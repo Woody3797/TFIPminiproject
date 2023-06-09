@@ -8,8 +8,8 @@ import { ProductaddComponent } from './components/productadd/productadd.componen
 const routes: Routes = [
     {path: '', component: MainComponent, title: 'Welcome'},
     {path: 'productlist', component: ProductlistComponent, title: 'Products'},
-    {path: 'addproduct', component: ProductaddComponent, title: 'Add'},
-    {path: 'profile', component: ProfileComponent, title: 'Profile'}
+    {path: 'addproduct', component: ProductaddComponent, title: 'Add Product'},
+    {path: 'profile', component: ProfileComponent, title: 'Profile'},
 ];
 
 @NgModule({

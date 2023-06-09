@@ -1,6 +1,8 @@
 export interface Product {
-    name: string
+    productID: number
+    username: string
+    productName: string
     description: string
     price: number
-    uploadedTime: Date
+    uploadTime: Date
 }

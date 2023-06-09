@@ -1,1 +1,36 @@
-<p>productadd works!</p>
+<app-header></app-header>
+<div class="container mt-3 mw-80">
+    <h1 class="display-2 m-2"><strong>Add A Product</strong></h1>
+    <div class="card p-lg-3">
+        <form class="row" [formGroup]="form" (submit)="uploadProductDetails()">
+            <div class="col-sm-5">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Product Name</mat-label>
+                    <input matInput placeholder="Product Name" formControlName="productName">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Product Price</mat-label>
+                    <input type="number" matInput placeholder="Product Price" min="0" formControlName="price">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Product Description</mat-label>
+                    <textarea matInput placeholder="Product Description" formControlName="description"></textarea>
+                </mat-form-field>
+                <div class="nav justify-content-center">
+                    <button mat-raised-button disabled="false" class="m-2" (click)="resetForm()">Clear Form</button>
+                    <button mat-raised-button type="submit" class="m-2" [disabled]="form.invalid">Submit</button>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div>
+                    Image Area
+                </div>
+                <div>
+                    <img id="uploadedImage" height="250" [src]="imageFile"/>
+                    <br>
+                    <input class="m-1" type="file" accept="image/*" (change)="showPreview($event)" formControlName="productImage" #productImage>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

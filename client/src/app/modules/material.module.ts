@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatCardModule} from '@angular/material/card';
 
 const matModules: any[] = [
     MatToolbarModule,
@@ -17,6 +18,7 @@ const matModules: any[] = [
     MatSlideToggleModule,
     MatMenuModule,
     MatPaginatorModule,
+    MatCardModule
 ]
 
 @NgModule({
