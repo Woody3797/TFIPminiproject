@@ -12,20 +12,5 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
     
-    public User createNewUser(User user) {
-        return userRepository.save(user);
-    }
-
-    public void initRolesAndUser() {
-       
-        User adminUser = new User();
-        adminUser.setUsername("admin1");
-        adminUser.setPassword("admin1");
-        userRepository.save(adminUser);
-
-        User user = new User();
-        user.setUsername("user1");
-        user.setPassword("user1");
-        userRepository.save(user);
-    }
+    
 }

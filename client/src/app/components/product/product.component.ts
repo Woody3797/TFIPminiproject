@@ -1,4 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, map } from 'rxjs';
+import { Product } from 'src/app/models/product.model';
 import { ProductService } from 'src/app/service/product.service';
 
 @Component({
@@ -9,11 +12,19 @@ import { ProductService } from 'src/app/service/product.service';
 export class ProductComponent implements OnInit {
 
     productService = inject(ProductService)
+    router = inject(Router)
+    activatedRoute = inject(ActivatedRoute)
 
-
-
+    product$!: Observable<Product>
+    productID = ''
+    
 
     ngOnInit(): void {
-        this.productService
+        this.productID = this.activatedRoute.snapshot.params['productID']
+        this.product$ = this.productService.getProduct(Number.parseInt(this.productID))
     }
+
+
+
+
 }

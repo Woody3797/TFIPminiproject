@@ -17,20 +17,37 @@
                     <textarea matInput placeholder="Product Description" formControlName="description"></textarea>
                 </mat-form-field>
                 <div class="nav justify-content-center">
-                    <button mat-raised-button disabled="false" class="m-2" (click)="resetForm()">Clear Form</button>
-                    <button mat-raised-button type="submit" class="m-2" [disabled]="form.invalid">Submit</button>
+                    <button mat-raised-button type="button" disabled="false" class="m-2" (click)="resetForm()">Clear Form</button>
+                    <button mat-raised-button type="submit" class="m-2" [disabled]="invalidForm()">Submit</button>
                 </div>
             </div>
             <div class="col-sm-5">
-                <div>
+                <div class="m-1">
                     Image Area
                 </div>
-                <div>
-                    <img id="uploadedImage" height="250" [src]="imageFile"/>
+                <div class="align-bottom">
+                    <div class="row" *ngIf="images.length > 0; else noImage">
+                        <mat-grid-list cols="2" rowHeight="2:1">
+                            <mat-grid-tile *ngFor="let image of product.images; let i = index">
+                                <img height="200" [src]="image.url" (click)="remove(i)"/>
+                            </mat-grid-tile>
+                          </mat-grid-list>
+                    </div>
                     <br>
-                    <input class="m-1" type="file" accept="image/*" (change)="showPreview($event)" formControlName="productImage" #productImage>
+                    <div >
+                        <input id="productImage" class="m-1" type="file" accept="image/*" (change)="showPreview($event)" formControlName="productImage" #productImage (click)="limitImages()">
+                        <br>
+                        Maximum of 4 images (click an image to remove it)
+                    </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
+
+<ng-template #noImage>
+    <br>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/HD_transparent_picture.png/1280px-HD_transparent_picture.png" height="100">
+    <br>
+    <br>
+</ng-template>

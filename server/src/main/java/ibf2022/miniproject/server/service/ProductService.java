@@ -1,12 +1,18 @@
 package ibf2022.miniproject.server.service;
 
 import java.io.IOException;
-import java.net.URL;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import ibf2022.miniproject.server.model.Image;
 import ibf2022.miniproject.server.model.Product;
 import ibf2022.miniproject.server.repository.ProductRepository;
 
@@ -16,11 +22,28 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
     
-    public boolean addNewProduct(Product product, MultipartFile imageFile) throws IOException {
-        int sqlRes = productRepository.insertProductDetailsIntoSQL(product.getUsername(), product.getProductName(), product.getDescription(), product.getPrice());
+    public Product addNewProduct(Product product, MultipartFile[] imageFiles) throws IOException {
+        List<Image> images = new ArrayList<>();
 
-        URL url = productRepository.uploadImageIntoS3(imageFile, product.getUsername());
+        for (MultipartFile file : imageFiles) {
+            Image image = new Image(file.getOriginalFilename(), file.getContentType(), file.getBytes());
+            images.add(image);
+        }
+        product.setImages(images);
+        int productID = productRepository.insertProductDetailsIntoSQL(product);
+        product.setUploadTime(LocalDateTime.now());
+        product.setProductID(productID);
+        productRepository.insertImageDetailsIntoSQL(imageFiles, productID);
 
-        return (sqlRes > 0 && url != null);
+        return product;
+    }
+
+    public Optional<Product> getProductByID(Integer productID) {
+        Optional<Product> opt = productRepository.getProductByID(productID);
+        if (opt.isPresent()) {
+            return opt;
+        } else {
+            return Optional.empty();
+        }
     }
 }

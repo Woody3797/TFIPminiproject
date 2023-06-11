@@ -1,1 +1,19 @@
-<p>product works!</p>
+<app-header></app-header>
+
+<h1>Product</h1>
+<div>
+    <button [routerLink]="['/addproduct']">Back</button>
+</div>
+<div class="container">
+    <div class="card p-1" *ngIf="product$ | async as p">
+        <div>
+            Product ID: {{ p.productID }}
+        </div>
+        <div>
+            Product Name: {{ p.productName }}
+        </div>
+        <div *ngFor="let i of p.images" class="card-content p-2">
+            <img [src]="i.imageBytes" height="150" class="img-fluid">
+        </div>
+    </div>
+</div>

@@ -16,23 +16,10 @@ public class UserController {
     @Autowired
     private UserService userService;
     
-    @PostMapping(path = "/createNewUser")
-    public User createNewUser(@RequestBody User user) {
-        return userService.createNewUser(user);
-    }
-
-    @GetMapping(path = "/forAdmin")
-    public String forAdmin() {
-        return "URL for admin access only";
-    }
-
-    @GetMapping(path = "/forUser")
-    public String forUser() {
-        return "URL for users only";
-    }
+    
 
     @PostConstruct
     public void initRolesAndUser() {
-        userService.initRolesAndUser();
+        
     }
 }

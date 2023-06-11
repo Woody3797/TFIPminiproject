@@ -19,7 +19,7 @@
 // import ibf2022.miniproject.server.service.JwtService;
 
 // @Configuration
-// @EnableWebSecurity
+// 
 // @EnableMethodSecurity(prePostEnabled = true)
 // public class WebSecurityConfig {
 

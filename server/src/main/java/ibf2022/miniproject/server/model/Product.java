@@ -2,8 +2,12 @@ package ibf2022.miniproject.server.model;
 
 import java.io.StringReader;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 
@@ -15,6 +19,7 @@ public class Product {
     private Double price;
     private String username = "admin";
     private LocalDateTime uploadTime;
+    private List<Image> images = new ArrayList<>();
     
     public Integer getProductID() {
         return productID;
@@ -52,6 +57,26 @@ public class Product {
     public void setUploadTime(LocalDateTime uploadTime) {
         this.uploadTime = uploadTime;
     }
+    public List<Image> getImages() {
+        return images;
+    }
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
+
+    public Product() {
+    }
+
+    public Product(Integer productID, String productName, String description, Double price, String username,
+            LocalDateTime uploadTime, List<Image> images) {
+        this.productID = productID;
+        this.productName = productName;
+        this.description = description;
+        this.price = price;
+        this.username = username;
+        this.uploadTime = uploadTime;
+        this.images = images;
+    }
 
     @Override
     public String toString() {
@@ -60,13 +85,19 @@ public class Product {
     }
 
     public JsonObject toJson() {
+        JsonArrayBuilder jab = Json.createArrayBuilder();
+        for (Image i : images) {
+            jab.add(i.toJson());
+        }
+
         return Json.createObjectBuilder()
         .add("productID", productID)
-        .add("username", username)
         .add("productName", productName)
         .add("description", description)
         .add("price", price)
+        .add("username", username)
         .add("uploadTime", uploadTime.toString())
+        .add("images", jab)
         .build();
     }
 
@@ -79,4 +110,5 @@ public class Product {
         product.setDescription(jo.getString("description"));
         return product;
     }
+    
 }

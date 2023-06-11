@@ -4,11 +4,13 @@ import { MainComponent } from './components/main/main.component';
 import { ProductlistComponent } from './components/productlist/productlist.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ProductaddComponent } from './components/productadd/productadd.component';
+import { ProductComponent } from './components/product/product.component';
 
 const routes: Routes = [
     {path: '', component: MainComponent, title: 'Welcome'},
     {path: 'productlist', component: ProductlistComponent, title: 'Products'},
     {path: 'addproduct', component: ProductaddComponent, title: 'Add Product'},
+    {path: 'product/:productID', component: ProductComponent, title: 'Product'},
     {path: 'profile', component: ProfileComponent, title: 'Profile'},
 ];
 
