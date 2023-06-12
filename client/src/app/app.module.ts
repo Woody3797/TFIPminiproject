@@ -13,6 +13,7 @@ import { ProductaddComponent } from './components/productadd/productadd.componen
 import { ProfileComponent } from './components/profile/profile.component';
 import { HeaderComponent } from './components/header/header.component';
 import { ProductComponent } from './components/product/product.component';
+import { ProducteditComponent } from './components/productedit/productedit.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { ProductComponent } from './components/product/product.component';
     ProfileComponent,
     HeaderComponent,
     ProductComponent,
+    ProducteditComponent,
   ],
   imports: [
     BrowserModule,

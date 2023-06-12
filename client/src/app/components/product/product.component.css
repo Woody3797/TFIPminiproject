@@ -1,0 +1,29 @@
+.row {
+    align-items: stretch;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    max-width: 100%;
+}
+
+.imageCard {
+    height: 90%;
+    width: 500px;
+}
+
+.button-row {
+    display: table-cell;
+    max-width: 600px;
+}
+
+.button-row .mat-mdc-button-base {
+    margin: 8px 8px 8px 8px;
+}

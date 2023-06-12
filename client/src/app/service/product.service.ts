@@ -13,6 +13,7 @@ export class ProductService {
     http = inject(HttpClient)
 
     product$!: Observable<Product>
+    product!: Product
 
     addNewProduct(upproduct: UploadProduct, productImages: File[]): Observable<Product> {
         const fdata = new FormData()
@@ -21,13 +22,12 @@ export class ProductService {
             fdata.append('productImages', image)
         }
         
-        this.product$ = this.http.post<Product>(URL + '/addnewproduct', fdata)
+        this.product$ = this.http.post<Product>('/api/addnewproduct', fdata)
         return this.product$
     }
 
     getProduct(productID: number) {
-        const params = new HttpParams().set('productID', productID)
 
-        return this.http.get<Product>(URL + '/product/' + productID)
+        return this.http.get<Product>('/api/product/' + productID)
     }
 }

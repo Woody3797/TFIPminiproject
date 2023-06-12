@@ -59,7 +59,7 @@ public class Image {
         return Json.createObjectBuilder()
         .add("imageName", imageName)
         .add("type", type)
-        .add("imageBytes", "data:" + type + ";base64, " + encoded)
+        .add("imageBytes", encoded)
         .build();
     }
 }

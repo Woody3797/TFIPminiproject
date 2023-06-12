@@ -5,9 +5,9 @@ import { Product } from 'src/app/models/product.model';
 import { ProductService } from 'src/app/service/product.service';
 
 @Component({
-  selector: 'app-product',
-  templateUrl: './product.component.html',
-  styleUrls: ['./product.component.css']
+    selector: 'app-product',
+    templateUrl: './product.component.html',
+    styleUrls: ['./product.component.css']
 })
 export class ProductComponent implements OnInit {
 
@@ -16,15 +16,27 @@ export class ProductComponent implements OnInit {
     activatedRoute = inject(ActivatedRoute)
 
     product$!: Observable<Product>
+    product!: Product
     productID = ''
-    
+
 
     ngOnInit(): void {
         this.productID = this.activatedRoute.snapshot.params['productID']
-        this.product$ = this.productService.getProduct(Number.parseInt(this.productID))
+        this.product$ = this.productService.getProduct(Number.parseInt(this.productID)).pipe(
+            map(p => {
+                this.product = p
+                return p
+            })
+        )
     }
 
 
+    editProduct() {
+        this.productService.product = this.product
+        this.router.navigate(['/editproduct/' + this.productID])
+    }
 
-
+    deleteProduct() {
+        
+    }
 }

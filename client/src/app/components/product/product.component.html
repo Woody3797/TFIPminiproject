@@ -1,19 +1,39 @@
 <app-header></app-header>
-
-<h1>Product</h1>
-<div>
-    <button [routerLink]="['/addproduct']">Back</button>
-</div>
-<div class="container">
-    <div class="card p-1" *ngIf="product$ | async as p">
-        <div>
-            Product ID: {{ p.productID }}
-        </div>
-        <div>
-            Product Name: {{ p.productName }}
-        </div>
-        <div *ngFor="let i of p.images" class="card-content p-2">
-            <img [src]="i.imageBytes" height="150" class="img-fluid">
-        </div>
+<div class="container mt-3 mw-100">
+    <div>
+        <button mat-raised-button [routerLink]="['/addproduct']">Back</button>
+    </div>
+    <div class="container mt-4">
+        <mat-card *ngIf="product$ | async as p">
+            <mat-card-header>
+                <mat-card-subtitle>Product ID: {{ p.productID }}</mat-card-subtitle>
+                <mat-card-title style="font-size: x-large;">Product Name: {{ p.productName }}</mat-card-title>
+            </mat-card-header>
+    
+            <mat-card-content>
+                <div class="row">
+                    <div *ngFor="let i of p.images" class="imageCard">
+                        <img mat-card-image [src]="'data:' + i.type + ';base64, ' + i.imageBytes">
+                    </div>
+                </div>
+            </mat-card-content>
+            <br>
+            <mat-card-content>
+                <h1>Product Price: ${{ p.price }}</h1>
+            </mat-card-content>
+            <br>
+            <mat-card-content>
+                <h2>Product Description</h2>
+                <p>
+                    {{ p.description }}
+                </p>
+            </mat-card-content>
+            <br>
+            <hr>
+            <mat-card-actions class="button-row">
+                <button mat-fab extended (click)="editProduct()">Edit</button>
+                <button mat-fab extended color="warn" (click)="deleteProduct()">Delete</button>
+            </mat-card-actions>
+        </mat-card>
     </div>
 </div>

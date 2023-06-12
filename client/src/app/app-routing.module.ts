@@ -5,12 +5,14 @@ import { ProductlistComponent } from './components/productlist/productlist.compo
 import { ProfileComponent } from './components/profile/profile.component';
 import { ProductaddComponent } from './components/productadd/productadd.component';
 import { ProductComponent } from './components/product/product.component';
+import { ProducteditComponent } from './components/productedit/productedit.component';
 
 const routes: Routes = [
     {path: '', component: MainComponent, title: 'Welcome'},
     {path: 'productlist', component: ProductlistComponent, title: 'Products'},
     {path: 'addproduct', component: ProductaddComponent, title: 'Add Product'},
     {path: 'product/:productID', component: ProductComponent, title: 'Product'},
+    {path: 'editproduct/:productID', component: ProducteditComponent, title: 'Product'},
     {path: 'profile', component: ProfileComponent, title: 'Profile'},
 ];
 

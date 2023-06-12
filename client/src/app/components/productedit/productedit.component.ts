@@ -1,49 +1,52 @@
 import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, map } from 'rxjs';
 import { Image, Product, UploadProduct } from 'src/app/models/product.model';
 import { ProductService } from 'src/app/service/product.service';
 
 @Component({
-    selector: 'app-productadd',
-    templateUrl: './productadd.component.html',
-    styleUrls: ['./productadd.component.css']
+    selector: 'app-productedit',
+    templateUrl: './productedit.component.html',
+    styleUrls: ['./productedit.component.css']
 })
-export class ProductaddComponent implements OnInit {
+export class ProducteditComponent implements OnInit {
 
     fb = inject(FormBuilder)
-    router = inject(Router)
     productService = inject(ProductService)
+    activatedRoute = inject(ActivatedRoute)
+    router = inject(Router)
 
     @ViewChild('productImage')
     productImage!: ElementRef
 
+    productID = ''
+    product!: Product
+    product$!: Observable<Product>
     form!: FormGroup
-    product: Product = {
-        productID: 0,
-        username: 'admin',
-        productName: '',
-        description: '',
-        price: 0,
-        uploadTime: '',
-        images: []
-    }
-    upproduct: UploadProduct = {
-        productName: '',
-        description: '',
-        price: 0
-    }
+    upproduct!: UploadProduct
     images: File[] = []
 
+
     ngOnInit(): void {
-        this.createAddProductForm()
+        this.createEditProductForm()
+        this.productID = this.activatedRoute.snapshot.params['productID']
+        this.productService.getProduct(Number.parseInt(this.productID)).subscribe(p => {
+            this.product = p
+            console.info(p.images)
+            this.form.patchValue({
+                productName: this.product.productName,
+                price: this.product.price,
+                description: this.product.description
+            })
+        })
     }
 
-    createAddProductForm() {
+    createEditProductForm() {
         this.form = this.fb.group({
-            productName: this.fb.control<string>(Math.random().toString(36).slice(-5).replace(/\d/g, String.fromCharCode(Math.random() * 26 + 97)), [Validators.required, Validators.minLength(5)]),
-            price: this.fb.control<number>(Math.floor(Math.random() * 20) + 1.00, [Validators.required, Validators.min(0)]),
-            description: this.fb.control<string>('test'),
+            productName: this.fb.control<string>('', [Validators.required, Validators.minLength(5)]),
+            price: this.fb.control<number>(0, [Validators.required, Validators.min(0)]),
+            description: this.fb.control<string>(''),
             productImage: this.fb.control<File | null>(null, [Validators.required, Validators.max(4)])
         })
     }
@@ -65,22 +68,10 @@ export class ProductaddComponent implements OnInit {
     }
 
     showPreview(event: any) {
-        const imageFile: Image = {
-            imageID: 0,
-            imageName: '',
-            type: '',
-            imageBytes: event.target.files[0],
-            url: URL.createObjectURL(event.target.files[0]),
-        }
-        this.product.images.push(imageFile)
+        
         const file: File = this.productImage.nativeElement.files[0]
         this.images.push(file)
         this.limitImages()
-    }
-
-    resetForm() {
-        this.product.images.length = 0
-        this.createAddProductForm()
     }
 
     remove(i: number) {
@@ -107,5 +98,17 @@ export class ProductaddComponent implements OnInit {
         if (!reg.test(input)) {
             event.preventDefault();
         }
+    }
+
+    convertBase64ToFile(data: string) {
+        let dataStr = atob(data);
+        let n = dataStr.length;
+        let dataArr = new Uint8Array(n);
+        while (n--) {
+            dataArr[n] = dataStr.charCodeAt(n);
+        }
+        let file = new File([dataArr], 'File.png', { type: this.product.images[0].type });
+
+        return file;
     }
 }
