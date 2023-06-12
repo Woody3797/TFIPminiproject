@@ -42,7 +42,7 @@ export class ProductaddComponent implements OnInit {
     createAddProductForm() {
         this.form = this.fb.group({
             productName: this.fb.control<string>(Math.random().toString(36).slice(-5).replace(/\d/g, String.fromCharCode(Math.random()*26+97)), [Validators.required, Validators.minLength(5)]),
-            price: this.fb.control<number>(Math.floor(Math.random()*20)+1, [Validators.required, Validators.min(0)]),
+            price: this.fb.control<number>(Math.floor(Math.random()*20)+1.00, [Validators.required, Validators.min(0)]),
             description: this.fb.control<string>('test'),
             productImage: this.fb.control<File | null>(null, [Validators.required, Validators.max(4)])
         })
@@ -99,4 +99,13 @@ export class ProductaddComponent implements OnInit {
     invalidForm() {
         return this.form.invalid || this.product.images.length == 0
     }
+
+    decimalFilter(event: any) {
+        const reg = /^-?\d*(\.\d{0,2})?$/;
+        let input = event.target.value + String.fromCharCode(event.charCode);
+     
+        if (!reg.test(input)) {
+            event.preventDefault();
+        }
+     }
 }
