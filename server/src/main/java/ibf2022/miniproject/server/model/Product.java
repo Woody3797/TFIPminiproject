@@ -4,7 +4,6 @@ import java.io.StringReader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
@@ -81,7 +80,7 @@ public class Product {
     @Override
     public String toString() {
         return "Product [productID=" + productID + ", productName=" + productName + ", description=" + description
-                + ", price=" + price + ", username=" + username + ", uploadTime=" + uploadTime + "]";
+                + ", price=" + price + ", username=" + username + ", uploadTime=" + uploadTime + ", images=" + images + "]";
     }
 
     public JsonObject toJson() {

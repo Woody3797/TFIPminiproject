@@ -12,13 +12,13 @@ export interface Image {
     imageID: number
     imageName: string
     type: string
-    imageBytes: string
+    imageBytes: any
     url: string
 }
 
 
 export interface UploadProduct {
     productName: string
-    description: string
     price: number
+    description: string
 }

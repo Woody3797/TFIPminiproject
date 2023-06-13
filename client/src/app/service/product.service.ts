@@ -15,19 +15,31 @@ export class ProductService {
     product$!: Observable<Product>
     product!: Product
 
-    addNewProduct(upproduct: UploadProduct, productImages: File[]): Observable<Product> {
+    addNewProduct(upproduct: UploadProduct, productImages: File[]): Observable<string> {
         const fdata = new FormData()
         fdata.set('product', new Blob([JSON.stringify(upproduct)], {type: 'application/json'}))
         for (const image of productImages) {
             fdata.append('productImages', image)
         }
         
-        this.product$ = this.http.post<Product>('/api/addnewproduct', fdata)
-        return this.product$
+        return this.http.post<string>('/api/addnewproduct', fdata) 
     }
 
     getProduct(productID: number) {
-
         return this.http.get<Product>('/api/product/' + productID)
+    }
+
+    editProduct(upproduct: UploadProduct, productImages: File[], productID: number): Observable<Product> {
+        const fdata = new FormData()
+        fdata.set('product', new Blob([JSON.stringify(upproduct)], {type: 'application/json'}))
+        for (const image of productImages) {
+            fdata.append('productImages', image)
+        }
+        
+        return this.http.post<Product>('/api/editproduct/' + productID, fdata)
+    }
+
+    deleteProduct(productID: string): Observable<string> {
+        return this.http.delete<string>('/api/deleteproduct/' + productID)
     }
 }

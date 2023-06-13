@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, map } from 'rxjs';
@@ -21,23 +21,32 @@ export class ProducteditComponent implements OnInit {
     productImage!: ElementRef
 
     productID = ''
-    product!: Product
+    product: Product = {
+        productID: 0,
+        productName: '',
+        description: '',
+        price: 0,
+        username: '',
+        uploadTime: '',
+        images: []
+    }
     product$!: Observable<Product>
     form!: FormGroup
     upproduct!: UploadProduct
     images: File[] = []
+    @ViewChild('price')
+    price!: ElementRef
 
 
     ngOnInit(): void {
-        this.createEditProductForm()
         this.productID = this.activatedRoute.snapshot.params['productID']
+        this.createEditProductForm()
         this.productService.getProduct(Number.parseInt(this.productID)).subscribe(p => {
-            this.product = p
-            console.info(p.images)
+            this.product = this.createImages(p)
             this.form.patchValue({
                 productName: this.product.productName,
                 price: this.product.price,
-                description: this.product.description
+                description: this.product.description,
             })
         })
     }
@@ -47,28 +56,38 @@ export class ProducteditComponent implements OnInit {
             productName: this.fb.control<string>('', [Validators.required, Validators.minLength(5)]),
             price: this.fb.control<number>(0, [Validators.required, Validators.min(0)]),
             description: this.fb.control<string>(''),
-            productImage: this.fb.control<File | null>(null, [Validators.required, Validators.max(4)])
+            productImage: this.fb.control<File | null>(null, [])
         })
     }
 
-    uploadProductDetails() {
-        this.upproduct.productName = this.form.value.productName
-        this.upproduct.price = this.form.value.price
-        this.upproduct.description = this.form.value.description
+    editProductDetails() {
+        this.upproduct = {
+            productName: this.form.value.productName,
+            price: Number(this.form.value.price.toFixed(2)),
+            description: this.form.value.description,
+        }
         console.info(this.upproduct)
-        this.productService.addNewProduct(this.upproduct, this.images).subscribe({
+        this.productService.editProduct(this.upproduct, this.images, Number.parseInt(this.productID)).subscribe({
             next: data => {
-                this.router.navigate(['/product', data.productID])
+                console.info(data)
+                this.router.navigate(['/product/' + this.productID])
             },
             error: e => {
-                alert(e.message)
+                console.info(e.message)
                 // location.reload()
             }
         })
     }
 
     showPreview(event: any) {
-        
+        const imageFile: Image = {
+            imageID: 0,
+            imageName: event.target.files[0].name,
+            type: event.target.files[0].type,
+            imageBytes: event.target.files[0],
+            url: URL.createObjectURL(event.target.files[0]),
+        }
+        this.product.images.push(imageFile)
         const file: File = this.productImage.nativeElement.files[0]
         this.images.push(file)
         this.limitImages()
@@ -76,6 +95,7 @@ export class ProducteditComponent implements OnInit {
 
     remove(i: number) {
         this.product.images.splice(i, 1)
+        this.images.splice(i, 1)
         this.form.patchValue({ productImage: null })
         this.form.get('productImage')?.enable()
     }
@@ -88,27 +108,52 @@ export class ProducteditComponent implements OnInit {
     }
 
     invalidForm() {
-        return this.form.invalid || this.product.images.length == 0
+        return this.form.invalid || this.images.length == 0
     }
 
-    decimalFilter(event: any) {
-        const reg = /^-?\d*(\.\d{0,2})?$/;
-        let input = event.target.value + String.fromCharCode(event.charCode);
-
-        if (!reg.test(input)) {
-            event.preventDefault();
+    limitPriceDecimal(event: Event) {
+        const target = event.target as HTMLInputElement
+        const separator = '.'
+        const regex = new RegExp(`^\\d*(${separator}\\d{0,2})?$`)
+        if (!regex.test(target.value)) {
+            target.value = target.value.slice(0, -1)
         }
     }
 
-    convertBase64ToFile(data: string) {
-        let dataStr = atob(data);
-        let n = dataStr.length;
-        let dataArr = new Uint8Array(n);
-        while (n--) {
-            dataArr[n] = dataStr.charCodeAt(n);
-        }
-        let file = new File([dataArr], 'File.png', { type: this.product.images[0].type });
-
-        return file;
+    priceToDecimal(event: Event) {
+        const target = event.target as HTMLInputElement
+        target.value = parseFloat(target.value).toFixed(2);
     }
+
+    dataURItoBlob(data: string, type: string) {
+        const byteString = window.atob(data);
+        const arrayBuffer = new ArrayBuffer(byteString.length);
+        const int8Array = new Uint8Array(arrayBuffer);
+        for (let i = 0; i < byteString.length; i++) {
+            int8Array[i] = byteString.charCodeAt(i);
+        }
+        const blob = new Blob([int8Array], { type: type });
+        return blob;
+    }
+
+    createImages(product: Product): Product {
+        const productImages: Image[] = product.images
+        const images: Image[] = []
+        for (var i of productImages) {
+            const imageBlob = this.dataURItoBlob(i.imageBytes, i.type)
+            const imageFile = new File([imageBlob], i.imageName, { type: i.type })
+            this.images.push(imageFile)
+            const image: Image = {
+                imageID: i.imageID,
+                imageName: i.imageName,
+                type: i.type,
+                imageBytes: imageFile,
+                url: window.URL.createObjectURL(imageFile)
+            }
+            images.push(image)
+        }
+        product.images = images
+        return product
+    }
+
 }

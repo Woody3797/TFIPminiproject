@@ -1,8 +1,11 @@
 <app-header></app-header>
 <div class="container mt-3 mw-80">
+    <div>
+        <button mat-raised-button [routerLink]="['/product/' + productID]">Back</button>
+    </div>
     <h1 class="display-2 m-2"><strong>Edit Product Details</strong></h1>
     <div class="card p-lg-3">
-        <form class="row" [formGroup]="form" (submit)="uploadProductDetails()">
+        <form class="row" [formGroup]="form" (submit)="editProductDetails()">
             <div class="col-sm-5">
                 <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Product Name</mat-label>
@@ -10,14 +13,14 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Product Price</mat-label>
-                    <input type="number" matInput placeholder="Product Price" min="0" step="0.1" formControlName="price" (keypress)="decimalFilter($event)">
+                    <input type="number" matInput placeholder="Product Price" min="0" step="0.1" formControlName="price" (input)="limitPriceDecimal($event)" (blur)="priceToDecimal($event)">
                 </mat-form-field>
                 <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Product Description</mat-label>
                     <textarea matInput placeholder="Product Description" formControlName="description"></textarea>
                 </mat-form-field>
                 <div class="nav justify-content-center">
-                    <button mat-raised-button type="submit" class="m-2" [disabled]="invalidForm()">Submit</button>
+                    <button mat-raised-button type="submit" class="m-2" [disabled]="invalidForm()">Edit</button>
                 </div>
             </div>
             <div class="col-sm-5">
@@ -25,28 +28,21 @@
                     Image Area
                 </div>
                 <div class="align-bottom">
-                    <div class="row" *ngIf="images.length > 0; else noImage">
+                    <div class="row" style="height: 20vh;">
                         <mat-grid-list cols="2" rowHeight="2:1">
-                            <mat-grid-tile *ngFor="let image of product.images; let i = index">
-                                <img height="200" [src]="image.url" (click)="remove(i)"/>
+                            <mat-grid-tile *ngFor="let pi of product.images; let i = index">
+                                <img height="200" [src]="pi.url" (click)="remove(i)"/>
                             </mat-grid-tile>
                           </mat-grid-list>
                     </div>
                     <br>
                     <div >
-                        <input id="productImage" class="m-1" type="file" accept="image/*" (change)="showPreview($event)" formControlName="productImage" #productImage (click)="limitImages()">
+                        <input class="m-1" type="file" accept="image/*" (change)="showPreview($event)" formControlName="productImage" #productImage (click)="limitImages()">
                         <br>
-                        Maximum of 4 images (click an image to remove it)
+                        Maximum of 4 images (click on an image to remove it)
                     </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
-
-<ng-template #noImage>
-    <br>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/HD_transparent_picture.png/1280px-HD_transparent_picture.png" height="100">
-    <br>
-    <br>
-</ng-template>

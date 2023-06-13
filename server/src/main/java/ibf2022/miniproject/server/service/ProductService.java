@@ -29,8 +29,8 @@ public class ProductService {
             Image image = new Image(file.getOriginalFilename(), file.getContentType(), file.getBytes());
             images.add(image);
         }
-        product.setImages(images);
         int productID = productRepository.insertProductDetailsIntoSQL(product);
+        product.setImages(images);
         product.setUploadTime(LocalDateTime.now());
         product.setProductID(productID);
         productRepository.insertImageDetailsIntoSQL(imageFiles, productID);
@@ -45,5 +45,27 @@ public class ProductService {
         } else {
             return Optional.empty();
         }
+    }
+
+    public Boolean editProduct(Product product, MultipartFile[] imageFiles) throws IOException {
+        List<Image> images = new ArrayList<>();
+
+        for (MultipartFile file : imageFiles) {
+            Image image = new Image(file.getOriginalFilename(), file.getContentType(), file.getBytes());
+            images.add(image);
+        }
+        product.setImages(images);
+        int prodRes = productRepository.editProductDetailsInSQL(product);
+        product.setUploadTime(LocalDateTime.now());
+        int imageRes = productRepository.editImageDetailsInSQL(imageFiles, product.getProductID());
+
+        return prodRes > 0 && imageRes > 0;
+    }
+
+    public Boolean deleteProduct(Integer productID) {
+        boolean ima = productRepository.deleteImagesByProductID(productID);
+        boolean prod = productRepository.deleteProductByID(productID);
+
+        return (ima && prod);
     }
 }

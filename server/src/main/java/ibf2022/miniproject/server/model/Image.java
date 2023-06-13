@@ -57,6 +57,7 @@ public class Image {
         String encoded = Base64.getEncoder().encodeToString(imageBytes);
         
         return Json.createObjectBuilder()
+        .add("imageID", imageID)
         .add("imageName", imageName)
         .add("type", type)
         .add("imageBytes", encoded)

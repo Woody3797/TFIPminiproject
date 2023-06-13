@@ -25,11 +25,11 @@ export class ProductComponent implements OnInit {
         this.product$ = this.productService.getProduct(Number.parseInt(this.productID)).pipe(
             map(p => {
                 this.product = p
+                console.info(p)
                 return p
             })
         )
     }
-
 
     editProduct() {
         this.productService.product = this.product
@@ -37,6 +37,10 @@ export class ProductComponent implements OnInit {
     }
 
     deleteProduct() {
-        
+        var result = confirm("Want to delete?");
+        if (result) {
+            this.productService.deleteProduct(this.productID).subscribe()
+            this.router.navigate(['/addproduct/'])
+        }
     }
 }

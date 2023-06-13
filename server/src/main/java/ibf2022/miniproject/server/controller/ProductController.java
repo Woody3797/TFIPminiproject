@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ibf2022.miniproject.server.model.Product;
 import ibf2022.miniproject.server.service.ProductService;
+import jakarta.json.Json;
 
 @RestController
 @RequestMapping(path = "/api")
@@ -26,15 +28,14 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @PostMapping(path = "/addnewproduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> addNewProduct(@RequestPart("product") Product product, @RequestPart("productImages") MultipartFile[] productImage) {
+    @PostMapping(path = "/addnewproduct", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> addNewProduct(@RequestPart("product") Product product, @RequestPart("productImages") MultipartFile[] productImages) {
         try {
-            Product result = productService.addNewProduct(product, productImage);
+            Product result = productService.addNewProduct(product, productImages);
             System.out.println(result);
-            return ResponseEntity.ok().body(result.toJson().toString());
+            return ResponseEntity.ok().body(result.getProductID().toString());
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "unable to add product").build().toString());
         }
     }
 
@@ -45,9 +46,35 @@ public class ProductController {
         if (opt.isPresent()) {
             return ResponseEntity.ok().body(opt.get().toJson().toString());
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{error : no images found}");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "no product found").build().toString());
         }
     }
 
-    
+    @PostMapping(path = "/editproduct/{productID}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> editProduct(@PathVariable String productID, @RequestPart("product") Product product, @RequestPart("productImages") MultipartFile[] productImages) {
+        product.setProductID(Integer.parseInt(productID));
+        try {
+            boolean res = productService.editProduct(product, productImages);
+            if (res) {
+                Product result = productService.getProductByID(Integer.parseInt(productID)).get();
+                return ResponseEntity.ok().body(result.toJson().toString());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(Json.createObjectBuilder().add("error", "unable to edit product details").build().toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "unable to edit product details").build().toString());
+        }
+    }
+
+    @DeleteMapping(path = "/deleteproduct/{productID}")
+    public ResponseEntity<String> deleteProduct(@PathVariable String productID) {
+        boolean result = productService.deleteProduct(Integer.parseInt(productID));
+
+        if (result) {
+            return ResponseEntity.ok().body(Json.createObjectBuilder().add("result", "product with productID: " + productID + " deleted").build().toString());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "unable to delete product").build().toString());
+        }
+    }
 }

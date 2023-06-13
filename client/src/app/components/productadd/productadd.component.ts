@@ -37,6 +37,7 @@ export class ProductaddComponent implements OnInit {
 
     ngOnInit(): void {
         this.createAddProductForm()
+
     }
 
     createAddProductForm() {
@@ -44,7 +45,7 @@ export class ProductaddComponent implements OnInit {
             productName: this.fb.control<string>(Math.random().toString(36).slice(-5).replace(/\d/g, String.fromCharCode(Math.random() * 26 + 97)), [Validators.required, Validators.minLength(5)]),
             price: this.fb.control<number>(Math.floor(Math.random() * 20) + 1.00, [Validators.required, Validators.min(0)]),
             description: this.fb.control<string>('test'),
-            productImage: this.fb.control<File | null>(null, [Validators.required, Validators.max(4)])
+            productImage: this.fb.control<File | null>(null, [])
         })
     }
 
@@ -52,16 +53,12 @@ export class ProductaddComponent implements OnInit {
         this.upproduct.productName = this.form.value.productName
         this.upproduct.price = this.form.value.price
         this.upproduct.description = this.form.value.description
-        console.info(this.upproduct)
-        this.productService.addNewProduct(this.upproduct, this.images).subscribe({
-            next: data => {
-                this.router.navigate(['/product', data.productID])
-            },
-            error: e => {
-                alert(e.message)
-                // location.reload()
+        this.productService.addNewProduct(this.upproduct, this.images).subscribe(
+            data => {
+                console.info(data)
+                this.router.navigate(['/product/' + data])
             }
-        })
+        )
     }
 
     showPreview(event: any) {
@@ -85,6 +82,7 @@ export class ProductaddComponent implements OnInit {
 
     remove(i: number) {
         this.product.images.splice(i, 1)
+        this.images.splice(i, 1)
         this.form.patchValue({ productImage: null })
         this.form.get('productImage')?.enable()
     }
@@ -100,12 +98,28 @@ export class ProductaddComponent implements OnInit {
         return this.form.invalid || this.product.images.length == 0
     }
 
-    decimalFilter(event: any) {
-        const reg = /^-?\d*(\.\d{0,2})?$/;
-        let input = event.target.value + String.fromCharCode(event.charCode);
-
-        if (!reg.test(input)) {
-            event.preventDefault();
+    limitPriceDecimal(event: Event) {
+        const target = event.target as HTMLInputElement
+        const separator = '.'
+        const regex = new RegExp(`^\\d*(${separator}\\d{0,2})?$`)
+        if (!regex.test(target.value)) {
+            target.value = target.value.slice(0, -1)
         }
+        target.value = parseFloat(target.value).toFixed(2);
     }
+
+    priceToDecimal(event: Event) {
+        const target = event.target as HTMLInputElement
+        target.value = parseFloat(target.value).toFixed(2);
+    }
+
 }
+
+// next: data => {
+//     console.info(data)
+//     this.router.navigate(['/product/' + data.productID])
+// },
+// error: e => {
+//     alert(e.message)
+//     // location.reload()
+// }
