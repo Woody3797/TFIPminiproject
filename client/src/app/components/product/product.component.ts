@@ -25,7 +25,6 @@ export class ProductComponent implements OnInit {
         this.product$ = this.productService.getProduct(Number.parseInt(this.productID)).pipe(
             map(p => {
                 this.product = p
-                console.info(p)
                 return p
             })
         )

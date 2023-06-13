@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { map } from 'rxjs';
 import { Image, Product, UploadProduct } from 'src/app/models/product.model';
 import { ProductService } from 'src/app/service/product.service';
 
@@ -34,6 +35,7 @@ export class ProductaddComponent implements OnInit {
         price: 0
     }
     images: File[] = []
+    productID!: number
 
     ngOnInit(): void {
         this.createAddProductForm()
@@ -53,12 +55,16 @@ export class ProductaddComponent implements OnInit {
         this.upproduct.productName = this.form.value.productName
         this.upproduct.price = this.form.value.price
         this.upproduct.description = this.form.value.description
-        this.productService.addNewProduct(this.upproduct, this.images).subscribe(
-            data => {
+        this.productService.addNewProduct(this.upproduct, this.images).subscribe({
+            next: data => {
                 console.info(data)
-                this.router.navigate(['/product/' + data])
+                this.router.navigate(['/product/' + data.productID])
+            },
+            error: e => {
+                alert(e.message)
+                // location.reload()
             }
-        )
+        })
     }
 
     showPreview(event: any) {
@@ -114,12 +120,3 @@ export class ProductaddComponent implements OnInit {
     }
 
 }
-
-// next: data => {
-//     console.info(data)
-//     this.router.navigate(['/product/' + data.productID])
-// },
-// error: e => {
-//     alert(e.message)
-//     // location.reload()
-// }

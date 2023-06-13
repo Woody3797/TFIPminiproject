@@ -59,11 +59,8 @@ public class ProductRepository {
         List<Image> images = new ArrayList<>();
         SqlRowSet prs = jdbcTemplate.queryForRowSet(GET_PRODUCT_BY_ID_FROM_SQL, productID);
         Optional<List<Image>> opt = jdbcTemplate.query(GET_IMAGES_BY_ID_FROM_SQL, rs -> {
-            // if (!rs.first()) {
-            //     return Optional.empty();
-            // }
             while (rs.next()) {
-                Image i = new Image(rs.getInt("image_id"), rs.getString("imageName"), rs.getString("type"), rs.getBytes("imageBytes"));
+                Image i = new Image(rs.getInt("imageID"), rs.getString("imageName"), rs.getString("type"), rs.getBytes("imageBytes"));
                 images.add(i);
             }
             return Optional.of(images);
@@ -76,6 +73,25 @@ public class ProductRepository {
         } else {
             return Optional.empty();
         }
+    }
+
+    public Optional<List<Product>> getAllProducts(String username) {
+        List<Product> products = new ArrayList<>();
+        // List<Image> images = new ArrayList<>();
+
+        Optional<List<Product>> opt = jdbcTemplate.query(GET_ALL_PRODUCTS_BY_USERNAME_FROM_SQL, rs -> {
+            while(rs.next()) {
+                Product p = new Product(rs.getInt("productID"), rs.getString("productName"), rs.getString("description"), rs.getDouble("price"), rs.getString("username"), rs.getTimestamp("uploadTime").toLocalDateTime());
+                
+                List<Image> images = getImagesByID(p.getProductID());
+
+                p.setImages(images);
+                products.add(p);
+            }
+            return Optional.of(products);
+        }, username);
+
+        return Optional.of(products);
     }
 
     public Integer editProductDetailsInSQL(Product product) {
@@ -120,12 +136,23 @@ public class ProductRepository {
         return result > 0;
     }
 
+    public List<Image> getImagesByID(Integer productID) {
+        List<Image> images = new ArrayList<>();
+        jdbcTemplate.query(GET_IMAGES_BY_ID_FROM_SQL, rs -> {
+            while (rs.next()) {
+                Image i = new Image(rs.getInt("imageID"), rs.getString("imageName"), rs.getString("type"), rs.getBytes("imageBytes"));
+                images.add(i);
+            }
+            return images;
+        }, productID);
+
+        return images;
+    }
 
 
 
 
 
-    
 
 
     // public URL uploadImageIntoS3(MultipartFile imageFile, String username) throws IOException {

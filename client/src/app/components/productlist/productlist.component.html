@@ -1,5 +1,38 @@
-<mat-paginator [length]="30"
-              [pageSize]="5"
-              [pageSizeOptions]="[5, 10, 30]"
-              aria-label="Select page">
-</mat-paginator>
+<app-header></app-header>
+<br>
+<div>
+    <button mat-raised-button [routerLink]="['/']">Back</button>
+</div>
+
+<div class="container mt-3 mw-100">
+    <mat-paginator [length]="30" [pageSize]="5" [pageSizeOptions]="[5, 10, 30]" aria-label="Select page"></mat-paginator>
+    <br>
+    <div class="card-grid mat-elevation-z4">
+        <mat-card *ngFor="let p of productlist">
+            <mat-card-header>
+                <mat-card-subtitle>Product ID: {{ p.productID }}</mat-card-subtitle>
+                <mat-card-title>Product Name: {{ p.productName }}</mat-card-title>
+            </mat-card-header>
+            <br>
+            <mat-card-content>
+                <div class="row">
+                    <div *ngFor="let i of p.images" class="imageCard">
+                        <img mat-card-image [src]="'data:' + i.type + ';base64, ' + i.imageBytes">
+                    </div>
+                </div>
+            </mat-card-content>
+            <br>
+            <mat-card-content>
+                <h1>Product Price: ${{ p.price }}</h1>
+            </mat-card-content>
+            <br>
+            <mat-card-content>
+                <h2>Product Description</h2>
+                <p>
+                    {{ p.description }}
+                </p>
+            </mat-card-content>
+            <br>
+        </mat-card>
+    </div>
+</div>

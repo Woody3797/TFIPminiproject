@@ -1,5 +1,6 @@
 package ibf2022.miniproject.server.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ibf2022.miniproject.server.model.Product;
 import ibf2022.miniproject.server.service.ProductService;
 import jakarta.json.Json;
+import jakarta.json.JsonArray;
 
 @RestController
 @RequestMapping(path = "/api")
@@ -33,7 +36,7 @@ public class ProductController {
         try {
             Product result = productService.addNewProduct(product, productImages);
             System.out.println(result);
-            return ResponseEntity.ok().body(result.getProductID().toString());
+            return ResponseEntity.ok().body(result.toJson().toString());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "unable to add product").build().toString());
         }
@@ -47,6 +50,17 @@ public class ProductController {
             return ResponseEntity.ok().body(opt.get().toJson().toString());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "no product found").build().toString());
+        }
+    }
+
+    @GetMapping(path = "/{username}/productlist")
+    public ResponseEntity<String> getAllProducts(@PathVariable String username, @RequestParam(required = false) String limit) {
+        JsonArray jArr = productService.getAllProducts(username);
+
+        if (jArr != null) {
+            return ResponseEntity.ok().body(jArr.toString());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "no products found").build().toString());
         }
     }
 

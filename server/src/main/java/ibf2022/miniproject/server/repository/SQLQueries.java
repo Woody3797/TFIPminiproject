@@ -14,6 +14,10 @@ public class SQLQueries {
             SELECT * FROM product_details WHERE productID = ?
             """;
 
+    public static final String GET_ALL_PRODUCTS_BY_USERNAME_FROM_SQL = """
+            SELECT * FROM product_details WHERE username = ?
+            """;
+
     public static final String GET_IMAGES_BY_ID_FROM_SQL = """
             SELECT * FROM image_details WHERE productID = ?
             """;

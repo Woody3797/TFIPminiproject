@@ -3,10 +3,8 @@ package ibf2022.miniproject.server.service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 import ibf2022.miniproject.server.model.Image;
 import ibf2022.miniproject.server.model.Product;
 import ibf2022.miniproject.server.repository.ProductRepository;
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonArrayBuilder;
 
 @Service
 public class ProductService {
@@ -30,7 +31,7 @@ public class ProductService {
             images.add(image);
         }
         int productID = productRepository.insertProductDetailsIntoSQL(product);
-        product.setImages(images);
+        // product.setImages(images);
         product.setUploadTime(LocalDateTime.now());
         product.setProductID(productID);
         productRepository.insertImageDetailsIntoSQL(imageFiles, productID);
@@ -47,6 +48,20 @@ public class ProductService {
         }
     }
 
+    public JsonArray getAllProducts(String username) {
+        Optional<List<Product>> opt = productRepository.getAllProducts(username);
+        if (opt.isPresent()) {
+            List<Product> products = opt.get();
+            JsonArrayBuilder jab = Json.createArrayBuilder();
+
+            for (Product p : products) {
+                jab.add(p.toJson());
+            }
+            return jab.build();
+        }
+        return null;
+    }
+    
     public Boolean editProduct(Product product, MultipartFile[] imageFiles) throws IOException {
         List<Image> images = new ArrayList<>();
 
@@ -68,4 +83,5 @@ public class ProductService {
 
         return (ima && prod);
     }
+
 }

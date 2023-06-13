@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { ProductService } from 'src/app/service/product.service';
 
 @Component({
   selector: 'app-header',
@@ -9,6 +10,9 @@ import { Router } from '@angular/router';
 export class HeaderComponent {
 
     router = inject(Router)
+    productService = inject(ProductService)
+
+    username = 'admin'
 
 
     goToProfile() {
@@ -20,6 +24,6 @@ export class HeaderComponent {
     }
 
     listProducts() {
-        this.router.navigate(['/productlist'])
+        this.router.navigate([ this.username + '/productlist'])
     }
 }

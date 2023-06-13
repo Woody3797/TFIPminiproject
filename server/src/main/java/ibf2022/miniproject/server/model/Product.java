@@ -1,6 +1,7 @@
 package ibf2022.miniproject.server.model;
 
 import java.io.StringReader;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +78,16 @@ public class Product {
         this.images = images;
     }
 
+    public Product(Integer productID, String productName, String description, Double price, String username,
+            LocalDateTime uploadTime) {
+        this.productID = productID;
+        this.productName = productName;
+        this.description = description;
+        this.price = price;
+        this.username = username;
+        this.uploadTime = uploadTime;
+    }
+    
     @Override
     public String toString() {
         return "Product [productID=" + productID + ", productName=" + productName + ", description=" + description

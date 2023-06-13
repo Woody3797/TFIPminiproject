@@ -9,7 +9,7 @@ import { ProducteditComponent } from './components/productedit/productedit.compo
 
 const routes: Routes = [
     {path: '', component: MainComponent, title: 'Welcome'},
-    {path: 'productlist', component: ProductlistComponent, title: 'Products'},
+    {path: ':username/productlist', component: ProductlistComponent, title: 'Products'},
     {path: 'addproduct', component: ProductaddComponent, title: 'Add Product'},
     {path: 'product/:productID', component: ProductComponent, title: 'Product'},
     {path: 'editproduct/:productID', component: ProducteditComponent, title: 'Product'},

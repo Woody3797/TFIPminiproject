@@ -53,6 +53,11 @@ public class Image {
         this.imageBytes = imageBytes;
     }
 
+    @Override
+    public String toString() {
+        return "Image [imageID=" + imageID + ", imageName=" + imageName + ", type=" + type + "]";
+    }
+    
     public JsonObject toJson() {
         String encoded = Base64.getEncoder().encodeToString(imageBytes);
         
