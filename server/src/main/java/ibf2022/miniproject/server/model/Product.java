@@ -1,7 +1,6 @@
 package ibf2022.miniproject.server.model;
 
 import java.io.StringReader;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,7 @@ import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 
 public class Product {
-    
+
     private Integer productID;
     private String productName;
     private String description;
@@ -20,7 +19,7 @@ public class Product {
     private String username = "admin";
     private LocalDateTime uploadTime;
     private List<Image> images = new ArrayList<>();
-    
+
     public Integer getProductID() {
         return productID;
     }
@@ -120,5 +119,5 @@ public class Product {
         product.setDescription(jo.getString("description"));
         return product;
     }
-    
+
 }
