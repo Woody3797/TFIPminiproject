@@ -13,6 +13,7 @@ export class HeaderComponent {
     productService = inject(ProductService)
 
     username = 'admin'
+    loggedIn = false;
 
 
     goToProfile() {

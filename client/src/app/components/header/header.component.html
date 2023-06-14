@@ -15,7 +15,9 @@
         <span [routerLink]="['/']" style="padding-inline: 1rem;"><button mat-raised-button color="primary">My App</button></span>
         
         <span class="example-spacer"></span>
-        <span [routerLink]="['/login']" style="padding-inline: 1rem;"><button mat-raised-button color="primary">Login</button></span>
+        <span [routerLink]="['/login']" style="padding-inline: 1rem;" *ngIf="!loggedIn">
+            <button mat-raised-button color="primary">Login</button>
+        </span>
         <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
             <mat-icon>share</mat-icon>
         </button>
