@@ -6,9 +6,11 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { ProductaddComponent } from './components/productadd/productadd.component';
 import { ProductComponent } from './components/product/product.component';
 import { ProducteditComponent } from './components/productedit/productedit.component';
+import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
     {path: '', component: MainComponent, title: 'Welcome'},
+    {path: 'login', component: LoginComponent, title: 'Login/Sign-up'},
     {path: ':username/productlist', component: ProductlistComponent, title: 'Products'},
     {path: 'addproduct', component: ProductaddComponent, title: 'Add Product'},
     {path: 'product/:productID', component: ProductComponent, title: 'Product'},

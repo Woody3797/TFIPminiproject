@@ -40,7 +40,7 @@ export class ProductService {
             fdata.append('productImages', image)
         }
         
-        return this.http.post<Product>('/api/editproduct/' + productID, fdata)
+        return this.http.put<Product>('/api/editproduct/' + productID, fdata)
     }
 
     deleteProduct(productID: string): Observable<string> {
