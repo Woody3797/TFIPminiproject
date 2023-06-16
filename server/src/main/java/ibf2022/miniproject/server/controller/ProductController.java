@@ -1,6 +1,5 @@
 package ibf2022.miniproject.server.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +54,9 @@ public class ProductController {
     }
 
     @GetMapping(path = "/{username}/productlist")
-    public ResponseEntity<String> getAllProducts(@PathVariable String username, @RequestParam(required = false) String limit) {
-        JsonArray jArr = productService.getAllProducts(username);
-
+    public ResponseEntity<String> getAllProducts(@PathVariable String username, @RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer pageIndex) {
+        JsonArray jArr = productService.getAllProducts(username, pageSize, pageIndex);
+        
         if (jArr != null) {
             return ResponseEntity.ok().body(jArr.toString());
         } else {

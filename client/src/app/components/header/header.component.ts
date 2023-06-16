@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoginService } from 'src/app/service/login.service';
 import { ProductService } from 'src/app/service/product.service';
 
 @Component({
@@ -7,16 +8,21 @@ import { ProductService } from 'src/app/service/product.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
 
     router = inject(Router)
     productService = inject(ProductService)
+    loginService = inject(LoginService)
 
-    username = 'admin'
+    username = ''
     loggedIn = false;
 
 
-    goToProfile() {
+    ngOnInit(): void {
+        this.username = this.loginService.username
+    }
+
+    gotoProfile() {
         this.router.navigate(['/profile'])
     }
 

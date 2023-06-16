@@ -15,7 +15,7 @@ public class SQLQueries {
             """;
 
     public static final String GET_ALL_PRODUCTS_BY_USERNAME_FROM_SQL = """
-            SELECT * FROM product_details WHERE username = ?
+            SELECT * FROM product_details WHERE username = ? LIMIT ? OFFSET ?
             """;
 
     public static final String GET_IMAGES_BY_ID_FROM_SQL = """

@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, map } from 'rxjs';
@@ -14,6 +15,7 @@ export class ProductComponent implements OnInit {
     productService = inject(ProductService)
     router = inject(Router)
     activatedRoute = inject(ActivatedRoute)
+    location = inject(Location)
 
     product$!: Observable<Product>
     product!: Product
@@ -41,5 +43,9 @@ export class ProductComponent implements OnInit {
             this.productService.deleteProduct(this.productID).subscribe()
             this.router.navigate(['/addproduct/'])
         }
+    }
+
+    goBackToProductlist() {
+        this.location.back()
     }
 }
