@@ -1,7 +1,6 @@
 package ibf2022.miniproject.server.model;
 
 import java.io.StringReader;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

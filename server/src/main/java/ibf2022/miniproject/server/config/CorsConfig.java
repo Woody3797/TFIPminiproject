@@ -1,23 +1,23 @@
-package ibf2022.miniproject.server.config;
+// package ibf2022.miniproject.server.config;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+// import org.springframework.context.annotation.Configuration;
+// import org.springframework.web.servlet.config.annotation.CorsRegistry;
+// import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Configuration
-public class CorsConfig {
+// @Configuration
+// public class CorsConfig {
     
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                .allowedMethods("GET", "POST", "DELETE", "PUT")
-                .allowedHeaders("*")
-                .allowedOriginPatterns("*")
-                .allowCredentials(true);
-                WebMvcConfigurer.super.addCorsMappings(registry);
-            }
-        };
-    }
-}
+//     public WebMvcConfigurer corsConfigurer() {
+//         return new WebMvcConfigurer() {
+//             @Override
+//             public void addCorsMappings(CorsRegistry registry) {
+//                 registry.addMapping("/**")
+//                 .allowedMethods("GET", "POST", "DELETE", "PUT")
+//                 .allowedHeaders("*")
+//                 .allowedOriginPatterns("*")
+//                 .allowCredentials(true);
+//                 WebMvcConfigurer.super.addCorsMappings(registry);
+//             }
+//         };
+//     }
+// }

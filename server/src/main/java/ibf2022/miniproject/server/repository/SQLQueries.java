@@ -33,4 +33,16 @@ public class SQLQueries {
     public static final String DELETE_PRODUCT_IN_SQL = """
             DELETE FROM product_details WHERE productID = ?
             """;
+
+    public static final String GET_USER_BY_USERNAME = """
+            SELECT * FROM user_details WHERE username = ?
+            """;
+
+    public static final String GET_USER_BY_EMAIL = """
+            SELECT * FROM user_details WHERE email = ?
+            """;
+
+    public static final String SIGNUP_NEW_USER = """
+            INSERT INTO user_details(username, password, email) values (?, ?, ?)
+            """;
 }

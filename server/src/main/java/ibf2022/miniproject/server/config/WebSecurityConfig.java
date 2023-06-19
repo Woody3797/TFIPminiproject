@@ -1,54 +1,62 @@
-// package ibf2022.miniproject.server.config;
+package ibf2022.miniproject.server.config;
 
-// import static org.springframework.security.config.Customizer.withDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.context.annotation.Bean;
-// import org.springframework.context.annotation.Configuration;
-// import org.springframework.http.HttpHeaders;
-// import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-// import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-// import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-// import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-// import org.springframework.security.core.userdetails.UserDetailsService;
-// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-// import org.springframework.security.crypto.password.PasswordEncoder;
-// import org.springframework.security.web.SecurityFilterChain;
-// import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+@Configuration
+@EnableMethodSecurity(prePostEnabled = true)
+public class WebSecurityConfig {
 
-// import ibf2022.miniproject.server.service.JwtService;
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-// @Configuration
-// 
-// @EnableMethodSecurity(prePostEnabled = true)
-// public class WebSecurityConfig {
+    @Autowired
+    private UserDetailsService userDetailsService;
 
-//     @Autowired
-//     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // http.csrf().disable().authorizeHttpRequests().requestMatchers("/**").permitAll()
+        // .anyRequest().authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        // .and().authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.csrf((csrf) -> csrf.disable())
+        .authorizeHttpRequests((authz) -> authz
+        .requestMatchers("/**").permitAll()
+        .anyRequest().authenticated()
+        ).sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authenticationProvider(authenticationProvider())
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-//     @Autowired
-//     private JwtRequestFilter jwtRequestFilter;
+        return http.build();
+    }
 
-//     @Autowired
-//     private UserDetailsService jwtService;
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-//     @Bean
-//     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-//         httpSecurity.csrf((csrf) -> csrf.disable()).cors(withDefaults())
-//         .authorizeHttpRequests((authz) -> authz
-//             .requestMatchers("").permitAll()
-//             .requestMatchers(HttpHeaders.ALLOW).permitAll()
-//             .anyRequest().authenticated()
-//         );
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
 
-//         return httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class).build();
-//     }
-
-//     public PasswordEncoder passwordEncoder() {
-//         return new BCryptPasswordEncoder();
-//     }
-
-//     public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-//         authenticationManagerBuilder.userDetailsService(jwtService).passwordEncoder(passwordEncoder());
-//     }
-// }
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
+}

@@ -1,12 +1,21 @@
 package ibf2022.miniproject.server.model;
 
-public class User {
+import java.util.Collection;
+
+import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+
+public class User implements UserDetails {
     
     private Integer id;
     private String username;
     private String password;
     private String email;
-    private String credentials;
+    private Collection<? extends GrantedAuthority> authorities;
     
     public Integer getId() {
         return id;
@@ -32,29 +41,61 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-    public String getCredentials() {
-        return credentials;
-    }
-    public void setCredentials(String credentials) {
-        this.credentials = credentials;
+    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        this.authorities = authorities;
     }
     
     public User() {
     }
     
-    public User(String username, String password, String email, String credentials) {
+    public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.credentials = credentials;
     }
 
     @Override
     public String toString() {
-        return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email
-                + ", credentials=" + credentials + "]";
+        return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + ", authorities=" + authorities + "]";
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
+    public static User createFromRowSet(SqlRowSet rs) {
+        User u = new User();
+        u.setId(rs.getInt("user_id"));
+        u.setUsername(rs.getString("username"));
+        u.setPassword(rs.getString("password"));
+        u.setEmail(rs.getString("email"));
+        return u;
+    }
+
+    public JsonObject toJson() {
+        return Json.createObjectBuilder()
+        .add("username", username)
+        .add("password", password)
+        .add("email", email)
+        .add("role", "user")
+        .build();
+    }
 
 }
