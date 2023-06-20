@@ -27,7 +27,6 @@ public class JwtService {
     // private static final Key KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     public String getUsernameFromJwt(String jwtToken) {
-        System.out.println(jwtToken);
         return extractClaim(jwtToken, Claims::getSubject);
     }
 
@@ -37,7 +36,7 @@ public class JwtService {
 
     public <T> T extractClaim(String jwtToken, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(jwtToken);
-        System.out.println(claims);
+        System.out.println(claims.toString());
         return claimsResolver.apply(claims);
     }
 
@@ -45,7 +44,7 @@ public class JwtService {
         return Jwts.builder()
         .setSubject(username)
         .setIssuedAt(new Date())
-        .setExpiration(new Date(System.currentTimeMillis() + 1000*9999999))
+        .setExpiration(new Date(System.currentTimeMillis() + 1000*3600*24*1))
         .signWith(getSigningKey(), SignatureAlgorithm.HS256)
         .compact();
     }
@@ -53,6 +52,7 @@ public class JwtService {
     public boolean validateToken(String jwtToken) {
         try {
             Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(jwtToken);
+            return true;
         } catch (SignatureException ex) {
             System.out.println("Invalid JWT signature");
         } catch (MalformedJwtException ex) {
@@ -68,7 +68,7 @@ public class JwtService {
     }
 
     public String getJwtFromCookie(HttpServletRequest request) {
-        Cookie cookie = WebUtils.getCookie(request, "jwt");
+        Cookie cookie = WebUtils.getCookie(request, "JWTtoken");
         if (cookie != null) {
             return cookie.getValue();
         }
@@ -77,11 +77,15 @@ public class JwtService {
 
     public ResponseCookie generateCookieFromUsername(String username) {
         String jwtToken = generateTokenFromUsername(username);
-        ResponseCookie cookie = ResponseCookie.from("jwt", jwtToken).path("/").httpOnly(true).build();
+        ResponseCookie cookie = ResponseCookie.from("JWTtoken", jwtToken).path("/").httpOnly(true).build();
+        System.out.println(jwtToken);
+        // Cookie cookie = new Cookie("JWTtoken", jwtToken);
+        // cookie.setPath("/");
+        // cookie.setMaxAge(86400);
+        // cookie.setHttpOnly(true);
         return cookie;
     }
 
-    
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);

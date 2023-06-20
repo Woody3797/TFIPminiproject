@@ -1,5 +1,9 @@
 <app-header></app-header>
 
-<div>
+<div *ngIf="username != null; else notLoggedIn">
     MAIN PAGE
+    <br>
+    WELCOME {{ username }}
 </div>
+
+<ng-template #notLoggedIn>Please Sign In</ng-template>

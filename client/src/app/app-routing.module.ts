@@ -12,10 +12,10 @@ const routes: Routes = [
     {path: '', component: MainComponent, title: 'Welcome'},
     {path: 'login', component: LoginComponent, title: 'Login/Sign-up'},
     {path: ':username/productlist', component: ProductlistComponent, title: 'Products'},
-    {path: 'addproduct', component: ProductaddComponent, title: 'Add Product'},
+    {path: ':username/addproduct', component: ProductaddComponent, title: 'Add Product'},
     {path: 'product/:productID', component: ProductComponent, title: 'Product'},
-    {path: 'editproduct/:productID', component: ProducteditComponent, title: 'Product'},
-    {path: 'profile', component: ProfileComponent, title: 'Profile'},
+    {path: 'editproduct/:productID', component: ProducteditComponent, title: 'Edit Product'},
+    {path: ':username/profile', component: ProfileComponent, title: 'Profile'},
 ];
 
 @NgModule({

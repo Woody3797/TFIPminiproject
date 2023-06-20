@@ -18,7 +18,7 @@ export class ProductlistComponent implements OnInit {
     loginService = inject(LoginService)
     activatedRoute = inject(ActivatedRoute)
 
-    username = 'admin'
+    username = ''
     productlist$!: Observable<Product[]>
     productlist!: Product[]
     modifiedProductlist!: Product[]
@@ -29,7 +29,7 @@ export class ProductlistComponent implements OnInit {
     pageIndex = 0
 
     ngOnInit(): void {
-        // this.username = this.activatedRoute.snapshot.params['username']
+        this.username = this.activatedRoute.snapshot.params['username']
         this.productService.getAllProducts(this.username, 99, this.pageIndex).pipe(
             map(data => {
                 this.productlist = data

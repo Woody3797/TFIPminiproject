@@ -12,9 +12,6 @@ export class LoginService {
     http = inject(HttpClient)
 
 
-    username = 'admin'
-
-
     login(data: any): Observable<any> {
 
         return this.http.post<any>('/user/login', data)
@@ -23,6 +20,10 @@ export class LoginService {
     signup(data: any): Observable<any> {
 
         return this.http.post<any>('/user/signup', data)
+    }
+
+    logout() {
+        return this.http.delete('/user/logout')
     }
 
 }

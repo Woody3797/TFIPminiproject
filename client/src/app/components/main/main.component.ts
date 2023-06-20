@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/service/login.service';
+import { StorageService } from 'src/app/service/storage.service';
 
 @Component({
   selector: 'app-main',
@@ -11,13 +12,14 @@ export class MainComponent implements OnInit {
 
     router = inject(Router)
     loginService = inject(LoginService)
+    storageService = inject(StorageService)
 
 
     username = ''
 
 
     ngOnInit(): void {
-        this.username = this.loginService.username
+        this.username = this.storageService.getUser().username
         
     }
 

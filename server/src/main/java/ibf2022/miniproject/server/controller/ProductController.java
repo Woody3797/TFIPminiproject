@@ -47,6 +47,7 @@ public class ProductController {
         Optional<Product> opt = productService.getProductByID(Integer.parseInt(productID));
 
         if (opt.isPresent()) {
+            System.out.println("product returned");
             return ResponseEntity.ok().body(opt.get().toJson().toString());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "no product found").build().toString());
@@ -54,7 +55,7 @@ public class ProductController {
     }
 
     @GetMapping(path = "/{username}/productlist")
-    public ResponseEntity<String> getAllProducts(@PathVariable String username, @RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer pageIndex) {
+    public ResponseEntity<String> getAllProducts(@PathVariable String username, @RequestParam(required = false) Integer pageSize, @RequestParam(required = false, defaultValue = "0") Integer pageIndex) {
         JsonArray jArr = productService.getAllProducts(username, pageSize, pageIndex);
         
         if (jArr != null) {

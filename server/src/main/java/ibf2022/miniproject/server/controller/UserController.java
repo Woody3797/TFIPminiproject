@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,10 @@ import ibf2022.miniproject.server.model.User;
 import ibf2022.miniproject.server.service.JwtService;
 import ibf2022.miniproject.server.service.UserService;
 import jakarta.json.Json;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping(path = "/user")
@@ -42,7 +47,6 @@ public class UserController {
     @Autowired
     private PasswordEncoder encoder;
     
-    
     @PostMapping(path = "/login")
     public ResponseEntity<String> login(@RequestBody Login loginRequest) {
         try {
@@ -57,7 +61,6 @@ public class UserController {
         }
     }
 
-    
     @PostMapping(path = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> signup(@RequestBody Signup signupRequest) throws Exception {
         System.out.println(signupRequest.toString());
@@ -78,5 +81,22 @@ public class UserController {
         }
     }
 
+    @DeleteMapping(path = "/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
+        if (request != null) {
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
+        }
+        SecurityContextHolder.clearContext();
+        Cookie cookie = new Cookie("JWTtoken", null);
+        cookie.setMaxAge(0);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        // ResponseCookie cookie = ResponseCookie.from("JWTtoken", null).path("/").httpOnly(true).build();
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(Json.createObjectBuilder().add("Result", "Successfully logged out").build().toString());
+    }
 
 }
