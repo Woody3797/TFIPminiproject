@@ -23,7 +23,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "8BkysfgvfqBD4pHdZx8x6i2o1j6Qr3KQz0QKqmwRkdUipYTK7cliEuwGDbDnYvOj";
+    private static final String SECRET_KEY = "8BkysfgvfqBD4pHdZx8x6i2o1j6Qr3KQz0QKqmwRkdUipYTK7cliEuwGDbDnYvOk";
     // private static final Key KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     public String getUsernameFromJwt(String jwtToken) {

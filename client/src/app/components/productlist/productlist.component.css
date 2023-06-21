@@ -45,3 +45,11 @@ mat-card {
     /* width: 80%; */
     padding: 3px 3px 3px 3px;
 }
+
+.login-prompt {
+    font-size: x-large;
+    font: bolder;
+    text-align: center;
+    border: solid plum;
+    padding: 1rem;
+}

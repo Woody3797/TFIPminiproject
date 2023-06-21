@@ -5,6 +5,7 @@ import { Observable, map } from 'rxjs';
 import { Product } from 'src/app/models/product.model';
 import { LoginService } from 'src/app/service/login.service';
 import { ProductService } from 'src/app/service/product.service';
+import { StorageService } from 'src/app/service/storage.service';
 
 @Component({
   selector: 'app-productlist',
@@ -16,6 +17,7 @@ export class ProductlistComponent implements OnInit {
     router = inject(Router)
     productService = inject(ProductService)
     loginService = inject(LoginService)
+    storageService = inject(StorageService)
     activatedRoute = inject(ActivatedRoute)
 
     username = ''
@@ -27,9 +29,10 @@ export class ProductlistComponent implements OnInit {
     pageSize = 5
     length!: number
     pageIndex = 0
+    loggedIn = this.storageService.isLoggedIn()
 
     ngOnInit(): void {
-        this.username = this.activatedRoute.snapshot.params['username']
+        this.username = this.storageService.getUser().username
         this.productService.getAllProducts(this.username, 99, this.pageIndex).pipe(
             map(data => {
                 this.productlist = data

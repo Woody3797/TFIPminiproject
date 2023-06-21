@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, map } from 'rxjs';
 import { Product } from 'src/app/models/product.model';
 import { ProductService } from 'src/app/service/product.service';
+import { StorageService } from 'src/app/service/storage.service';
 
 @Component({
     selector: 'app-product',
@@ -13,13 +14,15 @@ import { ProductService } from 'src/app/service/product.service';
 export class ProductComponent implements OnInit {
 
     productService = inject(ProductService)
-    router = inject(Router)
     activatedRoute = inject(ActivatedRoute)
+    storageService = inject(StorageService)
+    router = inject(Router)
     location = inject(Location)
 
     product$!: Observable<Product>
     product!: Product
     productID = ''
+    loggedIn = this.storageService.isLoggedIn()
 
 
     ngOnInit(): void {
