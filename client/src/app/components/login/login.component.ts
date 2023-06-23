@@ -1,3 +1,4 @@
+import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,9 +8,9 @@ import { LoginService } from 'src/app/service/login.service';
 import { StorageService } from 'src/app/service/storage.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
 
@@ -18,10 +19,12 @@ export class LoginComponent implements OnInit {
     activatedRoute = inject(ActivatedRoute)
     loginService = inject(LoginService)
     storageService = inject(StorageService)
+    authService = inject(SocialAuthService)
 
     signupForm!: FormGroup
     loginForm!: FormGroup
     isLoggedIn = false
+    user!: SocialUser
 
 
     ngOnInit(): void {
@@ -31,6 +34,12 @@ export class LoginComponent implements OnInit {
         if (this.storageService.isLoggedIn()) {
             this.isLoggedIn = true
         }
+
+        this.authService.authState.subscribe(user => {
+            this.user = user;
+            this.isLoggedIn = (user != null);
+            this.loginService.googleLogin(user).subscribe()
+        });
     }
 
     createSignupForm(): FormGroup {

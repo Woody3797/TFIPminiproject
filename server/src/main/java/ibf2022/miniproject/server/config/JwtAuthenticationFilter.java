@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 
+import ibf2022.miniproject.server.model.GoogleAuth;
 import ibf2022.miniproject.server.service.JwtService;
 import ibf2022.miniproject.server.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -35,8 +36,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         try {
             // String jwtToken = jwtService.getJwtFromCookie(request);
-            String jwtToken = tokenExtractor(request);
-            System.out.println("jwt: "+ jwtToken);
+            String jwtToken;
+            String googleToken = request.getHeader("Authorization");
+            if (googleToken.contains("Google-Bearer")) {
+                jwtToken = googleToken.replace("Google-Bearer ", "");
+                String data = jwtService.extractDataFromJWT(jwtToken);
+                GoogleAuth googleAuth = GoogleAuth.createFromJson(data);
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + googleAuth.toString());
+                String email = googleAuth.getEmail();
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            jwtToken = tokenExtractor(request);
+            System.out.println("------------------------------------");
+            System.out.println("jwttoken: "+ jwtToken);
 
             if (jwtToken == null) {
                 filterChain.doFilter(request, response);
@@ -56,19 +70,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken.toString());
             filterChain.doFilter(request, response);
         } catch (IllegalArgumentException e) {
-            System.out.println("unable to get jwt token" + e.getMessage());
+            System.out.println("unable to get jwt token: " + e.getMessage());
         } catch (ExpiredJwtException e) {
-            System.out.println(e.getMessage() + " token has expired");
+            System.out.println("token has expired: " + e.getMessage());
         }
     }
 
     public String tokenExtractor(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
         System.out.println("header: " + header);
-        Cookie cookie = WebUtils.getCookie(request, "JWTtoken");
         if (header != null) {
             return header.replace("Bearer ", "");
         }
+        Cookie cookie = WebUtils.getCookie(request, "JWTtoken");
         if (cookie != null) {
             return cookie.getValue();
         } else {

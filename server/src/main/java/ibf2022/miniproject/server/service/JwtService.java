@@ -1,6 +1,7 @@
 package ibf2022.miniproject.server.service;
 
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 import java.util.function.Function;
 
@@ -23,7 +24,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "8BkysfgvfqBD4pHdZx8x6i2o1j6Qr3KQz0QKqmwRkdUipYTK7cliEuwGDbDnYvOk";
+    private static final String SECRET_KEY = "8BkysfgvfqBD4pHdZx8x6i2o1j6Qr3KQz0QKqmwRkdUipYTK7cliEuwGDbDnYvOj";
     // private static final Key KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     public String getUsernameFromJwt(String jwtToken) {
@@ -38,6 +39,13 @@ public class JwtService {
         final Claims claims = extractAllClaims(jwtToken);
         System.out.println(claims.toString());
         return claimsResolver.apply(claims);
+    }
+
+    public String extractDataFromJWT(String jwtToken) {
+        String[] chunks = jwtToken.split("\\.");
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+        String data = new String(decoder.decode(chunks[1]));
+        return data;
     }
 
     public String generateTokenFromUsername(String username) {

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -24,6 +24,12 @@ export class LoginService {
 
     logout() {
         return this.http.delete('/user/logout')
+    }
+
+    googleLogin(data: any): Observable<any> {
+        console.info(data)
+        const headers = new HttpHeaders({ 'Authorization': `Google-Bearer ${data.idToken}` })
+        return this.http.post<any>('/user/googlelogin', data.idToken, { headers })
     }
 
 }

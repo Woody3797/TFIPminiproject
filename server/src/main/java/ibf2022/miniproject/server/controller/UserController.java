@@ -61,6 +61,15 @@ public class UserController {
         }
     }
 
+    @PostMapping(path = "/googlelogin")
+    public ResponseEntity<String> loginByGoogle(@RequestBody String googleAuthRequest) {
+        String payload = jwtService.extractDataFromJWT(googleAuthRequest);
+        System.out.println("-------------------------------------: " + payload);
+
+
+        return null;
+    }
+
     @PostMapping(path = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> signup(@RequestBody Signup signupRequest) throws Exception {
         System.out.println(signupRequest.toString());

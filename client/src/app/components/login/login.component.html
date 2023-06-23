@@ -22,6 +22,27 @@
                     <div class="group">
                         <input type="submit" class="button" value="Login">
                     </div>
+
+                    <div style="width: 70%; position: absolute; left: 15%;">
+                        <asl-google-signin-button type='standard' size='large' shape="pill" width="270">
+                            <div id="g_id_onload"
+                                data-client_id="216028312066-dll1brg9sq28s4lmi1vsi1n0u9gvptoa.apps.googleusercontent.com"
+                                data-context="signin"
+                                data-ux_mode="popup"
+                                data-login_uri="http://localhost:4200/login"
+                                data-auto_prompt="false">
+                            </div>
+                            <div class="g_id_signin"
+                                data-type="standard"
+                                data-shape="pill"
+                                data-theme="outline"
+                                data-text="signin_with"
+                                data-size="large"
+                                data-logo_alignment="left">
+                            </div>
+                        </asl-google-signin-button>
+                    </div>
+
                     <div class="hr"></div>
                     <div class="foot-lnk">
                         <a href="#forgot">Forgot Password?</a>
@@ -55,4 +76,22 @@
             </div>
         </div>
     </div>
+
+    <!-- <div style="width: 30%;">
+        <div id="g_id_onload"
+            data-client_id="216028312066-dll1brg9sq28s4lmi1vsi1n0u9gvptoa.apps.googleusercontent.com"
+            data-context="signin"
+            data-ux_mode="popup"
+            data-login_uri="http://localhost:8080/user/googlelogin"
+            data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin"
+            data-type="standard"
+            data-shape="pill"
+            data-theme="outline"
+            data-text="signin_with"
+            data-size="large"
+            data-logo_alignment="left">
+        </div>
+    </div> -->
 </div>
