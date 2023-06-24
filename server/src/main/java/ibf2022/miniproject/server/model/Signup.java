@@ -6,21 +6,12 @@ import jakarta.validation.constraints.Size;
 public class Signup {
     
     @NotBlank
-    private String username;
-    
-    @NotBlank
     @Size(min = 1)
     private String email;
     
     @NotBlank
     private String password;
 
-    public String getUsername() {
-        return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
     public String getEmail() {
         return email;
     }
@@ -36,6 +27,6 @@ public class Signup {
 
     @Override
     public String toString() {
-        return "Signup [username=" + username + ", email=" + email + ", password=" + password + "]";
+        return "Signup [email=" + email + ", password=" + password + "]";
     }
 }

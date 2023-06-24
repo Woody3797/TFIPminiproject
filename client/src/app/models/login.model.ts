@@ -1,10 +1,9 @@
 export interface LoginRequest {
-    username: string
+    email: string
     password: string
 }
 
 export interface SignupRequest {
-    username: string
-    password: string
     email: string
+    password: string
 }

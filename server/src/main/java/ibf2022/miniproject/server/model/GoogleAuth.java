@@ -11,6 +11,7 @@ public class GoogleAuth {
     private String email;
     private String name;
     private String picture;
+    private String sub;
     
     public String getEmail() {
         return email;
@@ -30,25 +31,32 @@ public class GoogleAuth {
     public void setPicture(String picture) {
         this.picture = picture;
     }
+    public String getSub() {
+        return sub;
+    }
+    public void setSub(String sub) {
+        this.sub = sub;
+    }
     
     public GoogleAuth() {
     }
     
-    public GoogleAuth(String email, String name, String picture) {
+    public GoogleAuth(String email, String name, String picture, String sub) {
         this.email = email;
         this.name = name;
         this.picture = picture;
+        this.sub = sub;
     }
 
     @Override
     public String toString() {
-        return "GoogleAuth [email=" + email + ", name=" + name + ", picture=" + picture + "]";
+        return "GoogleAuth [email=" + email + ", name=" + name + ", picture=" + picture + ", sub=" + sub + "]";
     }
 
     public static GoogleAuth createFromJson(String data) {
         JsonReader jr = Json.createReader(new StringReader(data));
         JsonObject jo = jr.readObject();
-        GoogleAuth g = new GoogleAuth(jo.getString("email"), jo.getString("name"), jo.getString("picture"));
+        GoogleAuth g = new GoogleAuth(jo.getString("email"), jo.getString("name"), jo.getString("picture"), jo.getString("sub"));
         return g;
     }
 }

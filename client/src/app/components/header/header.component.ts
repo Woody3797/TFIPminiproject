@@ -16,28 +16,28 @@ export class HeaderComponent implements OnInit {
     loginService = inject(LoginService)
     storageService = inject(StorageService)
 
-    username = ''
+    email = ''
     loggedIn = this.storageService.isLoggedIn()
 
 
     ngOnInit(): void {
-        this.username = this.storageService.isLoggedIn() ? this.storageService.getUser().username : ''
+        this.email = this.storageService.isLoggedIn() ? this.storageService.getUser().email : ''
     }
 
     gotoProfile() {
-        this.router.navigate([this.username + '/profile'])
+        this.router.navigate([this.email + '/profile'])
     }
 
     addProduct() {
-        this.router.navigate([this.username + '/addproduct'])
+        this.router.navigate([this.email + '/addproduct'])
     }
 
     listProducts() {
-        this.router.navigate([ this.username + '/productlist'])
+        this.router.navigate([ this.email + '/productlist'])
     }
 
     logout() {
-        this.username = ''
+        this.email = ''
         this.storageService.clearStorage()
         this.loginService.logout().subscribe()
         this.router.navigate(['/'])

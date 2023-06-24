@@ -22,8 +22,8 @@ public class UserRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public User findByUsername(String username) {
-        SqlRowSet rs = jdbcTemplate.queryForRowSet(GET_USER_BY_USERNAME, username);
+    public User findByEmail(String email) {
+        SqlRowSet rs = jdbcTemplate.queryForRowSet(GET_USER_BY_EMAIL, email);
         if (rs.next()) {
             User user = User.createFromRowSet(rs);
             Collection<GrantedAuthority> authorities = new ArrayList<>();
@@ -31,12 +31,12 @@ public class UserRepository {
             user.setAuthorities(authorities);
             return user;
         } else {
-            throw new UsernameNotFoundException(username + " not found.");
+            throw new UsernameNotFoundException(email + " not found.");
         }
     }
 
-    public boolean signupNewUser(Signup signupRequest) {
-        return jdbcTemplate.update(SIGNUP_NEW_USER, signupRequest.getUsername(), signupRequest.getPassword(), signupRequest.getEmail()) > 0;
+    public boolean signupNewUser(String email, String password) {
+        return jdbcTemplate.update(SIGNUP_NEW_USER, email, password) > 0;
     }
 
     public boolean existsByEmail(String email) {

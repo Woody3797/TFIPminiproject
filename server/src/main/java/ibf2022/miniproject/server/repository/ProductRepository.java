@@ -33,7 +33,7 @@ public class ProductRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(conn -> {
             PreparedStatement statement = conn.prepareStatement(INSERT_NEW_PRODUCT_INTO_SQL, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, "admin");
+            statement.setString(1, product.getEmail());
             statement.setString(2, product.getProductName());
             statement.setString(3, product.getDescription());
             statement.setDouble(4, product.getPrice());
@@ -67,19 +67,19 @@ public class ProductRepository {
         }, productID);
         
         if (opt.isPresent() && prs.next()) {
-            Product product = new Product(prs.getInt("productID"), prs.getString("productName"), prs.getString("description"), prs.getDouble("price"), prs.getString("username"), LocalDateTime.parse(prs.getString("uploadTime")), opt.get());
+            Product product = new Product(prs.getInt("productID"), prs.getString("productName"), prs.getString("description"), prs.getDouble("price"), prs.getString("email"), LocalDateTime.parse(prs.getString("uploadTime")), opt.get());
             return Optional.of(product);
         } else {
             return Optional.empty();
         }
     }
 
-    public Optional<List<Product>> getAllProducts(String username, Integer pageSize, Integer pageIndex) {
+    public Optional<List<Product>> getAllProducts(String email, Integer pageSize, Integer pageIndex) {
         List<Product> products = new ArrayList<>();
 
-        jdbcTemplate.query(GET_ALL_PRODUCTS_BY_USERNAME_FROM_SQL, rs -> {
+        jdbcTemplate.query(GET_ALL_PRODUCTS_BY_EMAIL_FROM_SQL, rs -> {
             while(rs.next()) {
-                Product p = new Product(rs.getInt("productID"), rs.getString("productName"), rs.getString("description"), rs.getDouble("price"), rs.getString("username"), rs.getTimestamp("uploadTime").toLocalDateTime());
+                Product p = new Product(rs.getInt("productID"), rs.getString("productName"), rs.getString("description"), rs.getDouble("price"), rs.getString("email"), rs.getTimestamp("uploadTime").toLocalDateTime());
                 
                 List<Image> images = getImagesByID(p.getProductID());
 
@@ -87,7 +87,7 @@ public class ProductRepository {
                 products.add(p);
             }
             return Optional.of(products);
-        }, username, pageSize, pageIndex*pageSize);
+        }, email, pageSize, pageIndex*pageSize);
 
         return Optional.of(products);
     }

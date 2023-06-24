@@ -20,12 +20,12 @@ public class UserService implements UserDetailsService {
     private JwtService jwtService;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email);
         if (user != null) {
             return user;
         } else {
-            throw new UsernameNotFoundException(username + " not found");
+            throw new UsernameNotFoundException(email + " not found");
         }
     }
 
@@ -33,10 +33,10 @@ public class UserService implements UserDetailsService {
         return userRepository.existsByEmail(email);
     }
     
-    public boolean signupNewUser(Signup signupRequest) {
-        String jwtToken = jwtService.generateTokenFromUsername(signupRequest.getUsername());
+    public boolean signupNewUser(String email, String password) {
+        String jwtToken = jwtService.generateTokenFromEmail(email);
         System.out.println(jwtToken);
-        return userRepository.signupNewUser(signupRequest);
+        return userRepository.signupNewUser(email, password);
     }
     
 }

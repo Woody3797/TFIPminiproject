@@ -8,8 +8,8 @@
             <div class="login-form">
                 <form class="sign-in-htm" [formGroup]="loginForm" (submit)="login()">
                     <div class="group">
-                        <label for="user" class="label">Username</label>
-                        <input type="text" class="input" formControlName="username">
+                        <label for="user" class="label">Email</label>
+                        <input type="text" class="input" formControlName="email">
                     </div>
                     <div class="group">
                         <label for="pass" class="label">Password</label>
@@ -50,8 +50,8 @@
                 </form>
                 <form class="sign-up-htm" [formGroup]="signupForm" (submit)="signup()">
                     <div class="group">
-                        <label for="user" class="label">Username</label>
-                        <input id="user" type="text" class="input" formControlName="username">
+                        <label for="user" class="label">Email</label>
+                        <input id="user" type="text" class="input" formControlName="email">
                     </div>
                     <div class="group">
                         <label for="pass" class="label">Password</label>
@@ -61,10 +61,6 @@
                         <label for="pass" class="label">Repeat Password</label>
                         <input id="pass" type="password" class="input" data-type="password">
                     </div> -->
-                    <div class="group">
-                        <label for="pass" class="label">Email Address</label>
-                        <input type="text" class="input" formControlName="email">
-                    </div>
                     <div class="group">
                         <input type="submit" class="button" value="Sign Up">
                     </div>
@@ -76,22 +72,4 @@
             </div>
         </div>
     </div>
-
-    <!-- <div style="width: 30%;">
-        <div id="g_id_onload"
-            data-client_id="216028312066-dll1brg9sq28s4lmi1vsi1n0u9gvptoa.apps.googleusercontent.com"
-            data-context="signin"
-            data-ux_mode="popup"
-            data-login_uri="http://localhost:8080/user/googlelogin"
-            data-auto_prompt="false">
-        </div>
-        <div class="g_id_signin"
-            data-type="standard"
-            data-shape="pill"
-            data-theme="outline"
-            data-text="signin_with"
-            data-size="large"
-            data-logo_alignment="left">
-        </div>
-    </div> -->
 </div>

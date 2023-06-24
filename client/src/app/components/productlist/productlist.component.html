@@ -6,6 +6,9 @@
     </div>
     
     <div class="container mt-3 mw-100">
+        <div class="fs-3 d-flex justify-content-center">
+            Product page for {{ email }}
+        </div>
         <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" (page)="handlePageEvent($event)" aria-label="Select page"></mat-paginator>
         <br>
         <div class="card-grid mat-elevation-z4">

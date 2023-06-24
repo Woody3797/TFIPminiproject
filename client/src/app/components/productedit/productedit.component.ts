@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, map } from 'rxjs';
 import { Image, Product, UploadProduct } from 'src/app/models/product.model';
 import { ProductService } from 'src/app/service/product.service';
+import { StorageService } from 'src/app/service/storage.service';
 
 @Component({
     selector: 'app-productedit',
@@ -16,6 +17,7 @@ export class ProducteditComponent implements OnInit {
     productService = inject(ProductService)
     activatedRoute = inject(ActivatedRoute)
     router = inject(Router)
+    storageService = inject(StorageService)
 
     @ViewChild('productImage')
     productImage!: ElementRef
@@ -26,7 +28,7 @@ export class ProducteditComponent implements OnInit {
         productName: '',
         description: '',
         price: 0,
-        username: '',
+        email: '',
         uploadTime: '',
         images: []
     }
@@ -65,6 +67,7 @@ export class ProducteditComponent implements OnInit {
             productName: this.form.value.productName,
             price: Number(this.form.value.price.toFixed(2)),
             description: this.form.value.description,
+            email: this.storageService.getUser().email
         }
         console.info(this.upproduct)
         this.productService.editProduct(this.upproduct, this.images, Number.parseInt(this.productID)).subscribe({

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { map } from 'rxjs';
 import { Image, Product, UploadProduct } from 'src/app/models/product.model';
 import { ProductService } from 'src/app/service/product.service';
+import { StorageService } from 'src/app/service/storage.service';
 
 @Component({
     selector: 'app-productadd',
@@ -15,6 +16,7 @@ export class ProductaddComponent implements OnInit {
     fb = inject(FormBuilder)
     router = inject(Router)
     productService = inject(ProductService)
+    storageService = inject(StorageService)
 
     @ViewChild('productImage')
     productImage!: ElementRef
@@ -22,7 +24,7 @@ export class ProductaddComponent implements OnInit {
     form!: FormGroup
     product: Product = {
         productID: 0,
-        username: 'admin',
+        email: '',
         productName: '',
         description: '',
         price: 0,
@@ -32,7 +34,8 @@ export class ProductaddComponent implements OnInit {
     upproduct: UploadProduct = {
         productName: '',
         description: '',
-        price: 0
+        price: 0,
+        email: ''
     }
     images: File[] = []
     productID!: number
@@ -55,6 +58,8 @@ export class ProductaddComponent implements OnInit {
         this.upproduct.productName = this.form.value.productName
         this.upproduct.price = this.form.value.price
         this.upproduct.description = this.form.value.description
+        this.upproduct.email = this.storageService.getUser().email
+        console.info(this.upproduct.email)
         this.productService.addNewProduct(this.upproduct, this.images).subscribe({
             next: data => {
                 console.info(data)

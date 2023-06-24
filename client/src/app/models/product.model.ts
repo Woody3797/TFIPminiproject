@@ -3,7 +3,7 @@ export interface Product {
     productName: string
     description: string
     price: number
-    username: string
+    email: string
     uploadTime: string
     images: Image[]
 }
@@ -21,4 +21,5 @@ export interface UploadProduct {
     productName: string
     price: number
     description: string
+    email: string
 }

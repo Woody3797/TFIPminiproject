@@ -29,10 +29,10 @@ export class ProductService {
         return this.http.get<Product>('/api/product/' + productID)
     }
 
-    getAllProducts(username: string, pageSize: number, pageIndex: number) {
+    getAllProducts(email: string, pageSize: number, pageIndex: number) {
         const params = new HttpParams().append('pageSize', pageSize).append('pageIndex', pageIndex)
 
-        return this.http.get<Product[]>('/api/' + username + '/productlist', {params})
+        return this.http.get<Product[]>('/api/' + email + '/productlist', {params})
     }
 
     editProduct(upproduct: UploadProduct, productImages: File[], productID: number): Observable<Product> {

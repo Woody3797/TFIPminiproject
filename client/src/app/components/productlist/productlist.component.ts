@@ -20,7 +20,7 @@ export class ProductlistComponent implements OnInit {
     storageService = inject(StorageService)
     activatedRoute = inject(ActivatedRoute)
 
-    username = ''
+    email = ''
     productlist$!: Observable<Product[]>
     productlist!: Product[]
     modifiedProductlist!: Product[]
@@ -32,8 +32,8 @@ export class ProductlistComponent implements OnInit {
     loggedIn = this.storageService.isLoggedIn()
 
     ngOnInit(): void {
-        this.username = this.storageService.getUser().username
-        this.productService.getAllProducts(this.username, 99, this.pageIndex).pipe(
+        this.email = this.storageService.getUser().email
+        this.productService.getAllProducts(this.email, 99, this.pageIndex).pipe(
             map(data => {
                 this.productlist = data
                 this.modifiedProductlist = this.productlist.slice(this.pageSize*this.pageIndex, this.pageSize*(this.pageIndex + 1))

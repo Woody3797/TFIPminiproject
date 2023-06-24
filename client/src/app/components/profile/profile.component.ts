@@ -11,11 +11,11 @@ export class ProfileComponent implements OnInit {
     storageService = inject(StorageService)
 
 
-    username = ''
+    email = ''
 
 
     ngOnInit(): void {
-        this.username = this.storageService.getUser().username
+        this.email = this.storageService.getUser().email
     }
 
 }

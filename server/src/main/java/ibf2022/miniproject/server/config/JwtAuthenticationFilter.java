@@ -3,10 +3,13 @@ package ibf2022.miniproject.server.config;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -38,37 +41,63 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // String jwtToken = jwtService.getJwtFromCookie(request);
             String jwtToken;
             String googleToken = request.getHeader("Authorization");
-            if (googleToken.contains("Google-Bearer")) {
+            if (googleToken != null && googleToken.contains("Google-Bearer")) {
                 jwtToken = googleToken.replace("Google-Bearer ", "");
                 String data = jwtService.extractDataFromJWT(jwtToken);
                 GoogleAuth googleAuth = GoogleAuth.createFromJson(data);
-                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + googleAuth.toString());
                 String email = googleAuth.getEmail();
-                filterChain.doFilter(request, response);
-                return;
-            }
+                jwtToken = jwtService.generateTokenFromEmail(email);
+                System.out.println(">>>>>>>>>>>>>>>>>>> " + jwtToken);
 
-            jwtToken = tokenExtractor(request);
-            System.out.println("------------------------------------");
-            System.out.println("jwttoken: "+ jwtToken);
-
-            if (jwtToken == null) {
-                filterChain.doFilter(request, response);
-                return;
-            }
-            String username = jwtService.getUsernameFromJwt(jwtToken);
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = userService.loadUserByUsername(username);
-                if (jwtService.validateToken(jwtToken)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    System.out.println(authToken);
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                if (userService.existsByEmail(email)) {
+                    try {
+                        UserDetails userDetails = userService.loadUserByUsername(email);
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        System.out.println(authToken);
+                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                    } catch (Exception e) {
+                        filterChain.doFilter(request, response);
+                        return;
+                    }
+                } else {
+                    PasswordEncoder encoder = passwordEncoder();
+                    googleAuth.setSub(encoder.encode(googleAuth.getSub()));
+                    userService.signupNewUser(email, googleAuth.getSub());
+                    try {
+                        UserDetails userDetails = userService.loadUserByUsername(email);
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        System.out.println(authToken);
+                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                    } catch (Exception e) {
+                        filterChain.doFilter(request, response);
+                        return;
+                    }
+                }
+            } else {
+                jwtToken = tokenExtractor(request);
+                System.out.println("jwttoken: "+ jwtToken);
+    
+                if (jwtToken == null) {
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+                String email = jwtService.getEmailFromJwt(jwtToken);
+                if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    UserDetails userDetails = userService.loadUserByUsername(email);
+                    if (jwtService.validateToken(jwtToken)) {
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        System.out.println(authToken);
+                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                    }
                 }
             }
             // Set bearer token to response headers
             response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken.toString());
             filterChain.doFilter(request, response);
+            
         } catch (IllegalArgumentException e) {
             System.out.println("unable to get jwt token: " + e.getMessage());
         } catch (ExpiredJwtException e) {
@@ -88,5 +117,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } else {
             return null;
         }
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

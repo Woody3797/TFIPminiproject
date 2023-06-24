@@ -27,7 +27,7 @@ public class JwtService {
     private static final String SECRET_KEY = "8BkysfgvfqBD4pHdZx8x6i2o1j6Qr3KQz0QKqmwRkdUipYTK7cliEuwGDbDnYvOj";
     // private static final Key KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    public String getUsernameFromJwt(String jwtToken) {
+    public String getEmailFromJwt(String jwtToken) {
         return extractClaim(jwtToken, Claims::getSubject);
     }
 
@@ -48,9 +48,9 @@ public class JwtService {
         return data;
     }
 
-    public String generateTokenFromUsername(String username) {
+    public String generateTokenFromEmail(String email) {
         return Jwts.builder()
-        .setSubject(username)
+        .setSubject(email)
         .setIssuedAt(new Date())
         .setExpiration(new Date(System.currentTimeMillis() + 1000*3600*24*1))
         .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -83,8 +83,8 @@ public class JwtService {
         return null;
     }
 
-    public ResponseCookie generateCookieFromUsername(String username) {
-        String jwtToken = generateTokenFromUsername(username);
+    public ResponseCookie generateCookieFromEmail(String email) {
+        String jwtToken = generateTokenFromEmail(email);
         ResponseCookie cookie = ResponseCookie.from("JWTtoken", jwtToken).path("/").httpOnly(true).build();
         System.out.println(jwtToken);
         // Cookie cookie = new Cookie("JWTtoken", jwtToken);

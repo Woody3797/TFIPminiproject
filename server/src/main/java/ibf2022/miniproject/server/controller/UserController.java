@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ibf2022.miniproject.server.model.GoogleAuth;
 import ibf2022.miniproject.server.model.Login;
 import ibf2022.miniproject.server.model.Signup;
 import ibf2022.miniproject.server.model.User;
@@ -50,24 +51,31 @@ public class UserController {
     @PostMapping(path = "/login")
     public ResponseEntity<String> login(@RequestBody Login loginRequest) {
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             User user = (User) authentication.getPrincipal();
-            ResponseCookie jwtCookie = jwtService.generateCookieFromUsername(user.getUsername());
+            ResponseCookie jwtCookie = jwtService.generateCookieFromEmail(user.getEmail());
             return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(user.toJson().toString());
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
-            return ResponseEntity.badRequest().body(Json.createObjectBuilder().add("error", "Username/Password not found or incorrect").build().toString());
+            return ResponseEntity.badRequest().body(Json.createObjectBuilder().add("error", "Email/Password not found or incorrect").build().toString());
         }
     }
 
     @PostMapping(path = "/googlelogin")
     public ResponseEntity<String> loginByGoogle(@RequestBody String googleAuthRequest) {
-        String payload = jwtService.extractDataFromJWT(googleAuthRequest);
-        System.out.println("-------------------------------------: " + payload);
-
-
-        return null;
+        try {
+            String payload = jwtService.extractDataFromJWT(googleAuthRequest);
+            GoogleAuth googleAuth = GoogleAuth.createFromJson(payload);
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(googleAuth.getEmail(), googleAuth.getSub()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            User user = (User) authentication.getPrincipal();
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>-------------------- " + authentication.toString());
+            ResponseCookie jwtCookie = jwtService.generateCookieFromEmail(user.getEmail());
+            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(user.toJson().toString());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Json.createObjectBuilder().add("error", e.getMessage()).build().toString());
+        }
     }
 
     @PostMapping(path = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -75,15 +83,15 @@ public class UserController {
         System.out.println(signupRequest.toString());
         if (userService.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity.badRequest().body(Json.createObjectBuilder().add("error", "Email already registered: " + signupRequest.getEmail()).build().toString());
-        } 
+        }
         try {
-            userService.loadUserByUsername(signupRequest.getUsername());
-            return ResponseEntity.badRequest().body(Json.createObjectBuilder().add("error", "Username already registered: " + signupRequest.getUsername()).build().toString());
+            userService.loadUserByUsername(signupRequest.getEmail());
+            return ResponseEntity.badRequest().body(Json.createObjectBuilder().add("error", "Email already registered: " + signupRequest.getEmail()).build().toString());
         } catch (UsernameNotFoundException e) {
             signupRequest.setPassword(encoder.encode(signupRequest.getPassword()));
-            boolean result = userService.signupNewUser(signupRequest);
+            boolean result = userService.signupNewUser(signupRequest.getEmail(), signupRequest.getPassword());
             if (result) {
-                return ResponseEntity.status(HttpStatus.CREATED).body(Json.createObjectBuilder().add("result", "User registered: " + signupRequest.getUsername()).build().toString());
+                return ResponseEntity.status(HttpStatus.CREATED).body(Json.createObjectBuilder().add("result", "User registered: " + signupRequest.getEmail()).build().toString());
             } else {
                 return ResponseEntity.badRequest().body(Json.createObjectBuilder().add("error", "Unable to register user").build().toString());
             }

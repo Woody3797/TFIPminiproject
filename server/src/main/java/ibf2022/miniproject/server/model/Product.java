@@ -16,7 +16,7 @@ public class Product {
     private String productName;
     private String description;
     private Double price;
-    private String username = "admin";
+    private String email;
     private LocalDateTime uploadTime;
     private List<Image> images = new ArrayList<>();
     
@@ -44,11 +44,11 @@ public class Product {
     public void setPrice(Double price) {
         this.price = price;
     }
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
     public LocalDateTime getUploadTime() {
         return uploadTime;
@@ -66,31 +66,30 @@ public class Product {
     public Product() {
     }
 
-    public Product(Integer productID, String productName, String description, Double price, String username,
+    public Product(Integer productID, String productName, String description, Double price, String email,
             LocalDateTime uploadTime, List<Image> images) {
         this.productID = productID;
         this.productName = productName;
         this.description = description;
         this.price = price;
-        this.username = username;
+        this.email = email;
         this.uploadTime = uploadTime;
         this.images = images;
     }
 
-    public Product(Integer productID, String productName, String description, Double price, String username,
+    public Product(Integer productID, String productName, String description, Double price, String email,
             LocalDateTime uploadTime) {
         this.productID = productID;
         this.productName = productName;
         this.description = description;
         this.price = price;
-        this.username = username;
+        this.email = email;
         this.uploadTime = uploadTime;
     }
     
     @Override
     public String toString() {
-        return "Product [productID=" + productID + ", productName=" + productName + ", description=" + description
-                + ", price=" + price + ", username=" + username + ", uploadTime=" + uploadTime + ", images=" + images + "]";
+        return "Product [productID=" + productID + ", productName=" + productName + ", description=" + description + ", price=" + price + ", email=" + email + ", uploadTime=" + uploadTime + ", images=" + images + "]";
     }
 
     public JsonObject toJson() {
@@ -104,7 +103,7 @@ public class Product {
         .add("productName", productName)
         .add("description", description)
         .add("price", price)
-        .add("username", username)
+        .add("email", email)
         .add("uploadTime", uploadTime.toString())
         .add("images", jab)
         .build();

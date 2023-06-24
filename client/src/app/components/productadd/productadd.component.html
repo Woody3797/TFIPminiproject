@@ -26,7 +26,7 @@
                     Image Area
                 </div>
                 <div class="align-bottom">
-                    <div class="row" style="height: 20vh;">
+                    <div class="row" style="height: 25vh;">
                         <mat-grid-list cols="2" rowHeight="2:1">
                             <mat-grid-tile *ngFor="let pi of product.images; let i = index">
                                 <img height="200" [src]="pi.url" (click)="remove(i)"/>

@@ -38,13 +38,22 @@ export class LoginComponent implements OnInit {
         this.authService.authState.subscribe(user => {
             this.user = user;
             this.isLoggedIn = (user != null);
-            this.loginService.googleLogin(user).subscribe()
+            this.loginService.googleLogin(user).subscribe({
+                next: res => {
+                    console.info(res)
+                    this.storageService.saveUser(res)
+                    this.router.navigate([res.email + '/productlist'])
+                },
+                error: err => {
+                    console.info(err)
+                    alert(err.error.error)
+                }
+            })
         });
     }
 
     createSignupForm(): FormGroup {
         return this.signupForm = this.fb.group({
-            username: this.fb.control('', [Validators.required, Validators.minLength(4)]),
             email: this.fb.control('', [Validators.required, Validators.email]),
             password: this.fb.control('', [Validators.required, Validators.minLength(3)])
         })
@@ -52,22 +61,22 @@ export class LoginComponent implements OnInit {
 
     createLoginForm(): FormGroup {
         return this.loginForm = this.fb.group({
-            username: this.fb.control('admin', [Validators.required, Validators.minLength(4)]),
+            email: this.fb.control('admin', [Validators.required, Validators.minLength(4)]),
             password: this.fb.control('123', [Validators.required, Validators.minLength(3)])
         })
     }
 
     login() {
         const loginRequest: LoginRequest = {
-            username: this.loginForm.value.username,
+            email: this.loginForm.value.email,
             password: this.loginForm.value.password,
         }
         this.loginService.login(loginRequest).subscribe({
             next: res => {
                 console.info(res)
                 this.storageService.saveUser(res)
-                if (this.loginForm.value.username == res.username) {
-                    this.router.navigate([res.username + '/productlist'])
+                if (this.loginForm.value.email == res.email) {
+                    this.router.navigate([res.email + '/productlist'])
                 }
             },
             error: err => {
@@ -79,7 +88,6 @@ export class LoginComponent implements OnInit {
 
     signup() {
         const signupRequest: SignupRequest = {
-            username: this.signupForm.value.username,
             email: this.signupForm.value.email,
             password: this.signupForm.value.password
         }
@@ -87,10 +95,10 @@ export class LoginComponent implements OnInit {
             next: res => {
                 console.info(res)
                 this.storageService.saveUser(res)
-                if (this.signupForm.value.username == res.username) {
-                    this.router.navigate([res.username + '/profile'])
+                if (this.signupForm.value.email == res.email) {
+                    this.router.navigate([res.email + '/profile'])
                 } else {
-                    throwError(() => new Error('Unable to login user: ' + res.username))
+                    throwError(() => new Error('Unable to login user: ' + res.email))
                 }
             },
             error: err => {

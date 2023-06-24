@@ -48,8 +48,8 @@ public class ProductService {
         }
     }
 
-    public JsonArray getAllProducts(String username, Integer pageSize, Integer pageIndex) {
-        Optional<List<Product>> opt = productRepository.getAllProducts(username, pageSize, pageIndex);
+    public JsonArray getAllProducts(String email, Integer pageSize, Integer pageIndex) {
+        Optional<List<Product>> opt = productRepository.getAllProducts(email, pageSize, pageIndex);
         if (opt.isPresent()) {
             List<Product> products = opt.get();
             JsonArrayBuilder jab = Json.createArrayBuilder();
