@@ -92,6 +92,24 @@ public class ProductRepository {
         return Optional.of(products);
     }
 
+    public Optional<List<Product>> getAllOtherProducts(String email, Integer pageSize, Integer pageIndex) {
+        List<Product> products = new ArrayList<>();
+
+        jdbcTemplate.query(GET_ALL_OTHER_PRODUCTS_FROM_SQL, rs -> {
+            while(rs.next()) {
+                Product p = new Product(rs.getInt("productID"), rs.getString("productName"), rs.getString("description"), rs.getDouble("price"), rs.getString("email"), rs.getTimestamp("uploadTime").toLocalDateTime());
+                
+                List<Image> images = getImagesByID(p.getProductID());
+
+                p.setImages(images);
+                products.add(p);
+            }
+            return Optional.of(products);
+        }, email, pageSize, pageIndex*pageSize);
+
+        return Optional.of(products);
+    }
+
     public Integer editProductDetailsInSQL(Product product) {
         jdbcTemplate.update(EDIT_PRODUCT_IN_SQL, product.getProductName(), product.getDescription(), product.getPrice(), product.getProductID());
 

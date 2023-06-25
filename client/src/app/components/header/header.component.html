@@ -9,13 +9,14 @@
             </mat-menu>
             <mat-menu #product="matMenu">
                 <button mat-menu-item (click)="addProduct()">Add Product</button>
-                <button mat-menu-item (click)="listProducts()">Product List</button>
+                <button mat-menu-item (click)="listProducts()">My Product List</button>
             </mat-menu>
         </button>
         <span [routerLink]="['/']" style="padding-inline: 1rem;"><button mat-raised-button color="primary">My App</button></span>
+        <span style="padding-inline: 1rem;"><button mat-raised-button color="primary" (click)="listAllProducts()">Browse All Product Listings</button></span>
         
         <span class="example-spacer"></span>
-        <span [routerLink]="['/login']" style="padding-inline: 1rem;" *ngIf="!loggedIn">
+        <span [routerLink]="['/login']" style="padding-inline: 1rem;" *ngIf="!isLoggedIn">
             <button mat-raised-button color="primary">Login</button>
         </span>
         <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">

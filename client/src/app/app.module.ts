@@ -16,12 +16,10 @@ import { ProductComponent } from './components/product/product.component';
 import { ProducteditComponent } from './components/productedit/productedit.component';
 import { LoginComponent } from './components/login/login.component';
 import { httpInterceptorProviders } from './http.interceptor';
-import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import { SocialLoginModule } from '@abacritt/angularx-social-login';
 import { SocialAuthServiceProvider } from './modules/social.module';
-import {
-    GoogleLoginProvider,
-    GoogleSigninButtonModule
-  } from '@abacritt/angularx-social-login';
+import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
+import { ProductlistallComponent } from './components/productlistall/productlistall.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +32,7 @@ import {
     ProductComponent,
     ProducteditComponent,
     LoginComponent,
+    ProductlistallComponent,
   ],
   imports: [
     BrowserModule,

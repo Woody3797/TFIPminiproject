@@ -8,15 +8,17 @@ import { ProductComponent } from './components/product/product.component';
 import { ProducteditComponent } from './components/productedit/productedit.component';
 import { LoginComponent } from './components/login/login.component';
 import { authGuard } from './auth.guard';
+import { ProductlistallComponent } from './components/productlistall/productlistall.component';
 
 const routes: Routes = [
     {path: '', component: MainComponent, title: 'Welcome'},
     {path: 'login', component: LoginComponent, title: 'Login/Sign-up'},
     {path: ':email/productlist', component: ProductlistComponent, title: 'Products', canActivate: [authGuard]},
+    {path: ':email/profile', component: ProfileComponent, title: 'Profile', canActivate: [authGuard]},
     {path: ':email/addproduct', component: ProductaddComponent, title: 'Add Product', canActivate: [authGuard]},
     {path: 'product/:productID', component: ProductComponent, title: 'Product', canActivate: [authGuard]},
     {path: 'editproduct/:productID', component: ProducteditComponent, title: 'Edit Product', canActivate: [authGuard]},
-    {path: ':email/profile', component: ProfileComponent, title: 'Profile', canActivate: [authGuard]},
+    {path: ':email/allproducts', component: ProductlistallComponent, title: 'All Products', canActivate: [authGuard]},
 ];
 
 @NgModule({

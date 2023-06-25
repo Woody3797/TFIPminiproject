@@ -35,6 +35,12 @@ export class ProductService {
         return this.http.get<Product[]>('/api/' + email + '/productlist', {params})
     }
 
+    getAllOtherProducts(email: string, pageSize: number, pageIndex: number) {
+        const params = new HttpParams().append('pageSize', pageSize).append('pageIndex', pageIndex)
+
+        return this.http.get<Product[]>('/api/' + email + '/allproducts', {params})
+    }
+
     editProduct(upproduct: UploadProduct, productImages: File[], productID: number): Observable<Product> {
         const fdata = new FormData()
         fdata.set('product', new Blob([JSON.stringify(upproduct)], {type: 'application/json'}))

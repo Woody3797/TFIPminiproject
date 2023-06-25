@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
 
     createLoginForm(): FormGroup {
         return this.loginForm = this.fb.group({
-            email: this.fb.control('admin', [Validators.required, Validators.minLength(4)]),
+            email: this.fb.control('admin@admin.com', [Validators.required, Validators.minLength(4)]),
             password: this.fb.control('123', [Validators.required, Validators.minLength(3)])
         })
     }
@@ -73,7 +73,6 @@ export class LoginComponent implements OnInit {
         }
         this.loginService.login(loginRequest).subscribe({
             next: res => {
-                console.info(res)
                 this.storageService.saveUser(res)
                 if (this.loginForm.value.email == res.email) {
                     this.router.navigate([res.email + '/productlist'])

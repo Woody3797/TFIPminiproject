@@ -18,6 +18,10 @@ public class SQLQueries {
             SELECT * FROM product_details WHERE email = ? LIMIT ? OFFSET ?
             """;
 
+    public static final String GET_ALL_OTHER_PRODUCTS_FROM_SQL = """
+            SELECT * FROM product_details WHERE email NOT LIKE ? LIMIT ? OFFSET ?
+            """;
+
     public static final String GET_IMAGES_BY_ID_FROM_SQL = """
             SELECT * FROM image_details WHERE productID = ?
             """;

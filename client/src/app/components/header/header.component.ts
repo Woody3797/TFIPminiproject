@@ -1,3 +1,4 @@
+import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/service/login.service';
@@ -15,12 +16,14 @@ export class HeaderComponent implements OnInit {
     productService = inject(ProductService)
     loginService = inject(LoginService)
     storageService = inject(StorageService)
+    authService = inject(SocialAuthService)
 
     email = ''
-    loggedIn = this.storageService.isLoggedIn()
+    isLoggedIn = false
 
 
     ngOnInit(): void {
+        this.isLoggedIn = this.storageService.isLoggedIn()
         this.email = this.storageService.isLoggedIn() ? this.storageService.getUser().email : ''
     }
 
@@ -36,10 +39,18 @@ export class HeaderComponent implements OnInit {
         this.router.navigate([ this.email + '/productlist'])
     }
 
+    listAllProducts() {
+        this.router.navigate([ this.email + '/allproducts'], { queryParams: {
+            pageSize: 5,
+            pageIndex: 0
+        } })
+    }
+
     logout() {
         this.email = ''
         this.storageService.clearStorage()
         this.loginService.logout().subscribe()
-        this.router.navigate(['/'])
+        this.authService.signOut(true)
+        this.router.navigate(['/login'])
     }
 }

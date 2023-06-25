@@ -1,0 +1,55 @@
+.row {
+    align-items: stretch;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    max-width: 100%;
+}
+
+.imageCard {
+    height: 90%;
+    width: 200px;
+}
+
+mat-card img {
+    object-fit: cover;
+    width: 100%;
+    height: 90%;
+}
+
+mat-card {
+    border: 1px solid green;
+    width: 30%;
+    height: 100%;
+    margin: 0.5rem;
+    max-width: 1000px;
+    position: relative;
+    border-radius: 2px;
+    background-color: #dcc7ef;
+}
+
+.card-grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    /* width: 80%; */
+    padding: 3px 3px 3px 3px;
+}
+
+.login-prompt {
+    font-size: x-large;
+    font: bolder;
+    text-align: center;
+    border: solid plum;
+    padding: 1rem;
+}

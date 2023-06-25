@@ -54,8 +54,19 @@ public class ProductController {
     }
 
     @GetMapping(path = "/{email}/productlist")
-    public ResponseEntity<String> getAllProducts(@PathVariable String email, @RequestParam(required = false) Integer pageSize, @RequestParam(required = false, defaultValue = "0") Integer pageIndex) {
+    public ResponseEntity<String> getAllProductsByEmail(@PathVariable String email, @RequestParam(required = false) Integer pageSize, @RequestParam(required = false, defaultValue = "0") Integer pageIndex) {
         JsonArray jArr = productService.getAllProducts(email, pageSize, pageIndex);
+        
+        if (jArr != null) {
+            return ResponseEntity.ok().body(jArr.toString());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "no products found").build().toString());
+        }
+    }
+
+    @GetMapping(path = "/{email}/allproducts")
+    public ResponseEntity<String> getAllOtherProducts(@PathVariable String email, @RequestParam(required = false) Integer pageSize, @RequestParam(required = false, defaultValue = "0") Integer pageIndex) {
+        JsonArray jArr = productService.getAllOtherProducts(email, pageSize, pageIndex);
         
         if (jArr != null) {
             return ResponseEntity.ok().body(jArr.toString());

@@ -61,6 +61,20 @@ public class ProductService {
         }
         return null;
     }
+
+    public JsonArray getAllOtherProducts(String email, Integer pageSize, Integer pageIndex) {
+        Optional<List<Product>> opt = productRepository.getAllOtherProducts(email, pageSize, pageIndex);
+        if (opt.isPresent()) {
+            List<Product> products = opt.get();
+            JsonArrayBuilder jab = Json.createArrayBuilder();
+
+            for (Product p : products) {
+                jab.add(p.toJson());
+            }
+            return jab.build();
+        }
+        return null;
+    }
     
     public Boolean editProduct(Product product, MultipartFile[] imageFiles) throws IOException {
         List<Image> images = new ArrayList<>();
