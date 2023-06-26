@@ -17,21 +17,19 @@ public class User {
   private String username;
   private String password;
 
-  @Enumerated(EnumType.STRING)
-  private UserRole userRole;
+  private String email;
+
+  private String resetPasswordToken;
+
 
   public User() {
   }
 
-  public User(String username, String password) {
-    this.username = username;
-    this.password = password;
-  }
 
-  public User(String username, String password, UserRole userRole) {
+  public User(String username, String password ) {
     this.username = username;
     this.password = password;
-    this.userRole = userRole;
+
   }
 
   public Integer getId() {
@@ -58,11 +56,19 @@ public class User {
     this.password = password;
   }
 
-  public UserRole getUserRole() {
-    return userRole;
+  public String getResetPasswordToken() {
+    return resetPasswordToken;
   }
 
-  public void setUserRole(UserRole userRole) {
-    this.userRole = userRole;
+  public void setResetPasswordToken(String resetPasswordToken) {
+    this.resetPasswordToken = resetPasswordToken;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
   }
 }
