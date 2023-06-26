@@ -54,4 +54,19 @@ export class ProductService {
     deleteProduct(productID: string): Observable<string> {
         return this.http.delete<string>('/api/deleteproduct/' + productID)
     }
+
+    buyProduct(productID: string): Observable<Product> {
+        const data = new FormData()
+        data.set('productID', productID)
+        data.set('status', 'pending sale')
+        
+        return this.http.post<Product>('/api/buyproduct', data)
+    }
+
+    cancelBuyProduct(productID: string): Observable<Product> {
+        const data = new FormData()
+        data.set('productID', productID)
+        
+        return this.http.post<Product>('/api/cancelpending', data)
+    }
 }

@@ -17,6 +17,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import ibf2022.miniproject.server.model.Image;
@@ -67,7 +68,7 @@ public class ProductRepository {
         }, productID);
         
         if (opt.isPresent() && prs.next()) {
-            Product product = new Product(prs.getInt("productID"), prs.getString("productName"), prs.getString("description"), prs.getDouble("price"), prs.getString("email"), LocalDateTime.parse(prs.getString("uploadTime")), opt.get());
+            Product product = new Product(prs.getInt("productID"), prs.getString("productName"), prs.getString("description"), prs.getDouble("price"), prs.getString("email"), LocalDateTime.parse(prs.getString("uploadTime")), opt.get(), prs.getString("productStatus"));
             return Optional.of(product);
         } else {
             return Optional.empty();
@@ -165,7 +166,19 @@ public class ProductRepository {
         return images;
     }
 
+    @Transactional(rollbackFor = DataAccessException.class)
+    public boolean buyProduct(Integer productID) {
+        int result = jdbcTemplate.update(UPDATE_PRODUCT_STATUS_IN_SQL, "pending", productID);
+        
+        return result > 0;
+    }
 
+    @Transactional(rollbackFor = DataAccessException.class)
+    public boolean cancelBuyProduct(Integer productID) {
+        int result = jdbcTemplate.update(UPDATE_PRODUCT_STATUS_IN_SQL, "selling", productID);
+        
+        return result > 0;
+    }
 
 
 

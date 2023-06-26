@@ -1,6 +1,7 @@
 package ibf2022.miniproject.server.repository;
 
-import static ibf2022.miniproject.server.repository.SQLQueries.*;
+import static ibf2022.miniproject.server.repository.SQLQueries.GET_USER_BY_EMAIL;
+import static ibf2022.miniproject.server.repository.SQLQueries.SIGNUP_NEW_USER;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +14,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 
-import ibf2022.miniproject.server.model.Signup;
 import ibf2022.miniproject.server.model.User;
 
 @Repository

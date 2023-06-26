@@ -1,6 +1,6 @@
 <app-header></app-header>
 <br>
-<div *ngIf="loggedIn; else login">
+<div>
     <div class="container mt-3 mw-80">
         <div>
             <button mat-raised-button (click)="goBackToProductlist()">Back</button>
@@ -32,7 +32,7 @@
                 </mat-card-content>
                 <br>
                 <hr>
-                <mat-card-actions class="button-row">
+                <mat-card-actions *ngIf="isUser;else isBuyer" class="button-row">
                     <button mat-fab extended (click)="editProduct()">Edit</button>
                     <button mat-fab extended color="warn" (click)="deleteProduct()">Delete</button>
                 </mat-card-actions>
@@ -41,8 +41,14 @@
     </div>
 </div>
 
-<ng-template #login>
-    <div class="login-prompt">
-        Click <a [routerLink]="['/login']">here</a> to login in order to access the site
+<ng-template #isBuyer>
+    <div *ngIf="productStatus == 'selling'; else showCancel">
+        <button mat-fab extended (click)="buyProduct()">Buy Product</button>
+    </div>
+</ng-template>
+
+<ng-template #showCancel>
+    <div>
+        <button mat-fab extended color="warn" (click)="cancelBuyProduct()">Cancel Order</button>
     </div>
 </ng-template>

@@ -19,6 +19,7 @@ public class Product {
     private String email;
     private LocalDateTime uploadTime;
     private List<Image> images = new ArrayList<>();
+    private String productStatus = "selling";
     
     public Integer getProductID() {
         return productID;
@@ -62,12 +63,17 @@ public class Product {
     public void setImages(List<Image> images) {
         this.images = images;
     }
-
+    public String getproductStatus() {
+        return productStatus;
+    }
+    public void setproductStatus(String productStatus) {
+        this.productStatus = productStatus;
+    }
+    
     public Product() {
     }
 
-    public Product(Integer productID, String productName, String description, Double price, String email,
-            LocalDateTime uploadTime, List<Image> images) {
+    public Product(Integer productID, String productName, String description, Double price, String email, LocalDateTime uploadTime, List<Image> images, String productStatus) {
         this.productID = productID;
         this.productName = productName;
         this.description = description;
@@ -75,10 +81,10 @@ public class Product {
         this.email = email;
         this.uploadTime = uploadTime;
         this.images = images;
+        this.productStatus = productStatus;
     }
-
-    public Product(Integer productID, String productName, String description, Double price, String email,
-            LocalDateTime uploadTime) {
+    
+    public Product(Integer productID, String productName, String description, Double price, String email, LocalDateTime uploadTime) {
         this.productID = productID;
         this.productName = productName;
         this.description = description;
@@ -97,7 +103,6 @@ public class Product {
         for (Image i : images) {
             jab.add(i.toJson());
         }
-
         return Json.createObjectBuilder()
         .add("productID", productID)
         .add("productName", productName)
@@ -106,6 +111,7 @@ public class Product {
         .add("email", email)
         .add("uploadTime", uploadTime.toString())
         .add("images", jab)
+        .add("productStatus", productStatus)
         .build();
     }
 

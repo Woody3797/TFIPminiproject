@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import ibf2022.miniproject.server.model.Signup;
 import ibf2022.miniproject.server.model.User;
 import ibf2022.miniproject.server.repository.UserRepository;
 

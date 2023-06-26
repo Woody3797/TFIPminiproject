@@ -29,7 +29,8 @@ export class ProductaddComponent implements OnInit {
         description: '',
         price: 0,
         uploadTime: '',
-        images: []
+        images: [],
+        productStatus: ''
     }
     upproduct: UploadProduct = {
         productName: '',

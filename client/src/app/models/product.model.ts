@@ -6,6 +6,7 @@ export interface Product {
     email: string
     uploadTime: string
     images: Image[]
+    productStatus: string
 }
 
 export interface Image {
@@ -15,7 +16,6 @@ export interface Image {
     imageBytes: any
     url: string
 }
-
 
 export interface UploadProduct {
     productName: string

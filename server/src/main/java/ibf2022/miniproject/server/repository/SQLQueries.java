@@ -45,4 +45,8 @@ public class SQLQueries {
     public static final String SIGNUP_NEW_USER = """
             INSERT INTO user_details(email, password) values (?, ?)
             """;
+
+    public static final String UPDATE_PRODUCT_STATUS_IN_SQL = """
+            UPDATE product_details SET productStatus = ? WHERE productID = ?
+            """;
 }

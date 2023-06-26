@@ -30,7 +30,8 @@ export class ProducteditComponent implements OnInit {
         price: 0,
         email: '',
         uploadTime: '',
-        images: []
+        images: [],
+        productStatus: ''
     }
     product$!: Observable<Product>
     form!: FormGroup

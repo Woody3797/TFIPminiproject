@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -102,4 +103,33 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "unable to delete product").build().toString());
         }
     }
+
+    @PostMapping(path = "/buyproduct")
+    public ResponseEntity<String> buyProduct(@RequestParam MultiValueMap<String, String> data) {
+        System.out.println(data);
+        String status = data.getFirst("status");
+        String productID = data.getFirst("productID");
+        if (status != null && status.contains("pending")) {
+            if (productService.buyProduct(Integer.parseInt(productID))) {
+                Optional<Product> opt = productService.getProductByID(Integer.parseInt(productID));
+                return ResponseEntity.ok().body(opt.get().toJson().toString());
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Json.createObjectBuilder().add("error", "unable to complete transaction").build().toString());
+            }
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Json.createObjectBuilder().add("error", "unable to complete transaction").build().toString());
+    }
+
+    @PostMapping(path = "/cancelpending")
+    public ResponseEntity<String> cancelBuyProduct(@RequestParam MultiValueMap<String, String> data) {
+        String productID = data.getFirst("productID");
+        System.out.println(data + productID);
+        if (productService.cancelBuyProduct(Integer.parseInt(productID))) {
+            Optional<Product> opt = productService.getProductByID(Integer.parseInt(productID));
+            return ResponseEntity.ok().body(opt.get().toJson().toString());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Json.createObjectBuilder().add("error", "unable to cancel pending order").build().toString());
+        }
+    }
+
 }

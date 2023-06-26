@@ -91,11 +91,18 @@ public class ProductService {
         return prodRes > 0 && imageRes > 0;
     }
 
-    public Boolean deleteProduct(Integer productID) {
+    public boolean deleteProduct(Integer productID) {
         boolean ima = productRepository.deleteImagesByProductID(productID);
         boolean prod = productRepository.deleteProductByID(productID);
 
         return (ima && prod);
     }
 
+    public boolean buyProduct(Integer productID) {
+        return productRepository.buyProduct(productID);
+    }
+
+    public boolean cancelBuyProduct(Integer productID) {
+        return productRepository.cancelBuyProduct(productID);
+    }
 }

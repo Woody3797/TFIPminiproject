@@ -41,7 +41,7 @@ export class HeaderComponent implements OnInit {
 
     listAllProducts() {
         this.router.navigate([ this.email + '/allproducts'], { queryParams: {
-            pageSize: 5,
+            pageSize: 10,
             pageIndex: 0
         } })
     }

@@ -26,7 +26,7 @@ export class ProductlistallComponent {
     modifiedProductlist!: Product[]
     productID!: number
 
-    pageSize = 5
+    pageSize = 0
     length!: number
     pageIndex = 0
     loggedIn = this.storageService.isLoggedIn()
