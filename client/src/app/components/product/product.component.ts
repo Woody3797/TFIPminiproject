@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Inject, OnInit, inject } from '@angular/core';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, map } from 'rxjs';
 import { Product } from 'src/app/models/product.model';
@@ -19,6 +20,7 @@ export class ProductComponent implements OnInit {
     storageService = inject(StorageService)
     router = inject(Router)
     location = inject(Location)
+    dialog = inject(MatDialog)
 
     product$!: Observable<Product>
     product!: Product
@@ -26,7 +28,7 @@ export class ProductComponent implements OnInit {
     loggedIn = this.storageService.isLoggedIn()
     isUser = false
     productStatus = ''
-
+    imgData!: any
 
     ngOnInit(): void {
         this.productID = this.activatedRoute.snapshot.params['productID']
@@ -49,11 +51,18 @@ export class ProductComponent implements OnInit {
     }
 
     deleteProduct() {
-        var result = confirm('Are you sure you want to delete?');
-        if (result) {
-            this.productService.deleteProduct(this.productID).subscribe()
-            this.router.navigate(['/addproduct/'])
-        }
+        Swal.fire({
+            title: 'Delete Product',
+            text: 'Are you sure you want to delete product?',
+            showDenyButton: true,
+            confirmButtonText: 'Yes'
+        }).then(result => {
+            if (result.value) {
+                this.productService.deleteProduct(this.productID).subscribe(d => {
+                    this.router.navigate([this.product.email + '/productlist/'])
+                })
+            }
+        })
     }
 
     buyProduct() {
@@ -102,7 +111,36 @@ export class ProductComponent implements OnInit {
     }
 
     enlargeImg(event: any) {
-        const imgInd = document.getElementById(event)
-        console.info(imgInd)
+        var img = event.target
+        console.info(event.target)
+        const dialogRef = this.dialog.open(ImageDialog, {
+            maxHeight: '70%',
+            data: {
+                imgData: img
+            }
+        })
+    }
+}
+
+
+@Component({
+    selector: 'image-dialog',
+    templateUrl: 'image-dialog.html',
+    standalone: true,
+    imports: [MatDialogModule],
+})
+export class ImageDialog implements OnInit {
+
+    constructor(@Inject(MAT_DIALOG_DATA) public data: ProductComponent) {}
+
+    img!: string
+    
+    ngOnInit(): void {
+        this.img = this.data.imgData.src
+        // this.productService.getProduct(this.productID).subscribe(d => {
+        //     this.product = d
+        //     this.img = this.product.images[this.data.imageID]
+        //     console.info(this.img)
+        // })
     }
 }

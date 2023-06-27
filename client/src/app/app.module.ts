@@ -20,7 +20,7 @@ import { SocialLoginModule } from '@abacritt/angularx-social-login';
 import { SocialAuthServiceProvider } from './modules/social.module';
 import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { ProductlistallComponent } from './components/productlistall/productlistall.component';
-import Swal from 'sweetalert2';
+
 
 @NgModule({
   declarations: [
@@ -47,7 +47,7 @@ import Swal from 'sweetalert2';
   ],
   providers: [
     httpInterceptorProviders,
-    SocialAuthServiceProvider
+    SocialAuthServiceProvider,
   ],
   bootstrap: [AppComponent]
 })

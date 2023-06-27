@@ -14,6 +14,7 @@ export class ProductService {
 
     product$!: Observable<Product>
     product!: Product
+    productID!: number
 
     addNewProduct(upproduct: UploadProduct, productImages: File[]): Observable<Product> {
         const fdata = new FormData()
@@ -26,6 +27,7 @@ export class ProductService {
     }
 
     getProduct(productID: number) {
+        this.productID = productID
         return this.http.get<Product>('/api/product/' + productID)
     }
 

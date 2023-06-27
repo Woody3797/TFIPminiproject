@@ -19,7 +19,8 @@ img {
     max-width: 450px;
     margin: 0px;
     padding: 1px;
-    border: 1px dashed grey;
+    border: 1px solid grey;
+    cursor: zoom-in;
 }
 
 .button-row {

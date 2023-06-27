@@ -15,7 +15,7 @@
                 <mat-card-content>
                     <div class="row">
                         <div *ngFor="let i of p.images; let n = index" class="imageCard">
-                            <img mat-card-image [src]="'data:' + i.type + ';base64, ' + i.imageBytes" [id]="n" (click)="enlargeImg(n)">
+                            <img mat-card-image [src]="'data:' + i.type + ';base64, ' + i.imageBytes" [id]="n" (click)="enlargeImg($event)">
                         </div>
                     </div>
                 </mat-card-content>
