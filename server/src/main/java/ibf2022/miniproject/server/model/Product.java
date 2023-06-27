@@ -19,7 +19,7 @@ public class Product {
     private String email;
     private LocalDateTime uploadTime;
     private List<Image> images = new ArrayList<>();
-    private String productStatus = "selling";
+    private String productStatus;
     
     public Integer getProductID() {
         return productID;
@@ -84,13 +84,14 @@ public class Product {
         this.productStatus = productStatus;
     }
     
-    public Product(Integer productID, String productName, String description, Double price, String email, LocalDateTime uploadTime) {
+    public Product(Integer productID, String productName, String description, Double price, String email, LocalDateTime uploadTime, String productStatus) {
         this.productID = productID;
         this.productName = productName;
         this.description = description;
         this.price = price;
         this.email = email;
         this.uploadTime = uploadTime;
+        this.productStatus = productStatus;
     }
     
     @Override

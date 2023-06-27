@@ -58,7 +58,7 @@ export class ProductComponent implements OnInit {
 
     buyProduct() {
         Swal.fire({
-            title: 'Place Order',
+            title: 'Place Offer',
             text: 'Do you wish to buy this item?',
             showDenyButton: true,
             confirmButtonText: 'Yes'
@@ -73,8 +73,8 @@ export class ProductComponent implements OnInit {
 
     cancelBuyProduct() {
         Swal.fire({
-            title: 'Cancel Order',
-            text: 'Do you wish to cancel your order?',
+            title: 'Cancel Offer',
+            text: 'Do you wish to cancel your offer?',
             showDenyButton: true,
             confirmButtonText: 'Yes'
         }).then(result => {
@@ -86,7 +86,23 @@ export class ProductComponent implements OnInit {
         })
     }
 
+    acceptOffer() {
+        Swal.fire({
+            title: 'Accept Offer',
+            text: 'Are you sure you want to accept the offer?',
+            showDenyButton: true,
+            confirmButtonText: 'Yes'
+        }).then(result => {
+            console.info(result)
+        })
+    }
+
     goBackToProductlist() {
         this.location.back()
+    }
+
+    enlargeImg(event: any) {
+        const imgInd = document.getElementById(event)
+        console.info(imgInd)
     }
 }

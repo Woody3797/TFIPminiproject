@@ -38,6 +38,7 @@ export class ProductlistComponent implements OnInit {
                 this.productlist = data
                 this.modifiedProductlist = this.productlist.slice(this.pageSize*this.pageIndex, this.pageSize*(this.pageIndex + 1))
                 this.length = data.length
+                console.info(this.productlist)
                 return this.productlist
             })
         ).subscribe()

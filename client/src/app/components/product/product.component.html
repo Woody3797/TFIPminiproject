@@ -14,8 +14,8 @@
                 <br>
                 <mat-card-content>
                     <div class="row">
-                        <div *ngFor="let i of p.images" class="imageCard">
-                            <img mat-card-image [src]="'data:' + i.type + ';base64, ' + i.imageBytes">
+                        <div *ngFor="let i of p.images; let n = index" class="imageCard">
+                            <img mat-card-image [src]="'data:' + i.type + ';base64, ' + i.imageBytes" [id]="n" (click)="enlargeImg(n)">
                         </div>
                     </div>
                 </mat-card-content>
@@ -35,6 +35,9 @@
                 <mat-card-actions *ngIf="isUser;else isBuyer" class="button-row">
                     <button mat-fab extended (click)="editProduct()">Edit</button>
                     <button mat-fab extended color="warn" (click)="deleteProduct()">Delete</button>
+                    <span *ngIf="isUser && productStatus == 'pending'" style="float: right;">
+                        <button mat-fab extended color="primary" (click)="acceptOffer()">Accept Offer</button>
+                    </span>
                 </mat-card-actions>
             </mat-card>
         </div>

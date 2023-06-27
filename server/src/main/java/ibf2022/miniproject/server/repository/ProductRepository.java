@@ -80,7 +80,7 @@ public class ProductRepository {
 
         jdbcTemplate.query(GET_ALL_PRODUCTS_BY_EMAIL_FROM_SQL, rs -> {
             while(rs.next()) {
-                Product p = new Product(rs.getInt("productID"), rs.getString("productName"), rs.getString("description"), rs.getDouble("price"), rs.getString("email"), rs.getTimestamp("uploadTime").toLocalDateTime());
+                Product p = new Product(rs.getInt("productID"), rs.getString("productName"), rs.getString("description"), rs.getDouble("price"), rs.getString("email"), rs.getTimestamp("uploadTime").toLocalDateTime(), rs.getString("productStatus"));
                 
                 List<Image> images = getImagesByID(p.getProductID());
 
@@ -98,7 +98,7 @@ public class ProductRepository {
 
         jdbcTemplate.query(GET_ALL_OTHER_PRODUCTS_FROM_SQL, rs -> {
             while(rs.next()) {
-                Product p = new Product(rs.getInt("productID"), rs.getString("productName"), rs.getString("description"), rs.getDouble("price"), rs.getString("email"), rs.getTimestamp("uploadTime").toLocalDateTime());
+                Product p = new Product(rs.getInt("productID"), rs.getString("productName"), rs.getString("description"), rs.getDouble("price"), rs.getString("email"), rs.getTimestamp("uploadTime").toLocalDateTime(), rs.getString("productStatus"));
                 
                 List<Image> images = getImagesByID(p.getProductID());
 
