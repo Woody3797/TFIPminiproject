@@ -106,19 +106,19 @@ export class ProductComponent implements OnInit {
         })
     }
 
-    goBackToProductlist() {
-        this.location.back()
-    }
-
     enlargeImg(event: any) {
         var img = event.target
-        console.info(event.target)
         const dialogRef = this.dialog.open(ImageDialog, {
             maxHeight: '70%',
             data: {
-                imgData: img
+                imgData: img,
+                product: this.product
             }
         })
+    }
+    
+    goBackToProductlist() {
+        this.location.back()
     }
 }
 
@@ -134,6 +134,8 @@ export class ImageDialog implements OnInit {
     constructor(@Inject(MAT_DIALOG_DATA) public data: ProductComponent) {}
 
     img!: string
+    imageID = +this.data.imgData.id + 1
+    size = this.data.product.images.length
     
     ngOnInit(): void {
         this.img = this.data.imgData.src

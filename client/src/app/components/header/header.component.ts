@@ -50,7 +50,11 @@ export class HeaderComponent implements OnInit {
         this.email = ''
         this.storageService.clearStorage()
         this.loginService.logout().subscribe()
-        this.authService.signOut(true)
+        this.authService.signOut(true).then(response => {
+            console.info(response)
+        }).catch(err => {
+            console.info(err)
+        })
         this.router.navigate(['/login'])
     }
 }

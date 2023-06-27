@@ -1,6 +1,7 @@
-<h3 mat-dialog-title>testing</h3>
-<div mat-dialog-content>
-    <img [src]="img" style="border: 1px solid grey;" class="img-fluid">
+<h2 mat-dialog-title>Image {{ imageID }} of {{ size }}</h2>
+
+<div mat-dialog-content style="height: 30rem;">
+    <img [src]="img" style="border: 2px solid grey; max-height: 100%;" class="img-fluid">
 </div>
 
 <!-- <img [src]="'data:' + img.type + ';base64, ' + img.imageBytes"> -->

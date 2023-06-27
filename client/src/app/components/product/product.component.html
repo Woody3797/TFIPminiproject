@@ -6,7 +6,7 @@
             <button mat-raised-button (click)="goBackToProductlist()">Back</button>
         </div>
         <div class="container mt-4">
-            <mat-card *ngIf="product$ | async as p">
+            <mat-card *ngIf="product$ | async as p" style="background-color: whitesmoke;">
                 <mat-card-header>
                     <mat-card-subtitle>Product ID: {{ p.productID }}</mat-card-subtitle>
                     <mat-card-title style="font-size: x-large;">Product Name: {{ p.productName }}</mat-card-title>
@@ -45,13 +45,13 @@
 </div>
 
 <ng-template #isBuyer>
-    <div *ngIf="productStatus == 'selling'; else showCancel">
+    <div *ngIf="productStatus == 'selling'; else showCancel" class="button-row">
         <button mat-fab extended (click)="buyProduct()">Buy Product</button>
     </div>
 </ng-template>
 
 <ng-template #showCancel>
-    <div>
+    <div class="button-row">
         <button mat-fab extended color="warn" (click)="cancelBuyProduct()">Cancel Order</button>
     </div>
 </ng-template>

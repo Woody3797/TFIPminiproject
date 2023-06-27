@@ -16,7 +16,7 @@ img {
 
 .imageCard {
     height: 100%;
-    max-width: 450px;
+    max-width: 30rem;
     margin: 0px;
     padding: 1px;
     border: 1px solid grey;
