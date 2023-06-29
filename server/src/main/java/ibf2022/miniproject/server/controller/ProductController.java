@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import ibf2022.miniproject.server.model.OrderDetails;
 import ibf2022.miniproject.server.model.Product;
 import ibf2022.miniproject.server.service.ProductService;
 import jakarta.json.Json;
@@ -109,10 +110,12 @@ public class ProductController {
         System.out.println(data);
         String status = data.getFirst("status");
         String productID = data.getFirst("productID");
+        String buyer = data.getFirst("buyer");
+        String seller = data.getFirst("seller");
         if (status != null && status.contains("pending")) {
-            if (productService.buyProduct(Integer.parseInt(productID))) {
-                Optional<Product> opt = productService.getProductByID(Integer.parseInt(productID));
-                return ResponseEntity.ok().body(opt.get().toJson().toString());
+            if (productService.buyProduct(Integer.parseInt(productID), buyer, seller)) {
+                OrderDetails order = productService.getOrderDetails(Integer.parseInt(productID));
+                return ResponseEntity.ok().body(order.toJson().toString());
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Json.createObjectBuilder().add("error", "unable to complete transaction").build().toString());
             }
@@ -122,14 +125,25 @@ public class ProductController {
 
     @PostMapping(path = "/cancelpending")
     public ResponseEntity<String> cancelBuyProduct(@RequestParam MultiValueMap<String, String> data) {
+        System.out.println(data);
         String productID = data.getFirst("productID");
-        System.out.println(data + productID);
-        if (productService.cancelBuyProduct(Integer.parseInt(productID))) {
-            Optional<Product> opt = productService.getProductByID(Integer.parseInt(productID));
-            return ResponseEntity.ok().body(opt.get().toJson().toString());
+        String buyer = data.getFirst("buyer");
+        String seller = data.getFirst("seller");
+        if (productService.cancelBuyProduct(Integer.parseInt(productID), buyer, seller)) {
+            OrderDetails order = productService.getOrderDetails(Integer.parseInt(productID));
+            return ResponseEntity.ok().body(order.toJson().toString());
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Json.createObjectBuilder().add("error", "unable to cancel pending order").build().toString());
         }
+    }
+
+    @GetMapping(path = "/getorderdetails/{productID}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getOrderDetails(@PathVariable String productID) {
+        OrderDetails order = productService.getOrderDetails(Integer.parseInt(productID));
+        if (order != null) {
+            return ResponseEntity.ok().body(order.toJson().toString());
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Json.createObjectBuilder().add("error", "no order details yet").build().toString());
     }
 
 }

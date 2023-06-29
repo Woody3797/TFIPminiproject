@@ -92,6 +92,7 @@ public class JwtService {
         return cookie;
     }
 
+
     private Key getSigningKey() {
         byte[] keyBytes = Base64.getDecoder().decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);

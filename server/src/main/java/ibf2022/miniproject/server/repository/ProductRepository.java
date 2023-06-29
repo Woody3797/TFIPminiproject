@@ -12,6 +12,10 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -20,7 +24,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mongodb.client.result.UpdateResult;
+
 import ibf2022.miniproject.server.model.Image;
+import ibf2022.miniproject.server.model.OrderDetails;
 import ibf2022.miniproject.server.model.Product;
 
 @Repository
@@ -28,6 +35,9 @@ public class ProductRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @SuppressWarnings("null")
     public Integer insertProductDetailsIntoSQL(Product product) {
@@ -176,8 +186,27 @@ public class ProductRepository {
     @Transactional(rollbackFor = DataAccessException.class)
     public boolean cancelBuyProduct(Integer productID) {
         int result = jdbcTemplate.update(UPDATE_PRODUCT_STATUS_IN_SQL, "selling", productID);
-        
+
         return result > 0;
+    }
+
+    public boolean upsertOrderDetails(Integer productID, String buyer, String seller, String action) {
+        Query query = Query.query(Criteria.where("productID").is(productID).and("seller").is(seller));
+        Update update = new Update();
+        if (action.equals("buy")) {
+            update.push("buyers").each(buyer);
+        } else if (action.equals("cancel")) {
+            update.pull("buyers", buyer);
+        }
+        UpdateResult res = mongoTemplate.upsert(query, update, "order_details");
+
+        return res.wasAcknowledged();
+    }
+
+    public OrderDetails getOrderDetails(Integer productID) {
+        Query query = Query.query(Criteria.where("productID").is(productID));
+        OrderDetails order = mongoTemplate.findOne(query, OrderDetails.class, "order_details");
+        return order;
     }
 
 

@@ -23,3 +23,10 @@ export interface UploadProduct {
     description: string
     email: string
 }
+
+export interface OrderDetails {
+    id: string
+    productID: number
+    seller: string
+    buyers: string[]
+}

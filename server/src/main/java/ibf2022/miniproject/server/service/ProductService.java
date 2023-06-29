@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import ibf2022.miniproject.server.model.Image;
+import ibf2022.miniproject.server.model.OrderDetails;
 import ibf2022.miniproject.server.model.Product;
 import ibf2022.miniproject.server.repository.ProductRepository;
 import jakarta.json.Json;
@@ -98,11 +99,25 @@ public class ProductService {
         return (ima && prod);
     }
 
-    public boolean buyProduct(Integer productID) {
-        return productRepository.buyProduct(productID);
+    public boolean buyProduct(Integer productID, String buyer, String seller) {
+        boolean sql = productRepository.buyProduct(productID);
+        boolean mongo = productRepository.upsertOrderDetails(productID, buyer, seller, "buy");
+
+        return (sql && mongo);
     }
 
-    public boolean cancelBuyProduct(Integer productID) {
-        return productRepository.cancelBuyProduct(productID);
+    public boolean cancelBuyProduct(Integer productID, String buyer, String seller) {
+        boolean sql = productRepository.cancelBuyProduct(productID);
+        boolean mongo = productRepository.upsertOrderDetails(productID, buyer, seller, "cancel");
+        
+        return (sql && mongo);
+    }
+
+    public OrderDetails getOrderDetails(Integer productID) {
+        OrderDetails order = productRepository.getOrderDetails(productID);
+        if (order != null) {
+            return order;
+        }
+        return null;
     }
 }

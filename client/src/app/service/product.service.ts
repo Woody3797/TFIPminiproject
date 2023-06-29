@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Product, UploadProduct } from '../models/product.model';
+import { OrderDetails, Product, UploadProduct } from '../models/product.model';
 
 const URL = 'http://localhost:8080'
 
@@ -57,18 +57,34 @@ export class ProductService {
         return this.http.delete<string>('/api/deleteproduct/' + productID)
     }
 
-    buyProduct(productID: string): Observable<Product> {
+    buyProduct(productID: string, buyer: string, seller: string): Observable<OrderDetails> {
         const data = new FormData()
         data.set('productID', productID)
+        data.set('buyer', buyer)
+        data.set('seller', seller)
         data.set('status', 'pending sale')
         
-        return this.http.post<Product>('/api/buyproduct', data)
+        return this.http.post<OrderDetails>('/api/buyproduct', data)
     }
 
-    cancelBuyProduct(productID: string): Observable<Product> {
+    cancelBuyProduct(productID: string, buyer: string, seller: string): Observable<OrderDetails> {
         const data = new FormData()
         data.set('productID', productID)
+        data.set('buyer', buyer)
+        data.set('seller', seller)
         
-        return this.http.post<Product>('/api/cancelpending', data)
+        return this.http.post<OrderDetails>('/api/cancelpending', data)
+    }
+
+    getOrderDetails(productID: number): Observable<OrderDetails> {
+        return this.http.get<OrderDetails>('/api/getorderdetails/' + productID)
+    }
+
+    acceptOrder(productID: string, buyer: string): Observable<any> {
+        const data = new FormData
+        data.set('productID', productID)
+        data.set('buyer', buyer)
+
+        return this.http.post<any>('/api/acceptorder/', data)
     }
 }

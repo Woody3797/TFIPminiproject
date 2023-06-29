@@ -1,9 +1,10 @@
 import { Location } from '@angular/common';
 import { Component, Inject, OnInit, inject } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, map } from 'rxjs';
-import { Product } from 'src/app/models/product.model';
+import { OrderDetails, Product } from 'src/app/models/product.model';
 import { ProductService } from 'src/app/service/product.service';
 import { StorageService } from 'src/app/service/storage.service';
 import Swal from 'sweetalert2';
@@ -20,29 +21,41 @@ export class ProductComponent implements OnInit {
     storageService = inject(StorageService)
     router = inject(Router)
     location = inject(Location)
+    fb = inject(FormBuilder)
     dialog = inject(MatDialog)
 
     product$!: Observable<Product>
     product!: Product
+    orderDetails!: OrderDetails
     productID = ''
     loggedIn = this.storageService.isLoggedIn()
-    isUser = false
+    isSeller = false
     productStatus = ''
+    isOrdering = false
     imgData!: any
+    form!: FormGroup
 
     ngOnInit(): void {
         this.productID = this.activatedRoute.snapshot.params['productID']
+        this.createForm()
         this.product$ = this.productService.getProduct(Number.parseInt(this.productID)).pipe(
             map(p => {
                 this.product = p
                 console.info(p)
                 this.productStatus = p.productStatus
                 if (this.storageService.getUser().email == p.email) {
-                    this.isUser = true
+                    this.isSeller = true
                 }
                 return p
             })
         )
+        this.productService.getOrderDetails(Number.parseInt(this.productID)).subscribe(data => {
+            this.orderDetails = data
+            console.info(this.orderDetails)
+            if (this.orderDetails.buyers.includes(this.storageService.getUser().email)) {
+                this.isOrdering = true
+            }
+        })
     }
 
     editProduct() {
@@ -73,8 +86,9 @@ export class ProductComponent implements OnInit {
             confirmButtonText: 'Yes'
         }).then(result => {
             if (result.value) {
-                this.productService.buyProduct(this.productID).subscribe(data => {
-                    this.productStatus = data.productStatus
+                this.productService.buyProduct(this.productID, this.storageService.getUser().email, this.product.email).subscribe(data => {
+                    this.orderDetails = data
+                    this.isOrdering = true
                 })
             }
         })
@@ -88,8 +102,9 @@ export class ProductComponent implements OnInit {
             confirmButtonText: 'Yes'
         }).then(result => {
             if (result.value) {
-                this.productService.cancelBuyProduct(this.productID).subscribe(data => {
-                    this.productStatus = data.productStatus
+                this.productService.cancelBuyProduct(this.productID, this.storageService.getUser().email, this.product.email).subscribe(data => {
+                    this.orderDetails = data
+                    this.isOrdering = false
                 })
             }
         })
@@ -102,7 +117,10 @@ export class ProductComponent implements OnInit {
             showDenyButton: true,
             confirmButtonText: 'Yes'
         }).then(result => {
-            console.info(result)
+            if (result.value) {
+                console.info(this.form.value.buyer)
+                this.productService.acceptOrder(this.productID, this.form.value.buyer)
+            }
         })
     }
 
@@ -116,11 +134,18 @@ export class ProductComponent implements OnInit {
             }
         })
     }
+
+    createForm() {
+        this.form = this.fb.group({
+            buyer: this.fb.control('', Validators.required)
+        })
+    }
     
     goBackToProductlist() {
         this.location.back()
     }
 }
+
 
 
 @Component({

@@ -19,6 +19,9 @@
         <span [routerLink]="['/login']" style="padding-inline: 1rem;" *ngIf="!isLoggedIn">
             <button mat-raised-button color="primary">Login</button>
         </span>
+        <span *ngIf="isLoggedIn">
+            Welcome {{ email }}
+        </span>
         <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
             <mat-icon>share</mat-icon>
         </button>
