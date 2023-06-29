@@ -29,4 +29,5 @@ export interface OrderDetails {
     productID: number
     seller: string
     buyers: string[]
+    status: string
 }

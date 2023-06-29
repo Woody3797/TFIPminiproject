@@ -85,6 +85,6 @@ export class ProductService {
         data.set('productID', productID)
         data.set('buyer', buyer)
 
-        return this.http.post<any>('/api/acceptorder/', data)
+        return this.http.post<any>('/api/acceptorder', data)
     }
 }

@@ -1,7 +1,8 @@
 package ibf2022.miniproject.server.model;
 
+import java.util.Arrays;
+
 import jakarta.json.Json;
-import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 
@@ -11,11 +12,12 @@ public class OrderDetails {
     private Integer productID;
     private String seller;
     private String[] buyers;
+    private String status;
     
-    public String getid() {
+    public String getId() {
         return id;
     }
-    public void setid(String id) {
+    public void setId(String id) {
         this.id = id;
     }
     public Integer getProductID() {
@@ -36,20 +38,27 @@ public class OrderDetails {
     public void setBuyers(String[] buyers) {
         this.buyers = buyers;
     }
-    
+    public String getStatus() {
+        return status;
+    }
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public OrderDetails() {
     }
     
-    public OrderDetails(String id, Integer productID, String seller, String[] buyers) {
+    public OrderDetails(String id, Integer productID, String seller, String[] buyers, String status) {
         this.id = id;
         this.productID = productID;
         this.seller = seller;
         this.buyers = buyers;
+        this.status = status;
     }
 
     @Override
     public String toString() {
-        return "Order [id=" + id + ", productID=" + productID + ", seller=" + seller + ", buyers=" + buyers + "]";
+        return "OrderDetails [id=" + id + ", productID=" + productID + ", seller=" + seller + ", buyers=" + Arrays.toString(buyers) + ", status=" + status + "]";
     }
 
     public JsonObject toJson() {
@@ -62,6 +71,7 @@ public class OrderDetails {
         .add("productID", productID)
         .add("seller", seller)
         .add("buyers", jab)
+        .add("status", status)
         .build();
     }
 

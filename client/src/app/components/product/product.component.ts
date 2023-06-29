@@ -26,12 +26,13 @@ export class ProductComponent implements OnInit {
 
     product$!: Observable<Product>
     product!: Product
-    orderDetails!: OrderDetails
+    orderDetails!: OrderDetails;
     productID = ''
     loggedIn = this.storageService.isLoggedIn()
     isSeller = false
     productStatus = ''
     isOrdering = false
+    isSold = false
     imgData!: any
     form!: FormGroup
 
@@ -49,11 +50,15 @@ export class ProductComponent implements OnInit {
                 return p
             })
         )
+
         this.productService.getOrderDetails(Number.parseInt(this.productID)).subscribe(data => {
             this.orderDetails = data
-            console.info(this.orderDetails)
+            console.info('orderdetails: ',this.orderDetails)
             if (this.orderDetails.buyers.includes(this.storageService.getUser().email)) {
                 this.isOrdering = true
+            }
+            if (this.orderDetails.status.includes('sold')) {
+                this.isSold = true
             }
         })
     }
@@ -119,7 +124,10 @@ export class ProductComponent implements OnInit {
         }).then(result => {
             if (result.value) {
                 console.info(this.form.value.buyer)
-                this.productService.acceptOrder(this.productID, this.form.value.buyer)
+                this.productService.acceptOrder(this.productID, this.form.value.buyer).subscribe(data => {
+                    this.orderDetails = data
+                    this.isSold = true
+                })
             }
         })
     }

@@ -190,24 +190,43 @@ public class ProductRepository {
         return result > 0;
     }
 
+    @Transactional(rollbackFor = DataAccessException.class)
+    public boolean acceptOrder(Integer productID) {
+        int result = jdbcTemplate.update(UPDATE_PRODUCT_STATUS_IN_SQL, "sold", productID);
+
+        return result > 0;
+    }
+
     public boolean upsertOrderDetails(Integer productID, String buyer, String seller, String action) {
         Query query = Query.query(Criteria.where("productID").is(productID).and("seller").is(seller));
-        Update update = new Update();
+        Update update = new Update().set("status", "selling");
         if (action.equals("buy")) {
             update.push("buyers").each(buyer);
         } else if (action.equals("cancel")) {
             update.pull("buyers", buyer);
+        } else {
+            update.set("buyers", null);
         }
         UpdateResult res = mongoTemplate.upsert(query, update, "order_details");
 
         return res.wasAcknowledged();
     }
+    
+    public boolean upsertOrderDetails(Integer productID, String buyer, String action) {
+        Query query = Query.query(Criteria.where("productID").is(productID));
+        Update update = new Update().set("status", action);
+        update.set("buyers", new String[0]);
+        UpdateResult res = mongoTemplate.upsert(query, update, "order_details");
 
+        return res.wasAcknowledged();
+    }
+    
     public OrderDetails getOrderDetails(Integer productID) {
         Query query = Query.query(Criteria.where("productID").is(productID));
         OrderDetails order = mongoTemplate.findOne(query, OrderDetails.class, "order_details");
         return order;
     }
+
 
 
 

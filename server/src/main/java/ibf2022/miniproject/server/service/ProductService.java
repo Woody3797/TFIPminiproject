@@ -113,6 +113,13 @@ public class ProductService {
         return (sql && mongo);
     }
 
+    public boolean acceptOrder(Integer productID, String buyer) {
+        boolean sql = productRepository.acceptOrder(productID);
+        boolean mongo = productRepository.upsertOrderDetails(productID, buyer, "sold");
+        
+        return (sql && mongo);
+    }
+
     public OrderDetails getOrderDetails(Integer productID) {
         OrderDetails order = productRepository.getOrderDetails(productID);
         if (order != null) {

@@ -15,11 +15,11 @@ public class SQLQueries {
             """;
 
     public static final String GET_ALL_PRODUCTS_BY_EMAIL_FROM_SQL = """
-            SELECT * FROM product_details WHERE email = ? LIMIT ? OFFSET ?
+            SELECT * FROM product_details WHERE email = ? ORDER BY productStatus, productID ASC LIMIT ? OFFSET ?
             """;
 
     public static final String GET_ALL_OTHER_PRODUCTS_FROM_SQL = """
-            SELECT * FROM product_details WHERE email NOT LIKE ? LIMIT ? OFFSET ?
+            SELECT * FROM product_details WHERE email NOT LIKE ? AND productStatus NOT LIKE 'sold' ORDER BY productID ASC LIMIT ? OFFSET ?
             """;
 
     public static final String GET_IMAGES_BY_ID_FROM_SQL = """
