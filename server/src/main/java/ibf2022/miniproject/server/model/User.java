@@ -78,7 +78,7 @@ public class User implements UserDetails {
 
     public static User createFromRowSet(SqlRowSet rs) {
         User u = new User();
-        u.setId(rs.getInt("user_id"));
+        u.setId(rs.getInt("userID"));
         u.setEmail(rs.getString("email"));
         u.setPassword(rs.getString("password"));
         return u;

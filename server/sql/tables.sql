@@ -14,7 +14,7 @@ CREATE TABLE `tfip_project`.`image_details` (
   `imageID` INT NOT NULL AUTO_INCREMENT,
   `imageName` VARCHAR(255) NOT NULL,
   `type` VARCHAR(45) NOT NULL,
-  `imageBytes` BLOB NOT NULL,
+  `imageBytes` MEDIUMBLOB NOT NULL,
   `productID` INT NOT NULL,
   PRIMARY KEY (`imageID`),
   INDEX `productID_idx` (`productID` ASC) VISIBLE,
