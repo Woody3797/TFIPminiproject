@@ -14,7 +14,7 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Product Description</mat-label>
-                    <textarea matInput placeholder="Product Description" formControlName="description"></textarea>
+                    <textarea matInput rows="7" placeholder="Product Description" formControlName="description"></textarea>
                 </mat-form-field>
                 <div class="nav justify-content-center">
                     <button mat-raised-button type="button" disabled="false" class="m-2" (click)="resetForm()">Clear Form</button>
@@ -26,10 +26,10 @@
                     Image Area
                 </div>
                 <div class="align-bottom">
-                    <div class="row" style="height: 25vh;">
+                    <div class="row" style="height: 30vh;">
                         <mat-grid-list cols="2" rowHeight="2:1">
                             <mat-grid-tile *ngFor="let pi of product.images; let i = index">
-                                <img height="200" [src]="pi.url" (click)="remove(i)"/>
+                                <img height="250" [src]="pi.url" (click)="remove(i)"/>
                             </mat-grid-tile>
                           </mat-grid-list>
                     </div>

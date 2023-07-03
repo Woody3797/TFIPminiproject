@@ -1,6 +1,7 @@
 package ibf2022.miniproject.server.config;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -42,6 +43,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             // String jwtToken = jwtService.getJwtFromCookie(request);
             String jwtToken;
+            // String s = request.getReader().readLine();
+            // System.out.println("S     "+s);
             String googleToken = request.getHeader("Authorization");
             if (googleToken != null && googleToken.contains("Google-Bearer")) {
                 jwtToken = googleToken.replace("Google-Bearer ", "");
@@ -82,6 +85,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 System.out.println("jwttoken: "+ jwtToken);
     
                 if (jwtToken == null) {
+                    System.out.println("filterchain");
                     filterChain.doFilter(request, response);
                     return;
                 }
@@ -98,6 +102,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             // Set bearer token to response headers
             response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken.toString());
+            System.out.println("response set " + response.getStatus());
             filterChain.doFilter(request, response);
             
         } catch (IllegalArgumentException e) {

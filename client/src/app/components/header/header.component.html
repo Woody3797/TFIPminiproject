@@ -8,8 +8,8 @@
                 <button mat-menu-item (click)="logout()">Logout</button>
             </mat-menu>
             <mat-menu #product="matMenu">
-                <button mat-menu-item (click)="addProduct()">Add Product</button>
                 <button mat-menu-item (click)="listProducts()">My Product List</button>
+                <button mat-menu-item (click)="addProduct()">Add Product</button>
             </mat-menu>
         </button>
         <span [routerLink]="['/']" style="padding-inline: 1rem;"><button mat-raised-button color="primary">My App</button></span>

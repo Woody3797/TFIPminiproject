@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, map } from 'rxjs';
@@ -26,10 +26,9 @@ export class ProductlistComponent implements OnInit {
     modifiedProductlist!: Product[]
     productID!: number
 
-    pageSize = 5
+    pageSize = 10
     length!: number
     pageIndex = 0
-    loggedIn = this.storageService.isLoggedIn()
 
     ngOnInit(): void {
         this.email = this.storageService.getUser().email

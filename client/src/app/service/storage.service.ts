@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 const USERKEY = 'authenticateduser'
+const JWTToken = 'token'
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,22 @@ export class StorageService {
             return true
         } else {
             return false
+        }
+    }
+
+    saveToken(data: any) {
+        window.sessionStorage.removeItem(JWTToken)
+        if (data) {
+            window.sessionStorage.setItem(JWTToken, data)
+        }
+    }
+
+    getToken(): any {
+        const jwtToken = window.sessionStorage.getItem(JWTToken)
+        if (jwtToken) {
+            return jwtToken
+        } else {
+            return ''
         }
     }
 }

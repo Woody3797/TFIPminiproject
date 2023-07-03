@@ -49,6 +49,7 @@ public class ProductRepository {
             statement.setString(3, product.getDescription());
             statement.setDouble(4, product.getPrice());
             statement.setObject(5, LocalDateTime.now());
+            statement.setString(6, "selling");
             return statement;
         }, keyHolder);
         product.setProductID(keyHolder.getKey().intValue());
@@ -215,7 +216,7 @@ public class ProductRepository {
     public boolean upsertOrderDetails(Integer productID, String buyer, String action) {
         Query query = Query.query(Criteria.where("productID").is(productID));
         Update update = new Update().set("status", action);
-        update.set("buyers", new String[0]);
+        update.set("buyers", buyer);
         UpdateResult res = mongoTemplate.upsert(query, update, "order_details");
 
         return res.wasAcknowledged();

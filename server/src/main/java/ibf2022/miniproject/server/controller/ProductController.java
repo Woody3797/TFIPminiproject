@@ -40,6 +40,7 @@ public class ProductController {
             System.out.println(result);
             return ResponseEntity.ok().body(result.toJson().toString());
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "unable to add product").build().toString());
         }
     }

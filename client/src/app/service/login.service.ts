@@ -14,7 +14,7 @@ export class LoginService {
 
     login(data: any): Observable<any> {
 
-        return this.http.post<any>('/user/login', data)
+        return this.http.post<any>('/user/login', data, { observe: 'response' })
     }
 
     signup(data: any): Observable<any> {
@@ -27,7 +27,6 @@ export class LoginService {
     }
 
     googleLogin(data: any): Observable<any> {
-        console.info(data)
         const headers = new HttpHeaders({ 'Authorization': `Google-Bearer ${data.idToken}` })
         return this.http.post<any>('/user/googlelogin', data.idToken, { headers })
     }

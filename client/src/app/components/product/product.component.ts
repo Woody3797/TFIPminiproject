@@ -127,6 +127,7 @@ export class ProductComponent implements OnInit {
                 this.productService.acceptOrder(this.productID, this.form.value.buyer).subscribe(data => {
                     this.orderDetails = data
                     this.isSold = true
+                    console.info(data)
                 })
             }
         })

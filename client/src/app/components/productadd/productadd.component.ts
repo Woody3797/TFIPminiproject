@@ -60,7 +60,6 @@ export class ProductaddComponent implements OnInit {
         this.upproduct.price = this.form.value.price
         this.upproduct.description = this.form.value.description
         this.upproduct.email = this.storageService.getUser().email
-        console.info(this.upproduct.email)
         this.productService.addNewProduct(this.upproduct, this.images).subscribe({
             next: data => {
                 console.info(data)

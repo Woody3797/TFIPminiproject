@@ -3,7 +3,7 @@ package ibf2022.miniproject.server.repository;
 public class SQLQueries {
 
     public static final String INSERT_NEW_PRODUCT_INTO_SQL = """
-                INSERT INTO product_details(email, productName, description, price, uploadTime) values (?, ?, ?, ?, ?)
+                INSERT INTO product_details(email, productName, description, price, uploadTime, productStatus) values (?, ?, ?, ?, ?, ?)
             """;
 
     public static final String INSERT_IMAGES_INTO_SQL = """

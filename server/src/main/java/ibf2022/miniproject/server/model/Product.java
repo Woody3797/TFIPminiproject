@@ -96,9 +96,11 @@ public class Product {
     
     @Override
     public String toString() {
-        return "Product [productID=" + productID + ", productName=" + productName + ", description=" + description + ", price=" + price + ", email=" + email + ", uploadTime=" + uploadTime + ", images=" + images + "]";
+        return "Product [productID=" + productID + ", productName=" + productName + ", description=" + description
+                + ", price=" + price + ", email=" + email + ", uploadTime=" + uploadTime + ", images=" + images
+                + ", productStatus=" + productStatus + "]";
     }
-
+    
     public JsonObject toJson() {
         JsonArrayBuilder jab = Json.createArrayBuilder();
         for (Image i : images) {

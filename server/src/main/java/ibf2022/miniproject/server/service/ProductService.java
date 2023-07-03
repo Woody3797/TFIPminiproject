@@ -35,6 +35,7 @@ public class ProductService {
         // product.setImages(images);
         product.setUploadTime(LocalDateTime.now());
         product.setProductID(productID);
+        product.setproductStatus("selling");
         productRepository.insertImageDetailsIntoSQL(imageFiles, productID);
 
         return product;
@@ -115,7 +116,7 @@ public class ProductService {
 
     public boolean acceptOrder(Integer productID, String buyer) {
         boolean sql = productRepository.acceptOrder(productID);
-        boolean mongo = productRepository.upsertOrderDetails(productID, buyer, "sold");
+        boolean mongo = productRepository.upsertOrderDetails(productID, buyer, "sold to " + buyer);
         
         return (sql && mongo);
     }

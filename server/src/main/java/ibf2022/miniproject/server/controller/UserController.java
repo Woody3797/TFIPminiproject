@@ -55,7 +55,8 @@ public class UserController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             User user = (User) authentication.getPrincipal();
             ResponseCookie jwtCookie = jwtService.generateCookieFromEmail(user.getEmail());
-            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(user.toJson().toString());
+            String jwtToken = "Bearer " + jwtService.generateTokenFromEmail(user.getEmail());
+            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).header(HttpHeaders.AUTHORIZATION, jwtToken).body(user.toJson().toString());
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             return ResponseEntity.badRequest().body(Json.createObjectBuilder().add("error", "Email/Password not found or incorrect").build().toString());
@@ -107,13 +108,14 @@ public class UserController {
             }
         }
         SecurityContextHolder.clearContext();
+        String jwtToken = "Bearer " + jwtService.generateTokenFromEmail(null);
         Cookie cookie = new Cookie("JWTtoken", null);
         cookie.setMaxAge(0);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         response.addCookie(cookie);
         // ResponseCookie cookie = ResponseCookie.from("JWTtoken", null).path("/").httpOnly(true).build();
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(Json.createObjectBuilder().add("Result", "Successfully logged out").build().toString());
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).header(HttpHeaders.AUTHORIZATION, jwtToken).body(Json.createObjectBuilder().add("Result", "Successfully logged out").build().toString());
     }
 
 }

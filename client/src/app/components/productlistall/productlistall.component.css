@@ -47,10 +47,16 @@ mat-card {
     padding: 3px 3px 3px 3px;
 }
 
-.login-prompt {
-    font-size: x-large;
-    font: bolder;
-    text-align: center;
-    border: solid plum;
-    padding: 1rem;
+.sold-out {
+    border: 1px solid black;
+    width: 30%;
+    height: 100%;
+    margin: 0.5rem;
+    max-width: 1000px;
+    position: relative;
+    border-radius: 2px;
+    background-color: #dedede;
+    cursor: pointer;
+    opacity: 0.55;
+    filter: grayscale(100%);
 }

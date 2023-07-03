@@ -23,7 +23,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "8BkysfgvfqBD4pHdZx8x6i2o1j6Qr3KQz0QKqmwRkdUipYTK7cliEuwGDbDnYvOj";
+    private static final String SECRET_KEY = "bf8bc08e34578e5d6ffc996271ebb5a9db182a1b179e810019cfc1d00bc0b17e";
     // private static final Key KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     public String getEmailFromJwt(String jwtToken) {
@@ -50,7 +50,7 @@ public class JwtService {
         return Jwts.builder()
         .setSubject(email)
         .setIssuedAt(new Date())
-        .setExpiration(new Date(System.currentTimeMillis() + 1000*3600*24*1))
+        .setExpiration(new Date(System.currentTimeMillis() + 1000*3600*24*5))
         .signWith(getSigningKey(), SignatureAlgorithm.HS256)
         .compact();
     }
@@ -84,7 +84,6 @@ public class JwtService {
     public ResponseCookie generateCookieFromEmail(String email) {
         String jwtToken = generateTokenFromEmail(email);
         ResponseCookie cookie = ResponseCookie.from("JWTtoken", jwtToken).path("/").httpOnly(true).build();
-        System.out.println(jwtToken);
         // Cookie cookie = new Cookie("JWTtoken", jwtToken);
         // cookie.setPath("/");
         // cookie.setMaxAge(86400);

@@ -33,24 +33,25 @@
                 </mat-card-content>
                 <br>
                 <hr>
-                <mat-card-actions *ngIf="isSeller;else isBuyer" class="button-row">
-                    <button mat-fab extended (click)="editProduct()">Edit</button>
-                    <button mat-fab extended color="warn" (click)="deleteProduct()">Delete</button>
-                    <span *ngIf="!isSold;else productSold">
-                        <span *ngIf="isSeller && productStatus == 'pending' && orderDetails != null; else noBuyers" style="float: right;">
-                            <form [formGroup]="form" (submit)="acceptOffer()">
-                                <mat-form-field>
-                                  <mat-label>Select Buyer</mat-label>
-                                  <mat-select formControlName="buyer">
-                                    <mat-option>None</mat-option>
-                                    <mat-option *ngFor="let buyer of orderDetails.buyers" [value]="buyer">
-                                      {{ buyer }}
-                                    </mat-option>
-                                  </mat-select>
-                                </mat-form-field>
-                                <button type="submit" mat-fab extended color="primary" (click)="acceptOffer()" [disabled]="form.invalid">Accept Offer</button>
-                            </form>
-                        </span>
+                <mat-card-actions *ngIf="!isSold;else productSold" class="button-row">
+                    <span *ngIf="isSeller;else isBuyer">
+                        <button mat-fab extended (click)="editProduct()">Edit</button>
+                        <button mat-fab extended color="warn" (click)="deleteProduct()">Delete</button>
+                    </span>
+
+                    <span *ngIf="isSeller && productStatus == 'pending' && orderDetails != null; else noBuyers" style="float: right;">
+                        <form [formGroup]="form" (submit)="acceptOffer()">
+                            <mat-form-field>
+                                <mat-label>Select Buyer</mat-label>
+                                <mat-select formControlName="buyer">
+                                <mat-option>None</mat-option>
+                                <mat-option *ngFor="let buyer of orderDetails.buyers" [value]="buyer">
+                                    {{ buyer }}
+                                </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <button type="submit" mat-fab extended color="primary" (click)="acceptOffer()" [disabled]="form.invalid">Accept Offer</button>
+                        </form>
                     </span>
                 </mat-card-actions>
             </mat-card>
@@ -71,13 +72,13 @@
 </ng-template>
 
 <ng-template #noBuyers>
-    <div style="float: right;">
+    <div style="float: right;" *ngIf="isSeller">
         <button mat-fab extended disabled>Currently No Buyers</button>
     </div>
 </ng-template>
 
 <ng-template #productSold>
-    <div style="float: right;">
+    <div class="button-row" style="float: right;">
         <button mat-fab extended disabled>Product Sold</button>
     </div>
 </ng-template>

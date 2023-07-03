@@ -33,8 +33,12 @@ mat-card {
     max-width: 1000px;
     position: relative;
     border-radius: 2px;
-    background-color: #dcc7ef;
+    background-color: #ddcdeb;
     cursor: pointer;
+}
+
+mat-card-header {
+    display: inline;
 }
 
 .card-grid {
@@ -53,4 +57,26 @@ mat-card {
     text-align: center;
     border: solid plum;
     padding: 1rem;
+}
+
+.sold-out {
+    border: 1px solid black;
+    color: darkred;
+    width: 30%;
+    height: 100%;
+    margin: 0.5rem;
+    max-width: 1000px;
+    position: relative;
+    border-radius: 2px;
+    background-color: #dedede;
+    cursor: pointer;
+    opacity: 0.55;
+    filter: grayscale(100%);
+}
+
+.have-buyers {
+    float: right;
+    color: limegreen;
+    font-size: 90%;
+    font-weight: bolder;
 }

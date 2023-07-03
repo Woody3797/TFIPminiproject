@@ -73,9 +73,12 @@ export class LoginComponent implements OnInit {
         }
         this.loginService.login(loginRequest).subscribe({
             next: res => {
-                this.storageService.saveUser(res)
-                if (this.loginForm.value.email == res.email) {
-                    this.router.navigate([res.email + '/productlist'])
+                const jwtToken = res.headers.get('Authorization')
+                const userData = res.body
+                this.storageService.saveToken(jwtToken)
+                this.storageService.saveUser(userData)
+                if (this.loginForm.value.email == userData.email) {
+                    this.router.navigate([userData.email + '/productlist'])
                 }
             },
             error: err => {
