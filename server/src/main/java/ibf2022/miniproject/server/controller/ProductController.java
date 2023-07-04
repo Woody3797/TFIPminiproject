@@ -1,5 +1,7 @@
 package ibf2022.miniproject.server.controller;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ibf2022.miniproject.server.model.OrderDetails;
 import ibf2022.miniproject.server.model.Product;
+import ibf2022.miniproject.server.model.UploadImageResponse;
 import ibf2022.miniproject.server.service.ProductService;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
@@ -160,4 +163,16 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Json.createObjectBuilder().add("error", "no order details yet").build().toString());
     }
 
+
+
+    @PostMapping(path = "/uploadimageimagga", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadImageImagga(@RequestPart("productImage") MultipartFile productImage) throws IOException {
+
+        UploadImageResponse response = productService.uploadImageImagga(productImage);
+        String upload_id = response.getResult().get("upload_id");
+        List<String> result = productService.getTagsFromImagga(upload_id);
+        System.out.println(result);
+        
+        return ResponseEntity.ok().body(result.toString());
+    }
 }

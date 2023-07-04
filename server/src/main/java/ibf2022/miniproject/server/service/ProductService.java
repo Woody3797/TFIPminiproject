@@ -1,28 +1,47 @@
 package ibf2022.miniproject.server.service;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import ibf2022.miniproject.server.model.Image;
 import ibf2022.miniproject.server.model.OrderDetails;
 import ibf2022.miniproject.server.model.Product;
+import ibf2022.miniproject.server.model.UploadImageResponse;
 import ibf2022.miniproject.server.repository.ProductRepository;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
+import jakarta.json.JsonValue;
 
 @Service
 public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Value("${IMAGGAAPIKEY}")
+    private String IMAGGAAPIKEY;
     
     public Product addNewProduct(Product product, MultipartFile[] imageFiles) throws IOException {
         List<Image> images = new ArrayList<>();
@@ -37,6 +56,9 @@ public class ProductService {
         product.setProductID(productID);
         product.setproductStatus("selling");
         productRepository.insertImageDetailsIntoSQL(imageFiles, productID);
+        String uploadID = uploadImageImagga(imageFiles[0]).getResult().get("upload_id");
+        List<String> tags = getTagsFromImagga(uploadID);
+        productRepository.upsertProductTags(productID, tags);
 
         return product;
     }
@@ -128,4 +150,44 @@ public class ProductService {
         }
         return null;
     }
+
+    public UploadImageResponse uploadImageImagga(MultipartFile productImage) throws IOException {
+        String url = "https://api.imagga.com/v2/uploads";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        headers.set("Authorization", IMAGGAAPIKEY);
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        String imageData = Base64.getEncoder().encodeToString(productImage.getBytes());
+        body.add("image_base64", imageData);
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+        RestTemplate restTemplate = new RestTemplate();
+        UploadImageResponse response = restTemplate.postForObject(url, request, UploadImageResponse.class);
+        return response;
+    }
+
+    public List<String> getTagsFromImagga(String upload_id) {
+        String url = UriComponentsBuilder.fromUriString("https://api.imagga.com/v2/tags")
+        .queryParam("image_upload_id", upload_id)
+        .queryParam("limit", "3")
+        .queryParam("threshold", "40.0")
+        .build().toUriString();
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", IMAGGAAPIKEY);
+        HttpEntity<String> request = new HttpEntity<String>(headers);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
+        JsonReader jr = Json.createReader(new StringReader(response.getBody()));
+        JsonObject jo = jr.readObject();
+        JsonArray jArr = jo.getJsonObject("result").getJsonArray("tags");
+        List<String> tags = new ArrayList<>();
+        for (JsonValue i : jArr) {
+            String tag = i.asJsonObject().getJsonObject("tag").getString("en");
+            tags.add(tag);
+        }
+        return tags;
+    }
 }
+
+// {"result":{"upload_id":"i196fea54afef99fe7fcd71c040UcWjz"},"status":{"text":"","type":"success"}}
+// {"result":{"tags":[{"confidence":79.4613265991211,"tag":{"en":"range"}},{"confidence":64.1534194946289,"tag":{"en":"mountain"}},{"confidence":61.3129501342773,"tag":{"en":"mountains"}}]},"status":{"text":"","type":"success"}}

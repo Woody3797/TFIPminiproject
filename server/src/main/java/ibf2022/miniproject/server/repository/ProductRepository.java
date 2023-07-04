@@ -228,7 +228,11 @@ public class ProductRepository {
         return order;
     }
 
-
+    public void upsertProductTags(Integer productID, List<String> tags) {
+        Query query = Query.query(Criteria.where("productID").is(productID));
+        Update update = new Update().set("tags", tags);
+        mongoTemplate.upsert(query, update, "product_tags");
+    }
 
 
 

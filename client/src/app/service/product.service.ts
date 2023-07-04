@@ -87,4 +87,10 @@ export class ProductService {
 
         return this.http.post<any>('/api/acceptorder', data)
     }
+
+    uploadImageImagga(productImages: File[]): Observable<string> {
+        const fdata = new FormData()
+        fdata.append('productImage', productImages[0])
+        return this.http.post<string>('/api/uploadimageimagga', fdata) 
+    }
 }
