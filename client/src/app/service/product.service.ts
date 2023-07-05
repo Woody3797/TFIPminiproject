@@ -100,10 +100,8 @@ export class ProductService {
         return this.http.get<number>('/api/' + email + '/allproductscount')
     }
 
-    // uploadImageImagga(productImages: File[]): Observable<string[]> {
-    //     const fdata = new FormData()
-    //     fdata.append('productImage', productImages[0])
-    //     return this.http.post<string[]>('/api/uploadimageimagga', fdata) 
-    // }
+    getProductsByTag(email: string, tag: string): Observable<Product[]> {
+        return this.http.get<Product[]>('/api/' + email + '/allproducts/' + tag)
+    }
 
 }

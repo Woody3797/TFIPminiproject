@@ -1,7 +1,8 @@
+import { Location } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { MatPaginator, MatPaginatorDefaultOptions, PageEvent } from '@angular/material/paginator';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Observable, Subscription, map } from 'rxjs';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { ActivatedRoute, Event, NavigationStart, Router } from '@angular/router';
+import { Subscription, map } from 'rxjs';
 import { Product } from 'src/app/models/product.model';
 import { LoginService } from 'src/app/service/login.service';
 import { ProductService } from 'src/app/service/product.service';
@@ -15,27 +16,33 @@ import { StorageService } from 'src/app/service/storage.service';
 export class ProductlistallComponent implements OnInit, OnDestroy, AfterViewInit {
 
     router = inject(Router)
+    location = inject(Location)
     productService = inject(ProductService)
     loginService = inject(LoginService)
     storageService = inject(StorageService)
     activatedRoute = inject(ActivatedRoute)
 
-    email = ''
     productlist!: Product[]
     modifiedProductlist!: Product[]
     productID!: number
     @ViewChild('paginator') paginator!: MatPaginator;
-    pageSize = 0
+    email = this.storageService.getUser().email
+    pageSize = this.activatedRoute.snapshot.queryParams['pageSize']
+    pageIndex = this.activatedRoute.snapshot.queryParams['pageIndex']
+    tag = this.activatedRoute.snapshot.queryParams['tag']
     length!: number
-    pageIndex = 0
     loggedIn = this.storageService.isLoggedIn()
     tags!: string[]
     prods!: Subscription
 
     ngOnInit(): void {
-        this.email = this.storageService.getUser().email
-        this.pageSize = this.activatedRoute.snapshot.queryParams['pageSize']
-        this.pageIndex = this.activatedRoute.snapshot.queryParams['pageIndex']
+        if (this.tag != undefined) {
+            this.productService.getProductsByTag(this.email, this.tag).subscribe(data => {
+                this.productlist = data
+                this.length = data.length
+            })
+        }
+
         this.productService.getAllOtherProductsCount(this.email).subscribe(data => {
             this.length = data
         });
@@ -46,10 +53,14 @@ export class ProductlistallComponent implements OnInit, OnDestroy, AfterViewInit
                 return this.productlist
             })
         ).subscribe()
-
         this.productService.getAllProductTags().subscribe(data => {
-            console.info('data', data)
-            this.tags = this.shuffleArray(data).slice(0, this.randomIntFromInterval(10, 15))
+            this.tags = this.shuffleArray(data).slice(0, this.randomIntFromInterval(13, 17))
+        })
+
+        this.router.events.subscribe((event: Event) => {
+            if (event instanceof NavigationStart && event.navigationTrigger == 'popstate') {
+                window.location.reload();
+            }
         })
     }
 
@@ -87,11 +98,20 @@ export class ProductlistallComponent implements OnInit, OnDestroy, AfterViewInit
 
     selectTag(event: any) {
         const tagContent = event.srcElement.textContent
-        console.info(tagContent)
+        this.productService.getProductsByTag(this.email, tagContent).subscribe(data => {
+            this.productlist = data
+            this.length = data.length
+            this.router.navigate([], {
+                relativeTo: this.activatedRoute,
+                queryParams: {
+                    tag: tagContent
+                }
+            })
+        })
     }
 
     back() {
-        this.router.navigate(['..'])
+        this.location.back()
     }
 
     // private functions

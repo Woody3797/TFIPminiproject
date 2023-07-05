@@ -247,7 +247,15 @@ public class ProductRepository {
     public List<String> getAllProductTags() {
         Query query = Query.query(Criteria.where("status").is("selling"));
         List<String> tags = mongoTemplate.findDistinct(query, "tags", "product_tags", ProductTags.class, String.class);
+        
         return tags;
+    }
+
+    public List<Integer> getProductIDsByTag(String tag) {
+        Query query = Query.query(Criteria.where("status").is("selling"));
+        query.addCriteria(Criteria.where("tags").in(tag));
+        List<Integer> productIDs = mongoTemplate.findDistinct(query, "productID", "product_tags", ProductTags.class, Integer.class);
+        return productIDs;
     }
 
     public Integer getAllOtherProductsCount(String email) {

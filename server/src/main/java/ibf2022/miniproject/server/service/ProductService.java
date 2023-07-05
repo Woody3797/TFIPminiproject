@@ -161,7 +161,34 @@ public class ProductService {
         }
         return null;
     }
+    
+    public ProductTags getProductTags(Integer productID) {
+        Optional<ProductTags> opt = productRepository.getProductTags(productID);
+        return opt.isPresent() ? opt.get() : null;
+    }
 
+    public List<String> getAllProductTags() {
+        return productRepository.getAllProductTags();
+    }
+
+    public Integer getAllOtherProductsCount(String email) {
+        return productRepository.getAllOtherProductsCount(email);
+    }
+    
+    public JsonArray getProductsByTag(String email, String tag) {
+        List<Integer> productIDs = productRepository.getProductIDsByTag(tag);
+        JsonArrayBuilder jab = Json.createArrayBuilder();
+        for (Integer id : productIDs) {
+            Optional<Product> opt = productRepository.getProductByID(id);
+            Product p = opt.get();
+            if (!p.getEmail().equals(email)) {
+                jab.add(p.toJson());
+            }
+        }
+
+        return jab.build();
+    }
+    
     private UploadImageResponse uploadImageImagga(MultipartFile productImage) throws IOException {
         String url = "https://api.imagga.com/v2/uploads";
         HttpHeaders headers = new HttpHeaders();
@@ -199,19 +226,4 @@ public class ProductService {
         return tags;
     }
 
-    public ProductTags getProductTags(Integer productID) {
-        Optional<ProductTags> opt = productRepository.getProductTags(productID);
-        return opt.isPresent() ? opt.get() : null;
-    }
-
-    public List<String> getAllProductTags() {
-        return productRepository.getAllProductTags();
-    }
-
-    public Integer getAllOtherProductsCount(String email) {
-        return productRepository.getAllOtherProductsCount(email);
-    }
 }
-
-// {"result":{"upload_id":"i196fea54afef99fe7fcd71c040UcWjz"},"status":{"text":"","type":"success"}}
-// {"result":{"tags":[{"confidence":79.4613265991211,"tag":{"en":"range"}},{"confidence":64.1534194946289,"tag":{"en":"mountain"}},{"confidence":61.3129501342773,"tag":{"en":"mountains"}}]},"status":{"text":"","type":"success"}}

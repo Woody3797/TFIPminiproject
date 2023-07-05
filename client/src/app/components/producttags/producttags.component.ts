@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductTags } from 'src/app/models/product.model';
 import { ProductService } from 'src/app/service/product.service';
 import { StorageService } from 'src/app/service/storage.service';
@@ -14,6 +14,7 @@ export class ProducttagsComponent implements OnInit {
     productService = inject(ProductService)
     storageService = inject(StorageService)
     activatedRoute = inject(ActivatedRoute)
+    router = inject(Router)
 
     productID!: number
     productTags!: ProductTags
@@ -29,6 +30,10 @@ export class ProducttagsComponent implements OnInit {
 
     click(event: any) {
         const tagContent = event.srcElement.textContent
-        console.info(tagContent)
+        this.router.navigate([this.storageService.getUser().email + '/allproducts'], {
+            queryParams: {
+                tag: tagContent
+            }
+        })
     }
 }

@@ -51,7 +51,6 @@ public class ProductController {
     @GetMapping(path = "/product/{productID}")
     public ResponseEntity<String> getProductByID(@PathVariable String productID) {
         Optional<Product> opt = productService.getProductByID(Integer.parseInt(productID));
-
         if (opt.isPresent()) {
             return ResponseEntity.ok().body(opt.get().toJson().toString());
         } else {
@@ -62,7 +61,6 @@ public class ProductController {
     @GetMapping(path = "/{email}/productlist")
     public ResponseEntity<String> getAllProductsByEmail(@PathVariable String email, @RequestParam(required = false) Integer pageSize, @RequestParam(required = false, defaultValue = "0") Integer pageIndex) {
         JsonArray jArr = productService.getAllProducts(email, pageSize, pageIndex);
-        
         if (jArr != null) {
             return ResponseEntity.ok().body(jArr.toString());
         } else {
@@ -185,15 +183,12 @@ public class ProductController {
         return ResponseEntity.ok().body(count.toString());
     }
 
-    // @PostMapping(path = "/uploadimageimagga", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    // public ResponseEntity<String> uploadImageImagga(@RequestPart("productImage") MultipartFile productImage) throws IOException {
+    @GetMapping(path = "/{email}/allproducts/{tag}")
+    public ResponseEntity<String> getProductsByTag(@PathVariable String email, @PathVariable String tag) {
+        JsonArray jArr = productService.getProductsByTag(email, tag);
+        return ResponseEntity.ok().body(jArr.toString());
+    }
 
-    //     UploadImageResponse response = productService.uploadImageImagga(productImage);
-    //     String upload_id = response.getResult().get("upload_id");
-    //     List<String> result = productService.getTagsFromImagga(upload_id);
-        
-    //     return ResponseEntity.ok().body(Json.createObjectBuilder().add("tags", result.toString()).build().toString());
-    // }
 
 
 }
