@@ -10,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -71,9 +70,10 @@ public class UserController {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(googleAuth.getEmail(), googleAuth.getSub()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             User user = (User) authentication.getPrincipal();
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>-------------------- " + authentication.toString());
+            String jwtToken = "Bearer " + jwtService.generateTokenFromEmail(user.getEmail());
             ResponseCookie jwtCookie = jwtService.generateCookieFromEmail(user.getEmail());
-            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(user.toJson().toString());
+            System.out.println(">>>>>>>>>>>>-------- " + authentication.toString() + jwtToken);
+            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).header(HttpHeaders.AUTHORIZATION, jwtToken).body(user.toJson().toString());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Json.createObjectBuilder().add("error", e.getMessage()).build().toString());
         }
@@ -82,20 +82,28 @@ public class UserController {
     @PostMapping(path = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> signup(@RequestBody Signup signupRequest) throws Exception {
         System.out.println(signupRequest.toString());
-        if (userService.existsByEmail(signupRequest.getEmail())) {
-            return ResponseEntity.badRequest().body(Json.createObjectBuilder().add("error", "Email already registered: " + signupRequest.getEmail()).build().toString());
-        }
         try {
-            userService.loadUserByUsername(signupRequest.getEmail());
-            return ResponseEntity.badRequest().body(Json.createObjectBuilder().add("error", "Email already registered: " + signupRequest.getEmail()).build().toString());
-        } catch (UsernameNotFoundException e) {
-            signupRequest.setPassword(encoder.encode(signupRequest.getPassword()));
-            boolean result = userService.signupNewUser(signupRequest.getEmail(), signupRequest.getPassword());
-            if (result) {
-                return ResponseEntity.status(HttpStatus.CREATED).body(Json.createObjectBuilder().add("result", "User registered: " + signupRequest.getEmail()).build().toString());
+            if (userService.existsByEmail(signupRequest.getEmail())) {
+                return ResponseEntity.badRequest().body(Json.createObjectBuilder().add("error", "Email already registered: " + signupRequest.getEmail()).build().toString());
             } else {
-                return ResponseEntity.badRequest().body(Json.createObjectBuilder().add("error", "Unable to register user").build().toString());
+                signupRequest.setPassword(encoder.encode(signupRequest.getPassword()));
+                boolean result = userService.signupNewUser(signupRequest.getEmail(), signupRequest.getPassword());
+                if (result) {
+                    User user = (User) userService.loadUserByUsername(signupRequest.getEmail());
+                    return ResponseEntity.status(HttpStatus.CREATED).body(user.toJson().toString());
+                } else {
+                    return ResponseEntity.badRequest().body(Json.createObjectBuilder().add("error", "Unable to register user").build().toString());
+                }
             }
+        } catch (Exception e) {
+            // System.out.println("sign up");
+            // signupRequest.setPassword(encoder.encode(signupRequest.getPassword()));
+            // boolean result = userService.signupNewUser(signupRequest.getEmail(), signupRequest.getPassword());
+            // if (result) {
+            //     return ResponseEntity.status(HttpStatus.CREATED).body(Json.createObjectBuilder().add("result", "User registered: " + signupRequest.getEmail()).build().toString());
+            // } else {
+            // }
+            return ResponseEntity.badRequest().body(Json.createObjectBuilder().add("error", "Unable to register user").build().toString());
         }
     }
 

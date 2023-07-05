@@ -49,4 +49,8 @@ public class SQLQueries {
     public static final String UPDATE_PRODUCT_STATUS_IN_SQL = """
             UPDATE product_details SET productStatus = ? WHERE productID = ?
             """;
+
+    public static final String GET_ALL_OTHER_PRODUCTS_COUNT = """
+            SELECT COUNT(productStatus) FROM product_details WHERE email NOT LIKE ? AND productStatus NOT LIKE 'sold'
+            """;
 }

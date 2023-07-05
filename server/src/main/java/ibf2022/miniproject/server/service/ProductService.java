@@ -145,7 +145,7 @@ public class ProductService {
     public boolean acceptOrder(Integer productID, String buyer) {
         boolean sql = productRepository.acceptOrder(productID);
         boolean mongo = productRepository.upsertOrderDetails(productID, buyer, "sold to " + buyer);
-        
+
         Optional<ProductTags> opt = productRepository.getProductTags(productID);
         if (opt.isPresent()) {
             productRepository.upsertProductTags(opt.get(), "sold");
@@ -202,6 +202,14 @@ public class ProductService {
     public ProductTags getProductTags(Integer productID) {
         Optional<ProductTags> opt = productRepository.getProductTags(productID);
         return opt.isPresent() ? opt.get() : null;
+    }
+
+    public List<String> getAllProductTags() {
+        return productRepository.getAllProductTags();
+    }
+
+    public Integer getAllOtherProductsCount(String email) {
+        return productRepository.getAllOtherProductsCount(email);
     }
 }
 

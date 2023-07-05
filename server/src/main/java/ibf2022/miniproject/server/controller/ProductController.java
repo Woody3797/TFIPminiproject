@@ -1,5 +1,6 @@
 package ibf2022.miniproject.server.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import ibf2022.miniproject.server.model.ProductTags;
 import ibf2022.miniproject.server.service.ProductService;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
+import jakarta.json.stream.JsonCollectors;
 
 @RestController
 @RequestMapping(path = "/api")
@@ -74,9 +76,8 @@ public class ProductController {
         
         if (jArr != null) {
             return ResponseEntity.ok().body(jArr.toString());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "no products found").build().toString());
         }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "no products found").build().toString());
     }
 
     @PutMapping(path = "/editproduct/{productID}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -169,7 +170,21 @@ public class ProductController {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Json.createObjectBuilder().add("error", "no tag details").build().toString());
     }
-    
+
+    @GetMapping(path = "/getallproducttags", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getAllProductTags() {
+        List<String> tags = productService.getAllProductTags();
+        JsonArray jArr = tags.stream().map(Json::createValue).collect(JsonCollectors.toJsonArray());
+        System.out.println(jArr);
+        return ResponseEntity.status(HttpStatus.OK).body(jArr.toString());
+    }
+
+    @GetMapping(path = "/{email}/allproductscount")
+    public ResponseEntity<String> getAllOtherProductsCount(@PathVariable String email) {
+        Integer count = productService.getAllOtherProductsCount(email);
+        return ResponseEntity.ok().body(count.toString());
+    }
+
     // @PostMapping(path = "/uploadimageimagga", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     // public ResponseEntity<String> uploadImageImagga(@RequestPart("productImage") MultipartFile productImage) throws IOException {
 

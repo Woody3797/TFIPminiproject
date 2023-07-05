@@ -244,7 +244,15 @@ public class ProductRepository {
         return Optional.ofNullable(productTags);
     }
 
+    public List<String> getAllProductTags() {
+        Query query = Query.query(Criteria.where("status").is("selling"));
+        List<String> tags = mongoTemplate.findDistinct(query, "tags", "product_tags", ProductTags.class, String.class);
+        return tags;
+    }
 
+    public Integer getAllOtherProductsCount(String email) {
+        return jdbcTemplate.queryForObject(GET_ALL_OTHER_PRODUCTS_COUNT, Integer.class, email);
+    }
 
 
     // public URL uploadImageIntoS3(MultipartFile imageFile, String username) throws IOException {

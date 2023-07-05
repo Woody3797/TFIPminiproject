@@ -42,8 +42,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             // String jwtToken = jwtService.getJwtFromCookie(request);
             String jwtToken;
-            // String s = request.getReader().readLine();
-            // System.out.println("S     "+s);
             String googleToken = request.getHeader("Authorization");
             if (googleToken != null && googleToken.contains("Google-Bearer")) {
                 jwtToken = googleToken.replace("Google-Bearer ", "");
@@ -51,14 +49,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 GoogleAuth googleAuth = GoogleAuth.createFromJson(data);
                 String email = googleAuth.getEmail();
                 jwtToken = jwtService.generateTokenFromEmail(email);
-                System.out.println(">>>>>>>>>>>>>>>>>>> " + jwtToken);
 
                 if (userService.existsByEmail(email)) {
                     try {
                         UserDetails userDetails = userService.loadUserByUsername(email);
                         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        System.out.println(authToken);
                         SecurityContextHolder.getContext().setAuthentication(authToken);
                     } catch (Exception e) {
                         filterChain.doFilter(request, response);
@@ -72,7 +68,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         UserDetails userDetails = userService.loadUserByUsername(email);
                         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        System.out.println(authToken);
                         SecurityContextHolder.getContext().setAuthentication(authToken);
                     } catch (Exception e) {
                         filterChain.doFilter(request, response);
@@ -112,16 +107,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public String tokenExtractor(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
-        System.out.println("header: " + header);
+        // System.out.println("header: " + header);
         if (header != null) {
             return header.replace("Bearer ", "");
         }
         Cookie cookie = WebUtils.getCookie(request, "JWTtoken");
         if (cookie != null) {
             return cookie.getValue();
-        } else {
-            return null;
         }
+        return null;
     }
 
     @Bean

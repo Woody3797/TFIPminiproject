@@ -26,18 +26,18 @@ export class ProductService {
         return this.http.post<Product>('/api/addnewproduct', fdata) 
     }
 
-    getProduct(productID: number) {
+    getProduct(productID: number): Observable<Product> {
         this.productID = productID
         return this.http.get<Product>('/api/product/' + productID)
     }
 
-    getAllProducts(email: string, pageSize: number, pageIndex: number) {
+    getAllProducts(email: string, pageSize: number, pageIndex: number): Observable<Product[]> {
         const params = new HttpParams().append('pageSize', pageSize).append('pageIndex', pageIndex)
 
         return this.http.get<Product[]>('/api/' + email + '/productlist', {params})
     }
 
-    getAllOtherProducts(email: string, pageSize: number, pageIndex: number) {
+    getAllOtherProducts(email: string, pageSize: number, pageIndex: number): Observable<Product[]> {
         const params = new HttpParams().append('pageSize', pageSize).append('pageIndex', pageIndex)
 
         return this.http.get<Product[]>('/api/' + email + '/allproducts', {params})
@@ -91,7 +91,15 @@ export class ProductService {
     getProductTags(productID: number): Observable<ProductTags> {
         return this.http.get<ProductTags>('/api/getproducttags/' + productID)
     }
-    
+
+    getAllProductTags(): Observable<string[]> {
+        return this.http.get<string[]>('/api/getallproducttags')
+    }
+
+    getAllOtherProductsCount(email: string): Observable<number> {
+        return this.http.get<number>('/api/' + email + '/allproductscount')
+    }
+
     // uploadImageImagga(productImages: File[]): Observable<string[]> {
     //     const fdata = new FormData()
     //     fdata.append('productImage', productImages[0])

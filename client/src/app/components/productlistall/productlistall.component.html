@@ -1,19 +1,25 @@
 <app-header></app-header>
 <br>
-<div>
+<div class="container mt-3 mw-80">
     <div class="container mt-3 mw-80">
-        <button mat-raised-button [routerLink]="['/']">Back</button>
+        <button mat-raised-button (click)="back()">Back</button>
     </div>
     
     <div class="container mt-3 mw-100">
         <div class="fs-3 d-flex justify-content-center">
             Browsing All Products
         </div>
-        <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" (page)="handlePageEvent($event)" aria-label="Select page" style="background-color: lightcyan;"></mat-paginator>
+        <mat-paginator #paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" (page)="handlePageEvent($event)" aria-label="Select page" style="background-color: lightcyan;"></mat-paginator>
         <br>
-        <div>
-            
+        <div *ngIf="tags">
+            <h2>Find products by tags :</h2>
+            <mat-chip-listbox aria-label="Tag selection">
+                <mat-chip *ngFor="let tags of tags" (click)="selectTag($event)">
+                    <span >{{ tags }}</span>
+                </mat-chip>
+            </mat-chip-listbox>
         </div>
+        <hr>
         <div class="card-grid mat-elevation-z4">
             <mat-card *ngFor="let p of productlist" (click)="gotoProduct(p)" [ngClass]="p.productStatus != 'sold' ? '' : 'sold-out'">
                 <mat-card-header>

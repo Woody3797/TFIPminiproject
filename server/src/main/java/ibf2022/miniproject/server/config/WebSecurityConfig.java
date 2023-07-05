@@ -25,8 +25,8 @@ public class WebSecurityConfig {
     private UserDetailsService userDetailsService;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // http.csrf().disable().authorizeHttpRequests().requestMatchers("/**").permitAll()
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // http.csrf().disable().authorizeHttpRequests().requestMatchers("/user/**").permitAll()
         // .anyRequest().authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         // .and().authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.csrf((csrf) -> csrf.disable())
@@ -41,7 +41,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(jwtAuthenticationFilter.passwordEncoder());
@@ -49,7 +49,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
 }

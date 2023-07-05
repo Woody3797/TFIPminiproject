@@ -40,6 +40,7 @@ export class ProductaddComponent implements OnInit {
     }
     images: File[] = []
     productID!: number
+    uploaded = false
 
     ngOnInit(): void {
         this.createAddProductForm()
@@ -70,6 +71,7 @@ export class ProductaddComponent implements OnInit {
                 // location.reload()
             }
         })
+        this.uploaded = true
     }
 
     showPreview(event: any) {
