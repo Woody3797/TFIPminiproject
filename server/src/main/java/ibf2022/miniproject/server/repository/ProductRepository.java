@@ -29,6 +29,7 @@ import com.mongodb.client.result.UpdateResult;
 import ibf2022.miniproject.server.model.Image;
 import ibf2022.miniproject.server.model.OrderDetails;
 import ibf2022.miniproject.server.model.Product;
+import ibf2022.miniproject.server.model.ProductTags;
 
 @Repository
 public class ProductRepository {
@@ -228,10 +229,19 @@ public class ProductRepository {
         return order;
     }
 
-    public void upsertProductTags(Integer productID, List<String> tags) {
+    public boolean upsertProductTags(ProductTags productTags, String action) {
+        Query query = Query.query(Criteria.where("productID").is(productTags.getProductID()));
+        Update update = new Update().set("tags", productTags.getTags()).set("status", action);
+        UpdateResult res = mongoTemplate.upsert(query, update, "product_tags");
+
+        return res.wasAcknowledged();
+    }
+
+    public Optional<ProductTags> getProductTags(Integer productID) {
         Query query = Query.query(Criteria.where("productID").is(productID));
-        Update update = new Update().set("tags", tags);
-        mongoTemplate.upsert(query, update, "product_tags");
+        ProductTags productTags = mongoTemplate.findOne(query, ProductTags.class, "product_tags");
+
+        return Optional.ofNullable(productTags);
     }
 
 

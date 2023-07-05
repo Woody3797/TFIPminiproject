@@ -16,6 +16,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -25,6 +26,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import ibf2022.miniproject.server.model.Image;
 import ibf2022.miniproject.server.model.OrderDetails;
 import ibf2022.miniproject.server.model.Product;
+import ibf2022.miniproject.server.model.ProductTags;
 import ibf2022.miniproject.server.model.UploadImageResponse;
 import ibf2022.miniproject.server.repository.ProductRepository;
 import jakarta.json.Json;
@@ -43,6 +45,7 @@ public class ProductService {
     @Value("${IMAGGAAPIKEY}")
     private String IMAGGAAPIKEY;
     
+    @Transactional(rollbackFor = Exception.class)
     public Product addNewProduct(Product product, MultipartFile[] imageFiles) throws IOException {
         List<Image> images = new ArrayList<>();
 
@@ -56,9 +59,12 @@ public class ProductService {
         product.setProductID(productID);
         product.setproductStatus("selling");
         productRepository.insertImageDetailsIntoSQL(imageFiles, productID);
+
         String uploadID = uploadImageImagga(imageFiles[0]).getResult().get("upload_id");
         List<String> tags = getTagsFromImagga(uploadID);
-        productRepository.upsertProductTags(productID, tags);
+        ProductTags productTags = new ProductTags(productID, tags);
+        System.out.println(productTags.toString());
+        productRepository.upsertProductTags(productTags, "selling");
 
         return product;
     }
@@ -140,6 +146,11 @@ public class ProductService {
         boolean sql = productRepository.acceptOrder(productID);
         boolean mongo = productRepository.upsertOrderDetails(productID, buyer, "sold to " + buyer);
         
+        Optional<ProductTags> opt = productRepository.getProductTags(productID);
+        if (opt.isPresent()) {
+            productRepository.upsertProductTags(opt.get(), "sold");
+        }
+        
         return (sql && mongo);
     }
 
@@ -151,7 +162,7 @@ public class ProductService {
         return null;
     }
 
-    public UploadImageResponse uploadImageImagga(MultipartFile productImage) throws IOException {
+    private UploadImageResponse uploadImageImagga(MultipartFile productImage) throws IOException {
         String url = "https://api.imagga.com/v2/uploads";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -165,7 +176,7 @@ public class ProductService {
         return response;
     }
 
-    public List<String> getTagsFromImagga(String upload_id) {
+    private List<String> getTagsFromImagga(String upload_id) {
         String url = UriComponentsBuilder.fromUriString("https://api.imagga.com/v2/tags")
         .queryParam("image_upload_id", upload_id)
         .queryParam("limit", "3")
@@ -186,6 +197,11 @@ public class ProductService {
             tags.add(tag);
         }
         return tags;
+    }
+
+    public ProductTags getProductTags(Integer productID) {
+        Optional<ProductTags> opt = productRepository.getProductTags(productID);
+        return opt.isPresent() ? opt.get() : null;
     }
 }
 

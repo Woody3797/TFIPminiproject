@@ -101,7 +101,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             // Set bearer token to response headers
             response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken.toString());
-            System.out.println("response set " + response.getStatus());
             filterChain.doFilter(request, response);
             
         } catch (IllegalArgumentException e) {

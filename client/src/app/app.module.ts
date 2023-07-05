@@ -20,6 +20,7 @@ import { SocialLoginModule } from '@abacritt/angularx-social-login';
 import { SocialAuthServiceProvider } from './modules/social.module';
 import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { ProductlistallComponent } from './components/productlistall/productlistall.component';
+import { ProducttagsComponent } from './components/producttags/producttags.component';
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import { ProductlistallComponent } from './components/productlistall/productlist
     ProducteditComponent,
     LoginComponent,
     ProductlistallComponent,
+    ProducttagsComponent,
   ],
   imports: [
     BrowserModule,

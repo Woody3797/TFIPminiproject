@@ -63,16 +63,12 @@ export class ProductaddComponent implements OnInit {
         this.productService.addNewProduct(this.upproduct, this.images).subscribe({
             next: data => {
                 console.info(data)
-                // this.router.navigate(['/product/' + data.productID])
+                this.router.navigate(['/product/' + data.productID])
             },
             error: e => {
                 alert(e.message)
                 // location.reload()
             }
-        })
-
-        this.productService.uploadImageImagga(this.images).subscribe(data => {
-            console.info(data)
         })
     }
 

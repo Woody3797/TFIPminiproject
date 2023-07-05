@@ -1,0 +1,8 @@
+<div *ngIf="productTags">
+    <h2>Find other similar products :</h2>
+    <mat-chip-listbox aria-label="Tag selection">
+        <mat-chip *ngFor="let tags of productTags.tags" (click)="click($event)">
+            <span >{{ tags }}</span>
+        </mat-chip>
+    </mat-chip-listbox>
+</div>

@@ -11,6 +11,9 @@
         </div>
         <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" (page)="handlePageEvent($event)" aria-label="Select page" style="background-color: lightcyan;"></mat-paginator>
         <br>
+        <div>
+            
+        </div>
         <div class="card-grid mat-elevation-z4">
             <mat-card *ngFor="let p of productlist" (click)="gotoProduct(p)" [ngClass]="p.productStatus != 'sold' ? '' : 'sold-out'">
                 <mat-card-header>

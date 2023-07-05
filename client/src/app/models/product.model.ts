@@ -31,3 +31,9 @@ export interface OrderDetails {
     buyers: string[]
     status: string
 }
+
+export interface ProductTags {
+    productID: number
+    tags: string[]
+    status: string
+}

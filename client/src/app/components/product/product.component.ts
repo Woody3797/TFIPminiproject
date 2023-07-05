@@ -27,7 +27,7 @@ export class ProductComponent implements OnInit {
     product$!: Observable<Product>
     product!: Product
     orderDetails!: OrderDetails;
-    productID = ''
+    productID!: number
     loggedIn = this.storageService.isLoggedIn()
     isSeller = false
     productStatus = ''
@@ -37,9 +37,9 @@ export class ProductComponent implements OnInit {
     form!: FormGroup
 
     ngOnInit(): void {
-        this.productID = this.activatedRoute.snapshot.params['productID']
+        this.productID = +this.activatedRoute.snapshot.params['productID']
         this.createForm()
-        this.product$ = this.productService.getProduct(Number.parseInt(this.productID)).pipe(
+        this.product$ = this.productService.getProduct(this.productID).pipe(
             map(p => {
                 this.product = p
                 console.info(p)
@@ -51,7 +51,7 @@ export class ProductComponent implements OnInit {
             })
         )
 
-        this.productService.getOrderDetails(Number.parseInt(this.productID)).subscribe(data => {
+        this.productService.getOrderDetails(this.productID).subscribe(data => {
             this.orderDetails = data
             console.info('orderdetails: ',this.orderDetails)
             if (this.orderDetails.buyers.includes(this.storageService.getUser().email)) {
@@ -91,7 +91,7 @@ export class ProductComponent implements OnInit {
             confirmButtonText: 'Yes'
         }).then(result => {
             if (result.value) {
-                this.productService.buyProduct(this.productID, this.storageService.getUser().email, this.product.email).subscribe(data => {
+                this.productService.buyProduct(this.productID.toString(), this.storageService.getUser().email, this.product.email).subscribe(data => {
                     this.orderDetails = data
                     this.isOrdering = true
                 })
@@ -107,7 +107,7 @@ export class ProductComponent implements OnInit {
             confirmButtonText: 'Yes'
         }).then(result => {
             if (result.value) {
-                this.productService.cancelBuyProduct(this.productID, this.storageService.getUser().email, this.product.email).subscribe(data => {
+                this.productService.cancelBuyProduct(this.productID.toString(), this.storageService.getUser().email, this.product.email).subscribe(data => {
                     this.orderDetails = data
                     this.isOrdering = false
                 })
@@ -124,7 +124,7 @@ export class ProductComponent implements OnInit {
         }).then(result => {
             if (result.value) {
                 console.info(this.form.value.buyer)
-                this.productService.acceptOrder(this.productID, this.form.value.buyer).subscribe(data => {
+                this.productService.acceptOrder(this.productID.toString(), this.form.value.buyer).subscribe(data => {
                     this.orderDetails = data
                     this.isSold = true
                     console.info(data)

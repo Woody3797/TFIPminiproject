@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { OrderDetails, Product, UploadProduct } from '../models/product.model';
+import { OrderDetails, Product, ProductTags, UploadProduct } from '../models/product.model';
 
 const URL = 'http://localhost:8080'
 
@@ -53,7 +53,7 @@ export class ProductService {
         return this.http.put<Product>('/api/editproduct/' + productID, fdata)
     }
 
-    deleteProduct(productID: string): Observable<string> {
+    deleteProduct(productID: number): Observable<string> {
         return this.http.delete<string>('/api/deleteproduct/' + productID)
     }
 
@@ -87,10 +87,15 @@ export class ProductService {
 
         return this.http.post<any>('/api/acceptorder', data)
     }
-
-    uploadImageImagga(productImages: File[]): Observable<string> {
-        const fdata = new FormData()
-        fdata.append('productImage', productImages[0])
-        return this.http.post<string>('/api/uploadimageimagga', fdata) 
+    
+    getProductTags(productID: number): Observable<ProductTags> {
+        return this.http.get<ProductTags>('/api/getproducttags/' + productID)
     }
+    
+    // uploadImageImagga(productImages: File[]): Observable<string[]> {
+    //     const fdata = new FormData()
+    //     fdata.append('productImage', productImages[0])
+    //     return this.http.post<string[]>('/api/uploadimageimagga', fdata) 
+    // }
+
 }
