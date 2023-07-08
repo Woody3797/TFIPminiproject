@@ -48,6 +48,10 @@ export class HeaderComponent implements OnInit {
         })
     }
 
+    gotoChat() {
+        this.router.navigate([this.email + '/chat'])
+    }
+
     logout() {
         this.email = ''
         this.storageService.clearStorage()

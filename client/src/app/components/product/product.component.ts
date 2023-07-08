@@ -124,7 +124,7 @@ export class ProductComponent implements OnInit {
         }).then(result => {
             if (result.value) {
                 console.info(this.form.value.buyer)
-                this.productService.acceptOrder(this.productID.toString(), this.form.value.buyer).subscribe(data => {
+                this.productService.acceptOrder(this.productID.toString(), this.form.value.buyer, this.product.email).subscribe(data => {
                     this.orderDetails = data
                     this.isSold = true
                     console.info(data)

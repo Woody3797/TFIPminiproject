@@ -3,8 +3,6 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OrderDetails, Product, ProductTags, UploadProduct } from '../models/product.model';
 
-const URL = 'http://localhost:8080'
-
 @Injectable({
   providedIn: 'root'
 })
@@ -80,10 +78,11 @@ export class ProductService {
         return this.http.get<OrderDetails>('/api/getorderdetails/' + productID)
     }
 
-    acceptOrder(productID: string, buyer: string): Observable<any> {
+    acceptOrder(productID: string, buyer: string, seller: string): Observable<any> {
         const data = new FormData
         data.set('productID', productID)
         data.set('buyer', buyer)
+        data.set('seller', seller)
 
         return this.http.post<any>('/api/acceptorder', data)
     }

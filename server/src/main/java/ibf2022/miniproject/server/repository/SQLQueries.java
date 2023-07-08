@@ -53,4 +53,8 @@ public class SQLQueries {
     public static final String GET_ALL_OTHER_PRODUCTS_COUNT = """
             SELECT COUNT(productStatus) FROM product_details WHERE email NOT LIKE ? AND productStatus NOT LIKE 'sold'
             """;
+
+    public static final String CHANGE_CURRENT_USER_PASSWORD = """
+            UPDATE user_details SET password = ? WHERE email = ?
+            """;
 }

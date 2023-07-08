@@ -1,6 +1,49 @@
 <app-header></app-header>
-
-<h1>Profile</h1>
-<div>
-    Hi {{ email }}
+<div class="container mt-3 mw-80">
+    <h1 class="fs-1"><ins>Profile Page</ins></h1>
+    <div>
+        <h2>Hi {{ email }}, you can edit your profile picture and password below.</h2>
+    </div>
+    <br>
+    <div>
+        <form [formGroup]="form">
+            <div class="image-container" (click)="removePic()">
+                <img *ngIf="profileImage; else noImage" class="profilepic" src="{{ profileImage }}">
+            </div>
+            <br>
+            <div class="button-row">
+                <button mat-raised-button (click)="selectPic.click()">
+                    <input type="file" #selectPic style="display: none" accept="image/*" (change)="showPreview($event)"/>
+                    Select a picture
+                </button>
+            </div>
+            <br>
+            <div class="row">
+                <div style="display: block; margin: auto;">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Password</mat-label>
+                        <input matInput type="password" formControlName="password" placeholder="Password"/>
+                        <small class="text-danger" *ngIf="form.controls['password'].errors">
+                            Minimum 3 characters.
+                        </small>
+                    </mat-form-field>
+                    <div>
+                        Leave password field blank to keep password unchanged. Click the profile picture to remove it.
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div>
+                    <button mat-fab extended type="button" [routerLink]="['/']">Back</button>
+                    &nbsp;
+                    <button mat-fab extended color="primary" type="submit" [disabled]="invalid()" (click)="editProfile()">Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
+
+<ng-template #noImage>
+    <img class="profilepic" src="/assets/profilepic.png">
+</ng-template>

@@ -1,0 +1,15 @@
+.container {
+    text-align: center;
+}
+
+.image-container {
+    width: 200px;
+    height: 200px;
+    margin: auto;
+    overflow: hidden;
+}
+
+.profilepic {
+    width: 200px;
+}
+

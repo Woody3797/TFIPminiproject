@@ -61,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         return;
                     }
                 } else {
-                    PasswordEncoder encoder = passwordEncoder();
+                    PasswordEncoder encoder = jwtService.passwordEncoder();
                     googleAuth.setSub(encoder.encode(googleAuth.getSub()));
                     userService.signupNewUser(email, googleAuth.getSub());
                     try {
@@ -78,7 +78,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 jwtToken = tokenExtractor(request);
                 System.out.println("jwttoken: "+ jwtToken);
     
-                if (jwtToken == null) {
+                if (jwtToken == null || jwtToken.isEmpty()) {
                     System.out.println("filterchain");
                     filterChain.doFilter(request, response);
                     return;
@@ -118,8 +118,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

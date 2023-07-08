@@ -10,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,9 +21,11 @@ import ibf2022.miniproject.server.model.GoogleAuth;
 import ibf2022.miniproject.server.model.Login;
 import ibf2022.miniproject.server.model.Signup;
 import ibf2022.miniproject.server.model.User;
+import ibf2022.miniproject.server.service.EmailService;
 import ibf2022.miniproject.server.service.JwtService;
 import ibf2022.miniproject.server.service.UserService;
 import jakarta.json.Json;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,10 +43,10 @@ public class UserController {
     private JwtService jwtService;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private EmailService emailService;
 
     @Autowired
-    private PasswordEncoder encoder;
+    private AuthenticationManager authenticationManager;
     
     @PostMapping(path = "/login")
     public ResponseEntity<String> login(@RequestBody Login loginRequest) {
@@ -86,7 +87,7 @@ public class UserController {
             if (userService.existsByEmail(signupRequest.getEmail())) {
                 return ResponseEntity.badRequest().body(Json.createObjectBuilder().add("error", "Email already registered: " + signupRequest.getEmail()).build().toString());
             } else {
-                signupRequest.setPassword(encoder.encode(signupRequest.getPassword()));
+                signupRequest.setPassword(jwtService.passwordEncoder().encode(signupRequest.getPassword()));
                 boolean result = userService.signupNewUser(signupRequest.getEmail(), signupRequest.getPassword());
                 if (result) {
                     User user = (User) userService.loadUserByUsername(signupRequest.getEmail());
@@ -96,13 +97,6 @@ public class UserController {
                 }
             }
         } catch (Exception e) {
-            // System.out.println("sign up");
-            // signupRequest.setPassword(encoder.encode(signupRequest.getPassword()));
-            // boolean result = userService.signupNewUser(signupRequest.getEmail(), signupRequest.getPassword());
-            // if (result) {
-            //     return ResponseEntity.status(HttpStatus.CREATED).body(Json.createObjectBuilder().add("result", "User registered: " + signupRequest.getEmail()).build().toString());
-            // } else {
-            // }
             return ResponseEntity.badRequest().body(Json.createObjectBuilder().add("error", "Unable to register user").build().toString());
         }
     }
@@ -124,6 +118,18 @@ public class UserController {
         response.addCookie(cookie);
         // ResponseCookie cookie = ResponseCookie.from("JWTtoken", null).path("/").httpOnly(true).build();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).header(HttpHeaders.AUTHORIZATION, jwtToken).body(Json.createObjectBuilder().add("Result", "Successfully logged out").build().toString());
+    }
+
+    @PostMapping(path = "/resetpassword")
+    public ResponseEntity<String> resetPassword(@RequestBody String email) throws MessagingException {
+        System.out.println(email);
+        String password = jwtService.generateResetPassword();
+        if (userService.resetPassword(email, password)) {
+            emailService.sendEmailFromTemplate("wuchienwei89@gmail.com", password);
+            return ResponseEntity.ok().body(Json.createObjectBuilder().add("status", "Password reset, check email for details").build().toString());
+        }
+        System.out.println("no email found");
+        return ResponseEntity.badRequest().body(Json.createObjectBuilder().add("error", "Unable to reset password").build().toString());
     }
 
 }

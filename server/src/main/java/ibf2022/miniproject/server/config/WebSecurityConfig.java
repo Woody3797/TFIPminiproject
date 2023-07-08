@@ -14,12 +14,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import ibf2022.miniproject.server.service.JwtService;
+
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Autowired
+    private JwtService jwtService;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -31,7 +36,7 @@ public class WebSecurityConfig {
         // .and().authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.csrf((csrf) -> csrf.disable())
         .authorizeHttpRequests((authz) -> authz
-        .requestMatchers("/user/**").permitAll()
+        .requestMatchers("/user/**", "/resetpassword").permitAll()
         .anyRequest().authenticated()
         ).sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authenticationProvider(authenticationProvider())
@@ -44,7 +49,7 @@ public class WebSecurityConfig {
     AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(jwtAuthenticationFilter.passwordEncoder());
+        authenticationProvider.setPasswordEncoder(jwtService.passwordEncoder());
         return authenticationProvider;
     }
 

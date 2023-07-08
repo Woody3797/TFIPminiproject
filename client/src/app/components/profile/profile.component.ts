@@ -1,4 +1,8 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription, map } from 'rxjs';
+import { ProfileService } from 'src/app/service/profile.service';
 import { StorageService } from 'src/app/service/storage.service';
 
 @Component({
@@ -6,16 +10,71 @@ import { StorageService } from 'src/app/service/storage.service';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
 
     storageService = inject(StorageService)
-
+    activatedRoute = inject(ActivatedRoute)
+    profileService = inject(ProfileService)
+    router = inject(Router)
+    fb = inject(FormBuilder)
 
     email = ''
+    form!: FormGroup
+    isLoggedIn = this.storageService.isLoggedIn()
+    profileImage!: string 
+    image$!: Subscription
 
 
     ngOnInit(): void {
         this.email = this.storageService.getUser().email
+        this.createForm()
+        this.image$ = this.profileService.getProfilePic(this.email).subscribe(data => {
+            console.info(data.url)
+            this.profileImage = ''
+            this.profileImage = data.url
+            this.form.markAsPristine()
+        })
+    }
+
+    ngOnDestroy(): void {
+        this.image$.unsubscribe()
+    }
+
+    createForm() {
+        this.form = this.fb.group({
+            password: this.fb.control('', [Validators.minLength(3)]),
+            profileImage: this.fb.control<File | null>(null, [])
+        })
+    }
+
+    showPreview(event: any) {
+        this.profileImage = URL.createObjectURL(event.target.files[0]).toString()
+        console.info(this.profileImage)
+        this.form.patchValue({
+            profileImage: event.target.files[0]
+        })
+        this.form.markAsDirty()
+    }
+
+    editProfile() {
+        console.info(this.form.value)
+        this.profileService.editProfile(this.email, this.form.value.password, this.form.value.profileImage).pipe(
+            map(data => {
+                this.profileImage = data.url
+                setTimeout(() => {location.reload()}, 300)
+            })
+        ).subscribe()
+    }
+
+    removePic() {
+        this.profileImage = ''
+        this.form.patchValue({
+            profileImage: null
+        })
+    }
+
+    invalid() {
+        return this.form.invalid || this.form.pristine
     }
 
 }

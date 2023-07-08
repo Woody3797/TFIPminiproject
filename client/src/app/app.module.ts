@@ -21,6 +21,8 @@ import { SocialAuthServiceProvider } from './modules/social.module';
 import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { ProductlistallComponent } from './components/productlistall/productlistall.component';
 import { ProducttagsComponent } from './components/producttags/producttags.component';
+import { ChatComponent } from './components/chat/chat.component';
+import { ForgotpasswordComponent } from './components/forgotpassword/forgotpassword.component';
 
 
 @NgModule({
@@ -36,6 +38,8 @@ import { ProducttagsComponent } from './components/producttags/producttags.compo
     LoginComponent,
     ProductlistallComponent,
     ProducttagsComponent,
+    ChatComponent,
+    ForgotpasswordComponent,
   ],
   imports: [
     BrowserModule,

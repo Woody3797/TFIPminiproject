@@ -27,6 +27,7 @@ import ibf2022.miniproject.server.service.ProductService;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.stream.JsonCollectors;
+import jakarta.mail.MessagingException;
 
 @RestController
 @RequestMapping(path = "/api")
@@ -139,16 +140,17 @@ public class ProductController {
     }
 
     @PostMapping(path = "/acceptorder")
-    public ResponseEntity<String> acceptOrder(@RequestParam MultiValueMap<String, String> data) {
+    public ResponseEntity<String> acceptOrder(@RequestParam MultiValueMap<String, String> data) throws MessagingException {
         System.out.println(data);
         String productID = data.getFirst("productID");
         String buyer = data.getFirst("buyer");
+        // String seller = data.getFirst("seller");
         if (productService.acceptOrder(Integer.parseInt(productID), buyer)) {
             OrderDetails order = productService.getOrderDetails(Integer.parseInt(productID));
             return ResponseEntity.ok().body(order.toJson().toString());
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Json.createObjectBuilder().add("error", "unable to accept order").build().toString());
-        }        
+        }
     }
 
     @GetMapping(path = "/getorderdetails/{productID}", produces = MediaType.APPLICATION_JSON_VALUE)
