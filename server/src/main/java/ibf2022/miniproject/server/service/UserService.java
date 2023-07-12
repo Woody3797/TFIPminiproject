@@ -51,15 +51,17 @@ public class UserService implements UserDetailsService {
             userRepository.resetPassword(email, encodedPassword);
         }
         if (profileImage != null) {
-            String url = userRepository.editProfileImage(email, profileImage);
-            return url;
-        } else {
-            return userRepository.deleteProfilePic(email);
+            userRepository.editProfileImage(email, profileImage);
         }
+        return "profile edited";
     }
 
     public String getProfilePic(String email) {
         return userRepository.getProfilePic(email);
+    }
+
+    public boolean deleteProfilePic(String email) {
+        return userRepository.deleteProfilePic(email);
     }
     
 }

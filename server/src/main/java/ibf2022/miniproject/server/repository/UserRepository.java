@@ -99,13 +99,13 @@ public class UserRepository {
         return null;
     }
 
-    public String deleteProfilePic(String email) {
+    public boolean deleteProfilePic(String email) {
         if (existsByEmail(email)) {
             String key = email + "/profileImage";
             amazonS3.deleteObject("woodybucket", key);
-            return "picture deleted";
+            return true;
         }
-        return null;
+        return false;
     }
     
 }

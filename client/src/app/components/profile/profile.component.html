@@ -7,14 +7,18 @@
     <br>
     <div>
         <form [formGroup]="form">
-            <div class="image-container" (click)="removePic()">
+            <div class="image-container">
                 <img *ngIf="profileImage; else noImage" class="profilepic" src="{{ profileImage }}">
             </div>
             <br>
             <div class="button-row">
                 <button mat-raised-button (click)="selectPic.click()">
                     <input type="file" #selectPic style="display: none" accept="image/*" (change)="showPreview($event)"/>
-                    Select a picture
+                    Select A Picture
+                </button>
+                &nbsp;
+                <button mat-raised-button (click)="removePic()">
+                    Remove Picture
                 </button>
             </div>
             <br>
@@ -28,7 +32,7 @@
                         </small>
                     </mat-form-field>
                     <div>
-                        Leave password field blank to keep password unchanged. Click the profile picture to remove it.
+                        Leave password field blank to keep password unchanged.
                     </div>
                 </div>
             </div>

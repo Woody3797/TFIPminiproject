@@ -1,5 +1,34 @@
 <app-header></app-header>
 <br>
-<div>
-    Chat
+<div id="container" class="m-3">
+    <aside>
+        <header>
+            <h2>Conversations</h2>
+        </header>
+        <ul>
+            <li>
+				<img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_02.jpg" alt="">
+				<div (click)="selectRecipient()">
+					<h2>EMAIL</h2>
+				</div>
+			</li>
+        </ul>
+    </aside>
+    <main>
+        <header>
+            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt="">
+            <div>
+                <h2>Chat with </h2>
+            </div>
+        </header>
+        <ul id="chat">
+            <li *ngFor="let message of messages">
+                {{message}}
+            </li>
+        </ul>
+        <footer>
+            <textarea placeholder="Type your message" #chatMessage (keydown.enter)="sendMessage(chatMessage.value);false" [formControl]="messageInput"></textarea>
+            <button mat-raised-button class="button" (click)="sendMessage(chatMessage.value)" type="submit" [disabled]="messageInput.invalid">Send</button>
+        </footer>
+    </main>
 </div>

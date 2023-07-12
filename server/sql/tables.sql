@@ -30,3 +30,19 @@ CREATE TABLE `tfip_project`.`user_details` (
   `email` VARCHAR(255) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`userID`));
+
+DROP TABLE IF EXISTS `chat_details`;
+CREATE TABLE `tfip_project`.`chat_details` (
+  `chatID` INT NOT NULL AUTO_INCREMENT,
+  `buyer` VARCHAR(255) NOT NULL,
+  `seller` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`chatID`));
+
+DROP TABLE IF EXISTS `message_details`;
+CREATE TABLE `tfip_project`.`message_details` (
+  `messageID` INT NOT NULL AUTO_INCREMENT,
+  `chatID` INT NOT NULL,
+  `sender` VARCHAR(255) NOT NULL,
+  `content` VARCHAR(512) NOT NULL,
+  `timestamp` DATETIME NOT NULL,
+  PRIMARY KEY (`messageID`));

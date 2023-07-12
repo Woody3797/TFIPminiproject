@@ -15,7 +15,6 @@ export class ProfileService {
         fdata.set('email', email)
         fdata.set('password', password)
         fdata.set('profileImage', profileImage)
-        console.info(fdata.get('profileImage'))
 
         return this.http.post<ProfilePic>('/profile/editprofile', fdata)
     }
@@ -23,5 +22,10 @@ export class ProfileService {
     getProfilePic(email: string): Observable<ProfilePic> {
 
         return this.http.get<ProfilePic>('/profile/getprofilepic/' + email)
+    }
+
+    deleteProfilePic(email: string) {
+
+        return this.http.delete('/profile/deleteprofilepic/' + email)
     }
 }

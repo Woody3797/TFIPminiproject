@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription, map } from 'rxjs';
+import { Subscription, lastValueFrom, map } from 'rxjs';
 import { ProfileService } from 'src/app/service/profile.service';
 import { StorageService } from 'src/app/service/storage.service';
 
@@ -23,16 +23,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
     isLoggedIn = this.storageService.isLoggedIn()
     profileImage!: string 
     image$!: Subscription
-
+    deletePic = false
 
     ngOnInit(): void {
         this.email = this.storageService.getUser().email
         this.createForm()
-        this.image$ = this.profileService.getProfilePic(this.email).subscribe(data => {
-            console.info(data.url)
-            this.profileImage = ''
-            this.profileImage = data.url
-            this.form.markAsPristine()
+        this.image$ = this.profileService.getProfilePic(this.email).subscribe({
+            next: data => {
+                this.profileImage = ''
+                this.profileImage = data.url
+                this.form.markAsPristine()
+            }
         })
     }
 
@@ -48,11 +49,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     showPreview(event: any) {
-        this.profileImage = URL.createObjectURL(event.target.files[0]).toString()
-        console.info(this.profileImage)
+        this.profileImage = URL.createObjectURL(event.target.files[0])
         this.form.patchValue({
             profileImage: event.target.files[0]
         })
+        console.info(this.form.value.profileImage)
         this.form.markAsDirty()
     }
 
@@ -61,16 +62,24 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.profileService.editProfile(this.email, this.form.value.password, this.form.value.profileImage).pipe(
             map(data => {
                 this.profileImage = data.url
-                setTimeout(() => {location.reload()}, 300)
+                setTimeout(() => {location.reload()}, 500)
             })
         ).subscribe()
+
+        if (this.deletePic) {
+            lastValueFrom(this.profileService.deleteProfilePic(this.email)).then(data => {
+                console.info(data)
+            })
+        }
     }
 
     removePic() {
+        this.deletePic = true
         this.profileImage = ''
         this.form.patchValue({
             profileImage: null
         })
+        this.form.markAsDirty()
     }
 
     invalid() {
