@@ -31,7 +31,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.image$ = this.profileService.getProfilePic(this.email).subscribe({
             next: data => {
                 this.profileImage = ''
-                this.profileImage = data.url
+                setTimeout(() => {
+                    console.info('sleeping')
+                    this.profileImage = data.url
+                }, 1111)
                 this.form.markAsPristine()
             }
         })

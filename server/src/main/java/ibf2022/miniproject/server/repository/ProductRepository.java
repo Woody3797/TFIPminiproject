@@ -180,21 +180,21 @@ public class ProductRepository {
 
     @Transactional(rollbackFor = DataAccessException.class)
     public boolean buyProduct(Integer productID) {
-        int result = jdbcTemplate.update(UPDATE_PRODUCT_STATUS_IN_SQL, "pending", productID);
+        int result = jdbcTemplate.update(UPDATE_PRODUCT_STATUS, "pending", productID);
         
         return result > 0;
     }
 
     @Transactional(rollbackFor = DataAccessException.class)
     public boolean cancelBuyProduct(Integer productID) {
-        int result = jdbcTemplate.update(UPDATE_PRODUCT_STATUS_IN_SQL, "selling", productID);
+        int result = jdbcTemplate.update(UPDATE_PRODUCT_STATUS, "selling", productID);
 
         return result > 0;
     }
 
     @Transactional(rollbackFor = DataAccessException.class)
     public boolean acceptOrder(Integer productID) {
-        int result = jdbcTemplate.update(UPDATE_PRODUCT_STATUS_IN_SQL, "sold", productID);
+        int result = jdbcTemplate.update(UPDATE_PRODUCT_STATUS, "sold", productID);
 
         return result > 0;
     }
@@ -260,6 +260,26 @@ public class ProductRepository {
 
     public Integer getAllOtherProductsCount(String email) {
         return jdbcTemplate.queryForObject(GET_ALL_OTHER_PRODUCTS_COUNT, Integer.class, email);
+    }
+
+    public boolean likeProduct(String email, Integer productID, Boolean like) {
+        Query query = Query.query(Criteria.where("email").is(email));
+        Update update = new Update();
+        if (like) {
+            update.push("liked_products", productID);
+        } else {
+            update.pull("liked_products", productID);
+        }
+        UpdateResult res = mongoTemplate.upsert(query, update, "user_likes");
+
+        return res.wasAcknowledged();
+    }
+
+    public List<Integer> getLikedProducts(String email) {
+        Query query = Query.query(Criteria.where("email").is(email));
+        List<Integer> productIDs = mongoTemplate.findDistinct(query, "liked_products", "user_likes", Integer.class, Integer.class);
+
+        return productIDs;
     }
 
 

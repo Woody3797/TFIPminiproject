@@ -22,6 +22,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { httpInterceptorProviders } from './http.interceptor';
 import { MaterialModule } from './modules/material.module';
 import { SocialAuthServiceProvider } from './modules/social.module';
+import { WatchlistComponent } from './components/watchlist/watchlist.component';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { SocialAuthServiceProvider } from './modules/social.module';
     ProducttagsComponent,
     ChatComponent,
     ForgotpasswordComponent,
+    WatchlistComponent,
   ],
   imports: [
     BrowserModule,

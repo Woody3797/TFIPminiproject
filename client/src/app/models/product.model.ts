@@ -37,3 +37,8 @@ export interface ProductTags {
     tags: string[]
     status: string
 }
+
+export interface LikedProducts {
+    email: string
+    productIDs: number[]
+}

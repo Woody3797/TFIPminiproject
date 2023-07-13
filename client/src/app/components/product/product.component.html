@@ -3,15 +3,23 @@
 <div>
     <div class="container mt-3 mw-80">
         <div>
-            <button mat-raised-button (click)="goBackToProductlist()">Back</button>
+            <button mat-raised-button (click)="goBackInHistory()">Back</button>
         </div>
         <div class="container mt-4">
             <mat-card *ngIf="product$ | async as p" style="background-color: whitesmoke;">
-                <mat-card-header>
-                    <mat-card-subtitle>Product ID: {{ p.productID }}</mat-card-subtitle>
-                    <mat-card-subtitle>Product Seller: {{ p.email }}</mat-card-subtitle>
-                    <mat-card-title style="font-size: x-large;">Product Name: {{ p.productName }}</mat-card-title>
-                </mat-card-header>
+                <div style="display: flex;">
+                    <mat-card-header style="width: 80%;">
+                        <mat-card-subtitle>Product ID: {{ p.productID }}</mat-card-subtitle>
+                        <mat-card-subtitle>Product Seller: {{ p.email }}</mat-card-subtitle>
+                        <mat-card-title style="font-size: x-large;">Product Name: {{ p.productName }}</mat-card-title>
+                    </mat-card-header>
+                    <button *ngIf="!isSeller" mat-icon-button style="align-self: center;" (click)="likeProduct()">
+                        <mat-icon [ngClass]="isLiked ? 'like-icon' : ''" color="">thumb_up</mat-icon>
+                    </button>
+                    <mat-card-header *ngIf="!isSeller" style="width: 13rem; justify-content: right;">
+                        <button mat-fab extended (click)="chatWithSeller()">Chat With Seller</button>
+                    </mat-card-header>
+                </div>
                 <br>
                 <mat-card-content>
                     <div class="row">

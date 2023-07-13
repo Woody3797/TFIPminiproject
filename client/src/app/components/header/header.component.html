@@ -14,6 +14,7 @@
         </button>
         <!-- <span [routerLink]="['/']" style="padding-inline: 1rem;"><button mat-raised-button color="primary">My App</button></span> -->
         <span style="padding-inline: 1rem;"><button mat-raised-button color="primary" (click)="listAllProducts()">Browse All Product Listings</button></span>
+        <span style="padding-inline: 1rem;"><button mat-raised-button color="primary" (click)="gotoWatchlist()">Product Watchlist</button></span>
         
         <span class="example-spacer"></span>
         <span [routerLink]="['/login']" style="padding-inline: 1rem;" *ngIf="!isLoggedIn">

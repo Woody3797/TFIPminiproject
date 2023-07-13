@@ -111,7 +111,7 @@ export class ProductlistallComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     back() {
-        this.location.back()
+        this.router.navigate(['/'])
     }
 
     // private functions

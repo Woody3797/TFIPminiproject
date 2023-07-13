@@ -3,7 +3,7 @@ import { Component, Inject, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, map } from 'rxjs';
+import { Observable, lastValueFrom, map } from 'rxjs';
 import { OrderDetails, Product } from 'src/app/models/product.model';
 import { ProductService } from 'src/app/service/product.service';
 import { StorageService } from 'src/app/service/storage.service';
@@ -29,10 +29,12 @@ export class ProductComponent implements OnInit {
     orderDetails!: OrderDetails;
     productID!: number
     loggedIn = this.storageService.isLoggedIn()
+    email = this.storageService.getUser().email
     isSeller = false
     productStatus = ''
     isOrdering = false
     isSold = false
+    isLiked = false
     imgData!: any
     form!: FormGroup
 
@@ -59,6 +61,13 @@ export class ProductComponent implements OnInit {
             }
             if (this.orderDetails.status.includes('sold')) {
                 this.isSold = true
+            }
+        })
+
+        lastValueFrom(this.productService.getLikedProductIDs(this.email)).then(data => {
+            console.info('liked products ', data)
+            if (data.productIDs.includes(this.productID)) {
+                this.isLiked = true
             }
         })
     }
@@ -133,6 +142,19 @@ export class ProductComponent implements OnInit {
         })
     }
 
+    chatWithSeller() {
+        // console.info(this.productID)
+        this.router.navigate([this.email + '/chat/' + this.productID])
+    }
+
+    likeProduct() {
+        this.isLiked = !this.isLiked
+        lastValueFrom(this.productService.likeProduct(this.email, this.productID, this.isLiked)).then(data => {
+            this.isLiked = data
+            console.info(this.isLiked)
+        })
+    }
+
     enlargeImg(event: any) {
         var img = event.target
         const dialogRef = this.dialog.open(ImageDialog, {
@@ -150,7 +172,7 @@ export class ProductComponent implements OnInit {
         })
     }
     
-    goBackToProductlist() {
+    goBackInHistory() {
         this.location.back()
     }
 }

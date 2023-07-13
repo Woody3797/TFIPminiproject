@@ -97,7 +97,6 @@ public class ProductService {
         if (opt.isPresent()) {
             List<Product> products = opt.get();
             JsonArrayBuilder jab = Json.createArrayBuilder();
-
             for (Product p : products) {
                 jab.add(p.toJson());
             }
@@ -188,6 +187,36 @@ public class ProductService {
 
         return jab.build();
     }
+
+    public boolean likeProduct(String email, Integer productID, Boolean like) {
+        return productRepository.likeProduct(email, productID, like);
+    }
+
+    public List<Integer> getLikedProducts(String email) {
+        List<Integer> productIDs = productRepository.getLikedProducts(email);
+        // int[] array = productIDs.stream().mapToInt(Integer::intValue).toArray();
+        return productIDs;
+    }
+
+    public JsonArray getWatchlist(String email) {
+        List<Integer> productIDs = productRepository.getLikedProducts(email);
+        List<Product> products = new ArrayList<>();
+        for (Integer productID : productIDs) {
+            Optional<Product> opt = productRepository.getProductByID(productID);
+            if (opt.isPresent()) {
+                products.add(opt.get());
+            }
+        }
+        JsonArrayBuilder jab = Json.createArrayBuilder();
+        for (Product p : products) {
+            jab.add(p.toJson());
+        }
+
+        return jab.build();
+    }
+
+
+
     
     private UploadImageResponse uploadImageImagga(MultipartFile productImage) throws IOException {
         String url = "https://api.imagga.com/v2/uploads";

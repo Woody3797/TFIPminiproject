@@ -46,7 +46,7 @@ public class SQLQueries {
             INSERT INTO user_details(email, password) values (?, ?)
             """;
 
-    public static final String UPDATE_PRODUCT_STATUS_IN_SQL = """
+    public static final String UPDATE_PRODUCT_STATUS = """
             UPDATE product_details SET productStatus = ? WHERE productID = ?
             """;
 
@@ -57,4 +57,13 @@ public class SQLQueries {
     public static final String CHANGE_CURRENT_USER_PASSWORD = """
             UPDATE user_details SET password = ? WHERE email = ?
             """;
+
+    public static final String SAVE_CHAT_CONVO = """
+            INSERT INTO chat_details(sender, recipient, productID) values (?, ?, ?)
+            """;
+
+    public static final String GET_CHAT_CONVO_BY_SENDER_RECIPIENT = """
+            SELECT * FROM chat_details WHERE sender = ? AND recipient = ? AND productID = ?
+            """;
+
 }

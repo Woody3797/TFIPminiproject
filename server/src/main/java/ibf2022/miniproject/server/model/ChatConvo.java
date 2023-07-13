@@ -3,8 +3,9 @@ package ibf2022.miniproject.server.model;
 public class ChatConvo {
 
     private Long chatID;
-    private String buyer;
-    private String seller;
+    private String sender;
+    private String recipient;
+    private Integer productID;
     
     public Long getChatID() {
         return chatID;
@@ -12,31 +13,39 @@ public class ChatConvo {
     public void setChatID(Long chatID) {
         this.chatID = chatID;
     }
-    public String getBuyer() {
-        return buyer;
+    public String getSender() {
+        return sender;
     }
-    public void setBuyer(String buyer) {
-        this.buyer = buyer;
+    public void setSender(String sender) {
+        this.sender = sender;
     }
-    public String getSeller() {
-        return seller;
+    public String getRecipient() {
+        return recipient;
     }
-    public void setSeller(String seller) {
-        this.seller = seller;
+    public void setRecipient(String recipient) {
+        this.recipient = recipient;
+    }
+    public Integer getProductID() {
+        return productID;
+    }
+    public void setProductID(Integer productID) {
+        this.productID = productID;
     }
 
     public ChatConvo() {
     }
 
-    public ChatConvo(Long chatID, String buyer, String seller) {
+    public ChatConvo(Long chatID, String sender, String recipient, Integer productID) {
         this.chatID = chatID;
-        this.buyer = buyer;
-        this.seller = seller;
+        this.sender = sender;
+        this.recipient = recipient;
+        this.productID = productID;
     }
-
+    
     @Override
     public String toString() {
-        return "ChatConvo [chatID=" + chatID + ", buyer=" + buyer + ", seller=" + seller + "]";
+        return "ChatConvo [chatID=" + chatID + ", sender=" + sender + ", recipient=" + recipient + ", productID="
+                + productID + "]";
     }
     
 }

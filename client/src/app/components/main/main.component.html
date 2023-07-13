@@ -1,9 +1,19 @@
 <app-header></app-header>
 
-<div *ngIf="email != null; else notLoggedIn">
-    MAIN PAGE
-    <br>
-    WELCOME {{ email }}
+<div *ngIf="email">
+    <div class="container mt-3 mw-80">
+        <h1 class="fs-1"><ins>Main Page</ins></h1>
+        <div>
+            <h2>Hi {{ email }}, you can navigate the site using the buttons on top.</h2>
+        </div>
+        <br>
+        <div>
+            <h2>
+                Here are some quick links to get you started!
+            </h2>
+            <div>
+                
+            </div>
+        </div>
+    </div>
 </div>
-
-<ng-template #notLoggedIn>Please Sign In</ng-template>

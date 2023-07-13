@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { OrderDetails, Product, ProductTags, UploadProduct } from '../models/product.model';
+import { LikedProducts, OrderDetails, Product, ProductTags, UploadProduct } from '../models/product.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +26,7 @@ export class ProductService {
 
     getProduct(productID: number): Observable<Product> {
         this.productID = productID
+        console.info(this.productID)
         return this.http.get<Product>('/api/product/' + productID)
     }
 
@@ -101,6 +102,22 @@ export class ProductService {
 
     getProductsByTag(email: string, tag: string): Observable<Product[]> {
         return this.http.get<Product[]>('/api/' + email + '/allproducts/' + tag)
+    }
+
+    likeProduct(email: string, productID: number, like: boolean): Observable<any> {
+        const params = new HttpParams().append('email', email)
+        .append('productID', productID)
+        .append('like', like)
+
+        return this.http.post<any>('/api/likeproduct', params)
+    }
+
+    getLikedProductIDs(email: string): Observable<LikedProducts> {
+        return this.http.get<LikedProducts>('/api/getlikedproductIDs/' + email)
+    }
+
+    getWatchlist(email: string): Observable<Product[]> {
+        return this.http.get<Product[]>('/api/watchlist/' + email)
     }
 
 }

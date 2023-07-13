@@ -43,9 +43,13 @@ export class HeaderComponent implements OnInit {
         this.router.navigate([this.email + '/allproducts'], { queryParams: {
             pageSize: 10,
             pageIndex: 0
-        } }).then(() => {
+        }}).then(() => {
             location.reload()
         })
+    }
+
+    gotoWatchlist() {
+        this.router.navigate([this.email + '/watchlist'])
     }
 
     gotoChat() {

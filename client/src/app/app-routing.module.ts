@@ -11,18 +11,20 @@ import { authGuard } from './auth.guard';
 import { ProductlistallComponent } from './components/productlistall/productlistall.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ForgotpasswordComponent } from './components/forgotpassword/forgotpassword.component';
+import { WatchlistComponent } from './components/watchlist/watchlist.component';
 
 const routes: Routes = [
     {path: '', component: MainComponent, title: 'Welcome', canActivate: [authGuard]},
     {path: 'login', component: LoginComponent, title: 'Login/Sign-up'},
     {path: 'forgotpassword', component: ForgotpasswordComponent, title: 'Password Reset'},
     {path: ':email/productlist', component: ProductlistComponent, title: 'Products', canActivate: [authGuard]},
+    {path: ':email/watchlist', component: WatchlistComponent, title: 'Product Watchlist', canActivate: [authGuard]},
     {path: ':email/profile', component: ProfileComponent, title: 'Profile', canActivate: [authGuard]},
     {path: ':email/addproduct', component: ProductaddComponent, title: 'Add Product', canActivate: [authGuard]},
     {path: 'product/:productID', component: ProductComponent, title: 'Product', canActivate: [authGuard]},
     {path: 'editproduct/:productID', component: ProducteditComponent, title: 'Edit Product', canActivate: [authGuard]},
     {path: ':email/allproducts', component: ProductlistallComponent, title: 'All Products', canActivate: [authGuard]},
-    {path: ':email/chat', component: ChatComponent, title: 'Chat', canActivate: [authGuard]},
+    {path: ':email/chat/:productID', component: ChatComponent, title: 'Chat', canActivate: [authGuard]},
 ];
 
 @NgModule({

@@ -26,6 +26,7 @@ import ibf2022.miniproject.server.model.ProductTags;
 import ibf2022.miniproject.server.service.ProductService;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
+import jakarta.json.JsonArrayBuilder;
 import jakarta.json.stream.JsonCollectors;
 import jakarta.mail.MessagingException;
 
@@ -191,6 +192,36 @@ public class ProductController {
         return ResponseEntity.ok().body(jArr.toString());
     }
 
+    @PostMapping(path = "/likeproduct")
+    public ResponseEntity<String> likeProduct(@RequestParam MultiValueMap<String, String> data) {
+        System.out.println(data);
+        String productID = data.getFirst("productID");
+        String email = data.getFirst("email");
+        String like = data.getFirst("like");
+        Boolean result = productService.likeProduct(email, Integer.parseInt(productID), Boolean.parseBoolean(like));
+        System.out.println(result);
+        return ResponseEntity.ok().body(like);
+    }
 
+    @GetMapping(path = "/getlikedproductIDs/{email}")
+    public ResponseEntity<String> getLikedProducts(@PathVariable String email) {
+        List<Integer> productIDs = productService.getLikedProducts(email);
+        if (productIDs.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "no liked products found").build().toString());
+        }
+        JsonArrayBuilder jab = Json.createArrayBuilder();
+        for (Integer productID : productIDs) {
+            jab.add(productID);
+        }
+        JsonArray jArr = jab.build();
+
+        return ResponseEntity.ok().body(Json.createObjectBuilder().add("email", email).add("productIDs", jArr).build().toString());
+    }
+
+    @GetMapping(path = "/watchlist/{email}")
+    public ResponseEntity<String> getWatchlist(@PathVariable String email) {
+        JsonArray jArr = productService.getWatchlist(email);
+        return ResponseEntity.ok().body(jArr.toString());
+    }
 
 }
