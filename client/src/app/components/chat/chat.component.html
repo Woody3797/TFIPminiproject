@@ -1,6 +1,6 @@
 <app-header></app-header>
 <br>
-<div id="container" class="m-3">
+<div id="container" class="container mt-3 mw-80">
     <aside>
         <header>
             <h2>Conversations</h2>
@@ -18,13 +18,26 @@
         <header>
             <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt="">
             <div>
-                <h2>Chat with </h2>
+                <h2>Chat with {{ recipient }} </h2>
             </div>
         </header>
-        <ul id="chat">
-            <li *ngFor="let message of messages">
-                {{message}}
+        <ul id="chat" #chat [scrollTop]="chat.scrollHeight">
+            <li *ngFor="let message of messages" [ngClass]="message.sender == email ? 'me' : 'you'">
+                <div class="entete">
+					<h3>{{ message.timestamp | date:'ccc d LLL y, h:mm:ss a' }}</h3>
+				</div>
+				<div class="message">
+					{{ message.content }}
+				</div>
             </li>
+            <!-- <li *ngFor="let message of messagesFrom" class="you">
+                <div class="entete">
+					<h3>timestamp</h3>
+				</div>
+				<div class="message">
+					{{ message }}
+				</div>
+            </li> -->
         </ul>
         <footer>
             <textarea placeholder="Type your message" #chatMessage (keydown.enter)="sendMessage(chatMessage.value);false" [formControl]="messageInput"></textarea>

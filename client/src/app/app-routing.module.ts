@@ -24,7 +24,7 @@ const routes: Routes = [
     {path: 'product/:productID', component: ProductComponent, title: 'Product', canActivate: [authGuard]},
     {path: 'editproduct/:productID', component: ProducteditComponent, title: 'Edit Product', canActivate: [authGuard]},
     {path: ':email/allproducts', component: ProductlistallComponent, title: 'All Products', canActivate: [authGuard]},
-    {path: ':email/chat/:productID', component: ChatComponent, title: 'Chat', canActivate: [authGuard]},
+    {path: ':email/chat/:seller/:productID', component: ChatComponent, title: 'Chat', canActivate: [authGuard]},
 ];
 
 @NgModule({

@@ -283,33 +283,4 @@ public class ProductRepository {
     }
 
 
-    // public URL uploadImageIntoS3(MultipartFile imageFile, String username) throws IOException {
-    //     // Add custom metadata
-    //     Map<String, String> userData = new HashMap<>();
-    //     userData.put("filename", imageFile.getOriginalFilename());
-    //     userData.put("upload-date", LocalDateTime.now().toString());
-
-    //     // Add object's metadata
-    //     ObjectMetadata metadata = new ObjectMetadata();
-    //     metadata.setContentType(imageFile.getContentType());
-    //     metadata.setContentLength(imageFile.getSize());
-    //     metadata.setUserMetadata(userData);
-
-    //     // woodybucket - bucket name
-    //     // key - imagefile path
-    //     // file.getInputStream() - actual bytes
-    //     // metadata
-    //     String key = username + "/" + imageFile.getOriginalFilename();
-    //     PutObjectRequest putReq = new PutObjectRequest("woodybucket", key, imageFile.getInputStream(), metadata);
-
-    //     // Make the file publically accessible
-    //     putReq = putReq.withCannedAcl(CannedAccessControlList.PublicRead);
-
-    //     PutObjectResult result = s3.putObject(putReq);
-    //     System.out.println(">> result: " + result);
-
-    //     return s3.getUrl("woodybucket", key);
-    // }
-
-
 }

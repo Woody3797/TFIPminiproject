@@ -2,28 +2,28 @@ package ibf2022.miniproject.server.model;
 
 public class ChatConvo {
 
-    private Long chatID;
-    private String sender;
-    private String recipient;
+    private String chatID;
+    private String chatter1;
+    private String chatter2;
     private Integer productID;
     
-    public Long getChatID() {
+    public String getChatID() {
         return chatID;
     }
-    public void setChatID(Long chatID) {
+    public void setChatID(String chatID) {
         this.chatID = chatID;
     }
-    public String getSender() {
-        return sender;
+    public String getChatter1() {
+        return chatter1;
     }
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setChatter1(String chatter1) {
+        this.chatter1 = chatter1;
     }
-    public String getRecipient() {
-        return recipient;
+    public String getChatter2() {
+        return chatter2;
     }
-    public void setRecipient(String recipient) {
-        this.recipient = recipient;
+    public void setChatter2(String chatter2) {
+        this.chatter2 = chatter2;
     }
     public Integer getProductID() {
         return productID;
@@ -31,21 +31,8 @@ public class ChatConvo {
     public void setProductID(Integer productID) {
         this.productID = productID;
     }
-
-    public ChatConvo() {
-    }
-
-    public ChatConvo(Long chatID, String sender, String recipient, Integer productID) {
-        this.chatID = chatID;
-        this.sender = sender;
-        this.recipient = recipient;
-        this.productID = productID;
-    }
     
-    @Override
-    public String toString() {
-        return "ChatConvo [chatID=" + chatID + ", sender=" + sender + ", recipient=" + recipient + ", productID="
-                + productID + "]";
-    }
+    
+    
     
 }

@@ -1,16 +1,16 @@
 package ibf2022.miniproject.server.repository;
 
-import static ibf2022.miniproject.server.repository.SQLQueries.*;
-
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+
+import com.mongodb.client.result.UpdateResult;
 
 import ibf2022.miniproject.server.model.ChatConvo;
 import ibf2022.miniproject.server.model.ChatMessage;
@@ -19,31 +19,26 @@ import ibf2022.miniproject.server.model.ChatMessage;
 public class ChatRepository {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private MongoTemplate mongoTemplate;
 
-    @SuppressWarnings("null")
-    public Integer saveChatConvo(String sender, String recipient, Integer productID) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(conn -> {
-            PreparedStatement statement = conn.prepareStatement(SAVE_CHAT_CONVO, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, sender);
-            statement.setString(2, recipient);
-            statement.setInt(3, productID);
-            return statement;
-        }, keyHolder);
-        Integer chatID = keyHolder.getKey().intValue();
-        return chatID;
+    public ChatMessage saveChatMessage(ChatMessage message) {
+        // Query query = Query.query(Criteria.where("chatID").is(message.getChatID()));
+        ChatMessage result = mongoTemplate.insert(message, "chat_messages");
+
+        return result;
     }
 
-    public ChatConvo getChatConvo(String sender, String recipient, Integer productID) {
-        ChatConvo convo = jdbcTemplate.queryForObject(GET_CHAT_CONVO_BY_SENDER_RECIPIENT, new BeanPropertyRowMapper<>(ChatConvo.class), sender, recipient, productID);
-        System.out.println(convo);
-
-        return convo;
+    public List<ChatMessage> getChatMessages(String chatID) {
+        Query query = Query.query(Criteria.where("chatID").is(chatID));
+        List<ChatMessage> messages = mongoTemplate.find(query, ChatMessage.class, "chat_messages");
+        return messages;
     }
 
-    public void saveChatMessage(ChatMessage message) {
-        
-    }
+	public List<ChatMessage> getAllConvos(String email) {
+        Query query = Query.query(Criteria.where("chatID").regex(email));
+        List<ChatMessage> messages = mongoTemplate.find(query, ChatMessage.class, "chat_messages");
+        return messages;
+	}
+
     
 }

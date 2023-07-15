@@ -4,22 +4,24 @@ import java.time.LocalDateTime;
 
 public class ChatMessage {
 
-    private Long messageID;
-    private Long chatID;
+    private String messageID;
+    private String chatID;
     private String sender;
+    private String recipient;
     private String content;
+    private Integer productID;
     private LocalDateTime timestamp;
     
-    public Long getMessageID() {
+    public String getMessageID() {
         return messageID;
     }
-    public void setMessageID(Long messageID) {
+    public void setMessageID(String messageID) {
         this.messageID = messageID;
     }
-    public Long getChatID() {
+    public String getChatID() {
         return chatID;
     }
-    public void setChatID(Long chatID) {
+    public void setChatID(String chatID) {
         this.chatID = chatID;
     }
     public String getSender() {
@@ -28,11 +30,23 @@ public class ChatMessage {
     public void setSender(String sender) {
         this.sender = sender;
     }
+    public String getRecipient() {
+        return recipient;
+    }
+    public void setRecipient(String recipient) {
+        this.recipient = recipient;
+    }
     public String getContent() {
         return content;
     }
     public void setContent(String content) {
         this.content = content;
+    }
+    public Integer getProductID() {
+        return productID;
+    }
+    public void setProductID(Integer productID) {
+        this.productID = productID;
     }
     public LocalDateTime getTimestamp() {
         return timestamp;
@@ -41,21 +55,12 @@ public class ChatMessage {
         this.timestamp = timestamp;
     }
     
-    public ChatMessage() {
-    }
-    
-    public ChatMessage(Long messageID, Long chatID, String sender, String content, LocalDateTime timestamp) {
-        this.messageID = messageID;
-        this.chatID = chatID;
-        this.sender = sender;
-        this.content = content;
-        this.timestamp = timestamp;
-    }
-
     @Override
     public String toString() {
-        return "ChatMessage [messageID=" + messageID + ", chatID=" + chatID + ", sender=" + sender + ", content="
-                + content + ", timestamp=" + timestamp + "]";
+        return "ChatMessage [messageID=" + messageID + ", chatID=" + chatID + ", sender=" + sender + ", recipient="
+                + recipient + ", content=" + content + ", productID=" + productID + ", timestamp=" + timestamp + "]";
     }
+    
+    
     
 }
