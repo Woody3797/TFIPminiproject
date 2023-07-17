@@ -1,6 +1,5 @@
 package ibf2022.miniproject.server.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +33,8 @@ public class ChatController {
 
     @GetMapping(path = "/getmessages")
     @ResponseBody
-    public ResponseEntity<List<ChatMessage>> getMessages(@RequestParam String chatID) {
-        List<ChatMessage> messages = chatService.getChatMessages(chatID);
+    public ResponseEntity<List<ChatMessage>> getChatMessagesByID(@RequestParam String chatID) {
+        List<ChatMessage> messages = chatService.getChatMessagesByID(chatID);
         return ResponseEntity.ok(messages);
     }
 
@@ -49,5 +48,3 @@ public class ChatController {
 
 
 }
-
-// ChatMessage [messageID=null, chatID=a@a.com,b@b.com,85, sender=a@a.com, recipient=null, content=qwewq, productID=85, timestamp=null]

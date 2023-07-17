@@ -6,6 +6,7 @@ import * as SockJS from 'sockjs-client';
 import { ChatMessage } from 'src/app/models/chatmessage.model';
 import { ChatService } from 'src/app/service/chat.service';
 import { ProductService } from 'src/app/service/product.service';
+import { ProfileService } from 'src/app/service/profile.service';
 import { StorageService } from 'src/app/service/storage.service';
 import * as Stomp from 'stompjs';
 
@@ -21,6 +22,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     router = inject(Router)
     activatedRoute = inject(ActivatedRoute)
     chatService = inject(ChatService)
+    profileService = inject(ProfileService)
     changeDetector = inject(ChangeDetectorRef)
 
     @ViewChild('chat')
@@ -37,6 +39,8 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     recipient!: string
     productID!: number
     chatID!: string
+    conversations: string[] = []
+    profileImage!: string
 
     ngOnInit(): void {
         this.productID = +this.activatedRoute.snapshot.params['productID']
@@ -44,12 +48,40 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.chatID = this.chatService.generateChatID(this.email, this.recipient, this.productID)
         console.info(this.chatID)
 
-        this.chatService.getMessages(this.chatID).subscribe(data => {
-            this.messages = data
+        this.chatService.getChatMessagesByID(this.chatID).subscribe(data => {
+            // this.messages = data
+        })
+
+        this.profileService.getProfilePic(this.email).subscribe({
+            next: data => {
+                this.profileImage = ''
+                setTimeout(() => {
+                    console.info('sleeping')
+                    this.profileImage = data.url
+                }, 1111)
+            }
         })
 
         this.chatService.getAllConvos(this.email).subscribe(data => {
+            this.messages = data
             console.info(data)
+            let array: string[] = []
+            for (var val of data) {
+                array = array.concat(val.sender).concat(val.recipient)
+            }
+            let uniqueChatters = [...new Set(array)]
+            this.conversations = uniqueChatters.filter(item => item != this.email)
+            console.info(this.conversations)
+            
+            this.profileService.getProfilePic(this.email).subscribe({
+                next: data => {
+                    this.profileImage = ''
+                    setTimeout(() => {
+                        console.info('sleeping')
+                        this.profileImage = data.url
+                    }, 1111)
+                }
+            })
         })
 
 

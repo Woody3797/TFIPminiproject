@@ -10,7 +10,7 @@ export class ChatService {
 
     http = inject(HttpClient)
 
-    getMessages(chatID: string): Observable<ChatMessage[]> {
+    getChatMessagesByID(chatID: string): Observable<ChatMessage[]> {
         const params = new HttpParams().set('chatID', chatID)
 
         return this.http.get<ChatMessage[]>('/api/chat/getmessages', { params })

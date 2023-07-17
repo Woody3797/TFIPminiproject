@@ -144,7 +144,7 @@ export class ProductComponent implements OnInit {
 
     chatWithSeller() {
         // console.info(this.productID)
-        this.router.navigate([this.email + '/chat/' + this.product.email + '/' + this.productID])
+        this.router.navigate([ this.email + '/chat' ])
     }
 
     likeProduct() {

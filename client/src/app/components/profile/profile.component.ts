@@ -21,7 +21,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     email = ''
     form!: FormGroup
     isLoggedIn = this.storageService.isLoggedIn()
-    profileImage!: string 
+    profileImage!: string
     image$!: Subscription
     deletePic = false
 

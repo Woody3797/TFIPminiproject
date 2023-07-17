@@ -21,8 +21,8 @@ public class ChatService {
         return chatRepository.saveChatMessage(message);
     }
 
-    public List<ChatMessage> getChatMessages(String chatID) {
-        return chatRepository.getChatMessages(chatID);
+    public List<ChatMessage> getChatMessagesByID(String chatID) {
+        return chatRepository.getChatMessagesByID(chatID);
     }
 
 	public List<ChatMessage> getAllConvos(String email) {
