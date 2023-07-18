@@ -13,6 +13,7 @@ export class ProductService {
     product$!: Observable<Product>
     product!: Product
     productID!: number
+    seller!: string
 
     addNewProduct(upproduct: UploadProduct, productImages: File[]): Observable<Product> {
         const fdata = new FormData()

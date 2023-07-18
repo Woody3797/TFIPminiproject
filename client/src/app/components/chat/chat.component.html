@@ -6,46 +6,46 @@
             <h2>Conversations</h2>
         </header>
         <ul>
-            <li *ngFor="let conversation of conversations">
-				<img *ngIf="profileImage; else noImage" src="{{ profileImage }}" style="object-fit: scale-down;">
-				<div (click)="selectRecipient()">
-					<h2>{{ conversation }}</h2>
-				</div>
+            <li *ngFor="let id of chatIDs" (click)="selectRecipient(id)">
+                <h3 #convoID>{{ id }}</h3>
 			</li>
         </ul>
     </aside>
     <main>
         <header>
-            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg">
+            <img *ngIf="profileImage; else noImage" src="{{ profileImage }}" style="object-fit: scale-down;" max-height="100px">
             <div>
-                <h2>Chat with {{ recipient }} </h2>
+                <h2 *ngIf="recipient; else noRecipient">
+                    Chatting with {{ recipient }} about Product: <span *ngIf="product">{{ product.productName }}</span>
+                </h2>
             </div>
         </header>
-        <ul id="chat" #chat [scrollTop]="chat.scrollHeight">
-            <li *ngFor="let message of messages" [ngClass]="message.sender == email ? 'me' : 'you'">
-                <div class="entete">
-					<h3>{{ message.timestamp | date:'ccc d LLL y, h:mm:ss a' }}</h3>
-				</div>
-				<div class="message">
-					{{ message.content }}
-				</div>
-            </li>
-            <!-- <li *ngFor="let message of messagesFrom" class="you">
-                <div class="entete">
-					<h3>timestamp</h3>
-				</div>
-				<div class="message">
-					{{ message }}
-				</div>
-            </li> -->
-        </ul>
-        <footer>
-            <textarea placeholder="Type your message" #chatMessage (keydown.enter)="sendMessage(chatMessage.value);false" [formControl]="messageInput"></textarea>
-            <button mat-raised-button class="button" (click)="sendMessage(chatMessage.value)" type="submit" [disabled]="messageInput.invalid">Send</button>
-        </footer>
+        <div *ngIf="recipient;else noChat" class="chatwindow">
+            <ul id="chat" #chat [scrollTop]="chat.scrollHeight">
+                <li *ngFor="let message of messages" [ngClass]="message.sender == email ? 'me' : 'you'">
+                    <div class="entete">
+                        <h3>{{ message.timestamp | date:'ccc d LLL y, h:mm:ss a' }}</h3>
+                    </div>
+                    <div class="message">
+                        {{ message.content }}
+                    </div>
+                </li>
+            </ul>
+            <footer>
+                <textarea placeholder="Type your message" #chatMessage (keydown.enter)="sendMessage(chatMessage.value);false" [formControl]="messageInput"></textarea>
+                <button mat-raised-button class="button" (click)="sendMessage(chatMessage.value)" type="submit" [disabled]="messageInput.invalid">Send</button>
+            </footer>
+
+        </div>
     </main>
 </div>
 
 <ng-template #noImage>
     <img class="profilepic" src="/assets/profilepic.png">
+</ng-template>
+<ng-template #noRecipient>
+    <h3>SELECT A PERSON FROM THE CONVERSATIONS BAR</h3>
+</ng-template>
+<ng-template #noChat>
+    
 </ng-template>

@@ -4,20 +4,13 @@ import java.time.LocalDateTime;
 
 public class ChatMessage {
 
-    private String messageID;
     private String chatID;
     private String sender;
     private String recipient;
     private String content;
     private Integer productID;
     private LocalDateTime timestamp;
-    
-    public String getMessageID() {
-        return messageID;
-    }
-    public void setMessageID(String messageID) {
-        this.messageID = messageID;
-    }
+
     public String getChatID() {
         return chatID;
     }
@@ -54,13 +47,11 @@ public class ChatMessage {
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
-    
+
     @Override
     public String toString() {
-        return "ChatMessage [messageID=" + messageID + ", chatID=" + chatID + ", sender=" + sender + ", recipient="
-                + recipient + ", content=" + content + ", productID=" + productID + ", timestamp=" + timestamp + "]";
+        return "ChatMessage [chatID=" + chatID + ", sender=" + sender + ", recipient=" + recipient + ", content="
+                + content + ", productID=" + productID + ", timestamp=" + timestamp + "]";
     }
-    
-    
     
 }

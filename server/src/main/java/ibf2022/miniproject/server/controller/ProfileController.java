@@ -40,7 +40,7 @@ public class ProfileController {
     @GetMapping(path = "/getprofilepic/{email}")
     public ResponseEntity<String> getProfilePic(@PathVariable String email) {
         String url = userService.getProfilePic(email);
-        System.out.println(url);
+        System.out.println("profile pic url: " + url);
         if (url != null) {
             return ResponseEntity.ok().body(Json.createObjectBuilder().add("url", url).build().toString());
         }

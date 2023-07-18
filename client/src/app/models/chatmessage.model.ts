@@ -1,8 +1,8 @@
 export interface ChatMessage {
-    messageID: string
     chatID: string
+    productID: number
     sender: string
     recipient: string
     content: string
-    timestamp: Date
+    timestamp?: Date | undefined
 }
