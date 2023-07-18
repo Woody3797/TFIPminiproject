@@ -70,7 +70,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
             })
         }
 
-        this.profileService.getProfilePic(this.email).subscribe({
+        this.profileService.getProfilePic(this.recipient).subscribe({
             next: data => {
                 setTimeout(() => {
                     this.profileImage = data.url
@@ -117,6 +117,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.stompClient.send('/app/chat/' + this.chatID, {}, JSON.stringify({
             message
         }));
+        // check if can do away with message
         this.messageInput.reset()
     }
 
@@ -131,6 +132,16 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
                 this.recipient = data[0].sender
             }
             this.getProductInfo(this.productID)
+            this.profileService.getProfilePic(this.recipient).subscribe({
+                next: data => {
+                    console.info(data)
+                    this.profileImage = ''
+                    setTimeout(() => {
+                        this.profileImage = data.url
+                    }, 300)
+                },
+                error: err => {this.profileImage = ''}
+            })
         })
         
         const socket = new SockJS('http://localhost:8080/chat');

@@ -42,7 +42,6 @@ public class ProductController {
     public ResponseEntity<String> addNewProduct(@RequestPart("product") Product product, @RequestPart("productImages") MultipartFile[] productImages) {
         try {
             Product result = productService.addNewProduct(product, productImages);
-            System.out.println(result);
             return ResponseEntity.ok().body(result.toJson().toString());
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -128,7 +127,6 @@ public class ProductController {
 
     @PostMapping(path = "/cancelpending")
     public ResponseEntity<String> cancelBuyProduct(@RequestParam MultiValueMap<String, String> data) {
-        System.out.println(data);
         String productID = data.getFirst("productID");
         String buyer = data.getFirst("buyer");
         String seller = data.getFirst("seller");
@@ -142,7 +140,6 @@ public class ProductController {
 
     @PostMapping(path = "/acceptorder")
     public ResponseEntity<String> acceptOrder(@RequestParam MultiValueMap<String, String> data) throws MessagingException {
-        System.out.println(data);
         String productID = data.getFirst("productID");
         String buyer = data.getFirst("buyer");
         // String seller = data.getFirst("seller");
@@ -176,7 +173,6 @@ public class ProductController {
     public ResponseEntity<String> getAllProductTags() {
         List<String> tags = productService.getAllProductTags();
         JsonArray jArr = tags.stream().map(Json::createValue).collect(JsonCollectors.toJsonArray());
-        System.out.println(jArr);
         return ResponseEntity.status(HttpStatus.OK).body(jArr.toString());
     }
 
@@ -194,13 +190,15 @@ public class ProductController {
 
     @PostMapping(path = "/likeproduct")
     public ResponseEntity<String> likeProduct(@RequestParam MultiValueMap<String, String> data) {
-        System.out.println(data);
         String productID = data.getFirst("productID");
         String email = data.getFirst("email");
         String like = data.getFirst("like");
         Boolean result = productService.likeProduct(email, Integer.parseInt(productID), Boolean.parseBoolean(like));
-        System.out.println(result);
-        return ResponseEntity.ok().body(like);
+        if (result) {
+            return ResponseEntity.ok().body(like);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Json.createObjectBuilder().add("error", "unable to like product").build().toString());
+        }
     }
 
     @GetMapping(path = "/getlikedproductIDs/{email}")
@@ -221,6 +219,7 @@ public class ProductController {
     @GetMapping(path = "/watchlist/{email}")
     public ResponseEntity<String> getWatchlist(@PathVariable String email) {
         JsonArray jArr = productService.getWatchlist(email);
+        
         return ResponseEntity.ok().body(jArr.toString());
     }
 

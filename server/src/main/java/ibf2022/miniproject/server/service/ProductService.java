@@ -63,7 +63,6 @@ public class ProductService {
         String uploadID = uploadImageImagga(imageFiles[0]).getResult().get("upload_id");
         List<String> tags = getTagsFromImagga(uploadID);
         ProductTags productTags = new ProductTags(productID, tags);
-        System.out.println(productTags.toString());
         productRepository.upsertProductTags(productTags, "selling");
 
         return product;
