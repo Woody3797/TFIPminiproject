@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { GoogleSigninButtonModule, SocialLoginModule } from '@abacritt/angularx-social-login';
@@ -23,6 +23,7 @@ import { httpInterceptorProviders } from './http.interceptor';
 import { MaterialModule } from './modules/material.module';
 import { SocialAuthServiceProvider } from './modules/social.module';
 import { WatchlistComponent } from './components/watchlist/watchlist.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 
 @NgModule({
@@ -51,6 +52,12 @@ import { WatchlistComponent } from './components/watchlist/watchlist.component';
     MaterialModule,
     SocialLoginModule,
     GoogleSigninButtonModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
   ],
   providers: [
     httpInterceptorProviders,

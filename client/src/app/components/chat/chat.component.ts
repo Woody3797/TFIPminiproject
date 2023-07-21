@@ -72,7 +72,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
                     this.conversationsArray[i]['product'] = d
                 })
             }
-            console.info(this.conversationsArray)
+            // console.info(this.conversationsArray)
             if (!!this.recipient && this.productID > 0) {
                 this.chatID = this.chatService.generateChatID(this.email, this.recipient, this.productID)
                 this.getProductInfo(this.productID)
@@ -92,7 +92,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
             next: data => {
                 setTimeout(() => {
                     this.profileImage = data.url
-                }, 300)
+                }, 200)
             },
             error: err => {console.info(err)}
         })
@@ -100,7 +100,6 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
         this.stompClient.connect({}, (frame) => {
             for (var id of this.chatIDs) {
                 this.stompClient.subscribe('/topic/chat/' + id, data => {
-                    console.info(data)
                     let message: ChatMessage = JSON.parse(data.body)
                     if (message.chatID == this.chatID) {
                         this.messages.push(message)
@@ -111,7 +110,12 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
                         }
                         return -1
                     })
-                    // this.sortConvo()
+                    this.sortConvo()
+                    for (let i = 0; i < this.conversationsArray.length; i++) {
+                        if (this.chatID == this.conversationsArray[i].chatID) {
+                            this.selectedIndex = i
+                        }
+                    }
                 })
             }
         })
@@ -136,9 +140,9 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
                 const prodID = +arr[1]
                 const otherEmail = arr[0]
                 this.product$ = this.productService.getProduct(prodID).subscribe(d => {
-                    var displayConvo = `${otherEmail} -> Product Name: ${d.productName} (${prodID})`
-                    // this.renderer.setProperty(this.convoID.toArray()[i].nativeElement, 'innerText', displayConvo)
-                    this.convoID.toArray()[i].nativeElement.textContent = displayConvo
+                    var displayConvo = `${otherEmail} - Product ID: (${prodID})`
+                    this.renderer.setProperty(this.convoID.toArray()[i].nativeElement, 'textContent', displayConvo)
+                    // this.convoID.toArray()[i].nativeElement.textContent = displayConvo
                 })
             }
         }, 200);
@@ -158,7 +162,6 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
         }));
         this.sortConvo()
         this.messageInput.reset()
-        this.selectedIndex = 0
     }
 
     selectRecipient(chatID: any, i: number) {
@@ -178,7 +181,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
                     this.profileImage = ''
                     setTimeout(() => {
                         this.profileImage = data.url
-                    }, 300)
+                    }, 200)
                 },
                 error: err => {this.profileImage = ''}
             })
@@ -210,9 +213,12 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
                 const otherEmail = arr[0]
                 this.product$ = this.productService.getProduct(prodID).subscribe(d => {
                     this.conversationsArray[i]['product'] = d
-                    var displayConvo = `${otherEmail} -> Product Name: ${d.productName} (${prodID})`
-                    this.convoID.toArray()[i].nativeElement.textContent = displayConvo
+                    var displayConvo = `${otherEmail} - Product ID: (${prodID})`
+                    this.renderer.setProperty(this.convoID.toArray()[i].nativeElement, 'textContent', displayConvo)
                 })
+                if (this.conversationsArray[i].chatID == this.chatID) {
+                    this.selectedIndex = i
+                }
             }
         })
     }

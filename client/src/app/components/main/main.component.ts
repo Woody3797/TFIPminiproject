@@ -20,7 +20,10 @@ export class MainComponent implements OnInit {
 
     ngOnInit(): void {
         this.email = this.storageService.getUser().email
-        
+    }
+
+    gotoAddProduct() {
+        this.router.navigate([ this.email + '/addproduct'])
     }
 
 }

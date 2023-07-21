@@ -3,22 +3,28 @@
 <div id="container" class="container mt-3 mw-80">
     <aside>
         <header>
-            <h1 class="mat-headline-4" style="margin: 0;">Conversations</h1>
+            <h1 class="mat-headline-5" style="margin: 0;">Conversations</h1>
         </header>
         <mat-selection-list>
             <mat-list-item *ngFor="let conversation of conversationsArray; let i = index" (click)="selectRecipient(conversation.chatID, i)" [ngClass]="{'selected': selectedIndex == i}">
-                <span matListItemTitle #convoID>{{ conversation.chatID }}</span>
-                <span matListItemLine>Product: {{ conversation?.product?.productName }} - ${{ conversation?.product?.price }}</span>
+                <span style="white-space: break-spaces;" matListItemTitle #convoID>{{ conversation.chatID }}</span>
+                <span matListItemLine>
+                    Product Name: {{ conversation?.product?.productName }} - ${{ conversation?.product?.price }}
+                    <span *ngIf="conversation?.product?.productStatus == 'sold'" style="color: green; font-weight: bold; float: right;">SOLD</span>
+                </span>
             </mat-list-item>
         </mat-selection-list>
     </aside>
     <main>
-        <header>
-            <img *ngIf="profileImage.length != 0; else noImage" src="{{ profileImage }}" height="150px">
-            <div>
-                <h2 *ngIf="recipient; else noRecipient">
-                    {{ recipient }} - Product: <span *ngIf="product">{{ product.productName }}({{ product.productID }})</span>
-                </h2>
+        <header style="display: flex;">
+            <div style="width: 10%;">
+                <img *ngIf="profileImage.length != 0; else noImage" src="{{ profileImage }}">
+            </div>
+            <div *ngIf="recipient; else noRecipient" class="conversation">
+                <span class="fs-4" style="padding: 5px;">
+                    {{ recipient }} - Product: <span *ngIf="product">{{ product.productName }} ({{ product.productID }})</span>
+                </span>
+                <span *ngIf="product.productStatus == 'sold';else showSelling" style="float: right; padding: 5px;">status: {{ product.productStatus }}</span>
             </div>
         </header>
         <div *ngIf="recipient;else noChat" class="chatwindow">
@@ -45,7 +51,9 @@
 </ng-template>
 
 <ng-template #noRecipient>
-    <h3>SELECT A CONVERSATION FROM THE CONVERSATIONS BAR</h3>
+    <div class="conversation">
+        <span style="margin: auto;">SELECT A CONVERSATION FROM THE CONVERSATIONS BAR</span>
+    </div>
 </ng-template>
 
 <ng-template #noChat>
@@ -53,4 +61,10 @@
         <h1 class="mat-headline-3" style="margin: 1rem">NO ACTIVE CONVERSATION</h1>
         <h2 class="mat-headline-4">Select a conversation from the left</h2>
     </div>
+</ng-template>
+
+<ng-template #showSelling>
+    <span style="padding: 5px;">
+        status: selling
+    </span>
 </ng-template>

@@ -2,18 +2,20 @@
 
 <div *ngIf="email">
     <div class="container mt-3 mw-80">
-        <h1 class="fs-1"><ins>Main Page</ins></h1>
         <div>
-            <h2>Hi {{ email }}, you can navigate the site using the buttons on top.</h2>
+            <h1 class="fs-2">Welcome {{ email }}, you can navigate the site using the buttons on top.</h1>
         </div>
         <br>
         <div>
-            <h2>
-                Here are some quick links to get you started!
-            </h2>
-            <div>
-                
-            </div>
+            <h1>
+                If you are new, add a product now, or browse all available products by clicking the browse button on the top bar.
+            </h1>
+        </div>
+        <br>
+        <div style="display: flex; justify-content: center;">
+            <button class="btn btn-raised bg-white" (click)="gotoAddProduct()">
+                <img src="https://cdn-icons-png.flaticon.com/512/7387/7387315.png" style="max-width: 100%; max-height: auto;">
+            </button>
         </div>
     </div>
 </div>
