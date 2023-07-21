@@ -27,7 +27,6 @@ export class ProductService {
 
     getProduct(productID: number): Observable<Product> {
         this.productID = productID
-        console.info(this.productID)
         return this.http.get<Product>('/api/product/' + productID)
     }
 

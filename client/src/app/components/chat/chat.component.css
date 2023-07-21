@@ -18,17 +18,17 @@ body {
 }
 
 aside {
-    width: 20%;
+    width: 30%;
     height: 100%;
     max-height: 2000px;
-    background-color: #a4a4a4;
+    background-color: rgb(177, 177, 177);
     display: inline-block;
     font-size: 1rem;
     vertical-align: top;
 }
 
 main {
-    width: 80%;
+    width: 70%;
     height: 100%;
     max-height: 2000px;
     display: inline-block;
@@ -37,7 +37,9 @@ main {
 }
 
 aside header {
-    padding: 30px 20px;
+    padding: 20px;
+    background-color: rgb(111, 199, 149);
+    text-align: center;
 }
 
 aside input {
@@ -60,20 +62,23 @@ aside input::placeholder {
 }
 
 aside ul {
-    padding-left: 0;
-    margin: 0;
+    padding: 0.3rem;
+    margin: 0.3rem;
     list-style-type: none;
     overflow-y: auto;
-    height: 85%;
+    height: 95%;
+    border: solid gray;
 }
 
 aside li {
     padding: 0.5rem;
+    margin: 0.3rem;
     text-align: center;
+    border: dashed green;
 }
 
 aside li:hover {
-    background-color: #5e616a;
+    background-color: #777777;
 }
 
 h2, h3 {
@@ -278,11 +283,15 @@ main footer a {
 
 img {
     max-width: 100%;
-    max-height: 100%; 
-    object-fit: contain;
+    max-height: 100%;
+    object-fit: cover;
 }
 
 .chatwindow {
     width: 100%;
     height: 100%;
+}
+
+.selected {
+    background-color: #8c8e91;
 }

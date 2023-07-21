@@ -4,5 +4,11 @@ export interface ChatMessage {
     sender: string
     recipient: string
     content: string
-    timestamp?: Date | undefined
+    timestamp: Date
+}
+
+export interface ChatConvo {
+    chatID: string
+    productID: number
+    messages: ChatMessage[]
 }
