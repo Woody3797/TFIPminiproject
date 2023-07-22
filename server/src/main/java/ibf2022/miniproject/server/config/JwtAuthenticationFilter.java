@@ -95,7 +95,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // Set bearer token to response headers
             response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken.toString());
             filterChain.doFilter(request, response);
-            
         } catch (IllegalArgumentException e) {
             System.out.println("unable to get jwt token: " + e.getMessage());
         } catch (ExpiredJwtException e) {
@@ -105,7 +104,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public String tokenExtractor(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
-        // System.out.println("header: " + header);
+        System.out.println("header: " + header);
         if (header != null) {
             return header.replace("Bearer ", "");
         }
