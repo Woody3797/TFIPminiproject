@@ -22,14 +22,14 @@ jobs:
         java-version: 17
 
     - name: Build with Maven
-      working-directory: server
       run: mvn -B package --file pom.xml
+      working-directory: server
 
     - name: Install Railway
       run: npm i -g @railway/cli
 
     - name: Deploy to Railway
-      working-directory: server
       run: railway up
+      working-directory: server
       env:
         RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
