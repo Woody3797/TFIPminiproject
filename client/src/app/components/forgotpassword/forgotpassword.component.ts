@@ -22,21 +22,24 @@ export class ForgotpasswordComponent implements OnInit {
 
     ngOnInit(): void {
         this.createForm()
-
     }
 
     createForm() {
         this.form = this.fb.group({
-            email: this.fb.control('a@a.com', [Validators.required, Validators.email])
+            email: this.fb.control('', [Validators.required, Validators.email])
         })
     }
 
     resetPassword() {
-        this.loginService.resetPassword(this.form.value.email).subscribe(data => {
-            console.info(data)
+        this.loginService.resetPassword(this.form.value.email).subscribe({
+            next: data => {
+                alert('Email with new password has been sent!')
+                this.router.navigate(['/login'])
+            },
+            error: err => {
+                alert('No such email found, enter a registered email!')
+            }
         })
-        // alert('Email with new password has been sent!')
-        // this.router.navigate(['/login'])
     }
 
     invalid() {
