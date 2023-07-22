@@ -36,8 +36,8 @@ public class WebSecurityConfig {
         // .and().authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.csrf((csrf) -> csrf.disable())
         .authorizeHttpRequests((authz) -> authz
-        .requestMatchers("/**").authenticated()
-        .anyRequest().permitAll()
+        .requestMatchers("/**").permitAll()
+        .anyRequest().authenticated()
         ).sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authenticationProvider(authenticationProvider())
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
