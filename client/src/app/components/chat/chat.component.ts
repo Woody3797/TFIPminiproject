@@ -11,7 +11,7 @@ import { ProfileService } from 'src/app/service/profile.service';
 import { StorageService } from 'src/app/service/storage.service';
 import * as Stomp from 'stompjs';
 
-const SOCKET_KEY = 'https://fluttering-sock-production.up.railway.app/api/chat'
+const SOCKET_KEY = 'https://fluttering-sock-production.up.railway.app/chat'
 
 @Component({
     selector: 'app-chat',
