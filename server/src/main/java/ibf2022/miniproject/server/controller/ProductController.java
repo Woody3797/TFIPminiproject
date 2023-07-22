@@ -42,6 +42,7 @@ public class ProductController {
     public ResponseEntity<String> addNewProduct(@RequestPart("product") Product product, @RequestPart("productImages") MultipartFile[] productImages) {
         try {
             Product result = productService.addNewProduct(product, productImages);
+            System.out.println(result);
             return ResponseEntity.ok().body(result.toJson().toString());
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -53,6 +54,7 @@ public class ProductController {
     public ResponseEntity<String> getProductByID(@PathVariable String productID) {
         Optional<Product> opt = productService.getProductByID(Integer.parseInt(productID));
         if (opt.isPresent()) {
+            System.out.println(opt.get());
             return ResponseEntity.ok().body(opt.get().toJson().toString());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "no product found").build().toString());
@@ -63,6 +65,7 @@ public class ProductController {
     public ResponseEntity<String> getAllProductsByEmail(@PathVariable String email, @RequestParam(required = false) Integer pageSize, @RequestParam(required = false, defaultValue = "0") Integer pageIndex) {
         JsonArray jArr = productService.getAllProducts(email, pageSize, pageIndex);
         if (jArr != null) {
+            System.out.println(jArr.size());
             return ResponseEntity.ok().body(jArr.toString());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "no products found").build().toString());
@@ -72,8 +75,8 @@ public class ProductController {
     @GetMapping(path = "/{email}/allproducts")
     public ResponseEntity<String> getAllOtherProducts(@PathVariable String email, @RequestParam(required = false) Integer pageSize, @RequestParam(required = false, defaultValue = "0") Integer pageIndex) {
         JsonArray jArr = productService.getAllOtherProducts(email, pageSize, pageIndex);
-        
         if (jArr != null) {
+            System.out.println(jArr.size());
             return ResponseEntity.ok().body(jArr.toString());
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "no products found").build().toString());
@@ -86,6 +89,7 @@ public class ProductController {
             boolean res = productService.editProduct(product, productImages);
             if (res) {
                 Product result = productService.getProductByID(Integer.parseInt(productID)).get();
+                System.out.println(result.toString());
                 return ResponseEntity.ok().body(result.toJson().toString());
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(Json.createObjectBuilder().add("error", "unable to edit product details").build().toString());
@@ -164,6 +168,7 @@ public class ProductController {
     public ResponseEntity<String> getProductTags(@PathVariable String productID) {
         ProductTags tags = productService.getProductTags(Integer.parseInt(productID));
         if (tags != null) {
+            System.out.println(tags.toString());
             return ResponseEntity.ok().body(tags.toJson().toString());
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Json.createObjectBuilder().add("error", "no tag details").build().toString());
