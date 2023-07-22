@@ -58,12 +58,4 @@ public class SQLQueries {
             UPDATE user_details SET password = ? WHERE email = ?
             """;
 
-    public static final String SAVE_CHAT_CONVO = """
-            INSERT INTO chat_details(sender, recipient, productID) values (?, ?, ?)
-            """;
-
-    public static final String GET_CHAT_CONVO_BY_SENDER_RECIPIENT = """
-            SELECT * FROM chat_details WHERE sender = ? AND recipient = ? AND productID = ?
-            """;
-
 }

@@ -74,7 +74,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             } else {
                 jwtToken = tokenExtractor(request);
-                // System.out.println("jwttoken: "+ jwtToken);
+                System.out.println("jwttoken: "+ jwtToken);
     
                 if (jwtToken == null || jwtToken.isEmpty()) {
                     System.out.println("filterchain");
@@ -87,7 +87,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     if (jwtService.validateToken(jwtToken)) {
                         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        // System.out.println("auth: " + authToken);
+                        System.out.println("auth: " + authToken);
                         SecurityContextHolder.getContext().setAuthentication(authToken);
                     }
                 }

@@ -1,7 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { map } from 'rxjs';
 import { Image, Product, UploadProduct } from 'src/app/models/product.model';
 import { ProductService } from 'src/app/service/product.service';
 import { StorageService } from 'src/app/service/storage.service';
@@ -49,9 +48,9 @@ export class ProductaddComponent implements OnInit {
 
     createAddProductForm() {
         this.form = this.fb.group({
-            productName: this.fb.control<string>(Math.random().toString(36).slice(-5).replace(/\d/g, String.fromCharCode(Math.random() * 26 + 97)), [Validators.required, Validators.minLength(5)]),
-            price: this.fb.control<number>(Math.floor(Math.random() * 20) + 1.00, [Validators.required, Validators.min(0)]),
-            description: this.fb.control<string>('test'),
+            productName: this.fb.control<string>('', [Validators.required, Validators.minLength(5)]),
+            price: this.fb.control<number>(0, [Validators.required, Validators.min(0)]),
+            description: this.fb.control<string>(''),
             productImage: this.fb.control<File | null>(null, [])
         })
     }

@@ -1,0 +1,35 @@
+name: Spring Boot CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Use JDK 19
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: 17
+
+    - name: Build with Maven
+      working-directory: server
+      run: mvn -B package --file pom.xml
+
+    - name: Install Railway
+      run: npm i -g @railway/cli
+
+    - name: Deploy to Railway
+      working-directory: server
+      run: railway up
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}

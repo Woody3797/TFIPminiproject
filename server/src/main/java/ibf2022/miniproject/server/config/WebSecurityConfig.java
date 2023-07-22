@@ -36,7 +36,7 @@ public class WebSecurityConfig {
         // .and().authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.csrf((csrf) -> csrf.disable())
         .authorizeHttpRequests((authz) -> authz
-        .requestMatchers("/user/**", "/resetpassword", "/chat").permitAll()
+        .requestMatchers("/user/**", "/resetpassword", "/chat", "/**").permitAll()
         .anyRequest().authenticated()
         ).sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authenticationProvider(authenticationProvider())
