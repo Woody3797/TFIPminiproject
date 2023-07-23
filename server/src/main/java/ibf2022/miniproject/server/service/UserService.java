@@ -42,7 +42,8 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean resetPassword(String email, String password) {
-        return userRepository.resetPassword(email, password);
+        String encodedPassword = jwtService.passwordEncoder().encode(password);
+        return userRepository.resetPassword(email, encodedPassword);
     }
 
     public String editProfileDetails(String email, String password, MultipartFile profileImage) throws IOException {
