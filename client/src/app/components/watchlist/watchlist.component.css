@@ -37,6 +37,8 @@ mat-card {
     border-radius: 2px;
     background-color: #ddcdeb;
     cursor: pointer;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 mat-card-header {
