@@ -39,7 +39,7 @@
                 </li>
             </ul>
             <footer>
-                <textarea placeholder="Type your message" #chatMessage (keydown.enter)="sendMessage(chatMessage.value);false" [formControl]="messageInput"></textarea>
+                <textarea placeholder="Type your message" #chatMessage (keydown.enter)="sendMessage(chatMessage.value);false" [formControl]="messageInput" [disabled]="chatMessage.value.length == 0"></textarea>
                 <button mat-raised-button class="button" (click)="sendMessage(chatMessage.value)" type="submit" [disabled]="messageInput.invalid">Send</button>
             </footer>
         </div>
