@@ -24,7 +24,6 @@ export class ProducttagsComponent implements OnInit {
         this.productID = +this.activatedRoute.snapshot.params['productID']
         this.productService.getProductTags(this.productID).subscribe(data => {
             this.productTags = data
-            console.info('tags ', data)
         })
     }
 

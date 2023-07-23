@@ -95,7 +95,6 @@ export class LoginComponent implements OnInit {
         }
         this.loginService.signup(signupRequest).subscribe({
             next: res => {
-                console.info(res)
                 this.storageService.saveUser(res)
                 if (this.signupForm.value.email == res.email) {
                     this.router.navigate([res.email + '/profile'])

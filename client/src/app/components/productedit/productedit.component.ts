@@ -70,10 +70,8 @@ export class ProducteditComponent implements OnInit {
             description: this.form.value.description,
             email: this.storageService.getUser().email
         }
-        console.info(this.upproduct)
         this.productService.editProduct(this.upproduct, this.images, Number.parseInt(this.productID)).subscribe({
             next: data => {
-                console.info(data)
                 this.router.navigate(['/product/' + this.productID])
             },
             error: e => {

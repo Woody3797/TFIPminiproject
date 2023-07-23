@@ -56,12 +56,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.form.patchValue({
             profileImage: event.target.files[0]
         })
-        console.info(this.form.value.profileImage)
         this.form.markAsDirty()
     }
 
     editProfile() {
-        console.info(this.form.value)
         this.profileService.editProfile(this.email, this.form.value.password, this.form.value.profileImage).pipe(
             map(data => {
                 this.profileImage = data.url

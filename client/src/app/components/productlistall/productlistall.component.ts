@@ -48,7 +48,6 @@ export class ProductlistallComponent implements OnInit, OnDestroy, AfterViewInit
         });
         this.prods = this.productService.getAllOtherProducts(this.email, this.pageSize, this.pageIndex).pipe(
             map(data => {
-                console.info(data)
                 this.productlist = data
                 return this.productlist
             })

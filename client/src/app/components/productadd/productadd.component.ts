@@ -62,7 +62,6 @@ export class ProductaddComponent implements OnInit {
         this.upproduct.email = this.storageService.getUser().email
         this.productService.addNewProduct(this.upproduct, this.images).subscribe({
             next: data => {
-                console.info(data)
                 this.router.navigate(['/product/' + data.productID])
             },
             error: e => {

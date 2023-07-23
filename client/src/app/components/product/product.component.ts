@@ -44,7 +44,6 @@ export class ProductComponent implements OnInit {
         this.product$ = this.productService.getProduct(this.productID).pipe(
             map(p => {
                 this.product = p
-                console.info(p)
                 this.productStatus = p.productStatus
                 if (this.storageService.getUser().email == p.email) {
                     this.isSeller = true
@@ -55,7 +54,6 @@ export class ProductComponent implements OnInit {
 
         this.productService.getOrderDetails(this.productID).subscribe(data => {
             this.orderDetails = data
-            console.info('orderdetails: ',this.orderDetails)
             if (this.orderDetails.buyers.includes(this.storageService.getUser().email)) {
                 this.isOrdering = true
             }
@@ -65,7 +63,6 @@ export class ProductComponent implements OnInit {
         })
 
         lastValueFrom(this.productService.getLikedProductIDs(this.email)).then(data => {
-            console.info('liked products ', data)
             if (data.productIDs.includes(this.productID)) {
                 this.isLiked = true
             }
@@ -132,11 +129,9 @@ export class ProductComponent implements OnInit {
             confirmButtonText: 'Yes'
         }).then(result => {
             if (result.value) {
-                console.info(this.form.value.buyer)
                 this.productService.acceptOrder(this.productID.toString(), this.form.value.buyer, this.product.email).subscribe(data => {
                     this.orderDetails = data
                     this.isSold = true
-                    console.info(data)
                 })
             }
         })
@@ -153,7 +148,6 @@ export class ProductComponent implements OnInit {
         this.isLiked = !this.isLiked
         lastValueFrom(this.productService.likeProduct(this.email, this.productID, this.isLiked)).then(data => {
             this.isLiked = data
-            console.info(this.isLiked)
         })
     }
 
