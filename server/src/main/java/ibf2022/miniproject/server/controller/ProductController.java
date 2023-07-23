@@ -113,7 +113,6 @@ public class ProductController {
 
     @PostMapping(path = "/buyproduct")
     public ResponseEntity<String> buyProduct(@RequestParam MultiValueMap<String, String> data) {
-        System.out.println(data);
         String status = data.getFirst("status");
         String productID = data.getFirst("productID");
         String buyer = data.getFirst("buyer");
