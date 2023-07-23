@@ -65,7 +65,7 @@ public class ProductController {
     public ResponseEntity<String> getAllProductsByEmail(@PathVariable String email, @RequestParam(required = false) Integer pageSize, @RequestParam(required = false, defaultValue = "0") Integer pageIndex) {
         JsonArray jArr = productService.getAllProducts(email, pageSize, pageIndex);
         if (jArr != null) {
-            System.out.println(jArr.size());
+            System.out.println("No. of own products: " + jArr.size());
             return ResponseEntity.ok().body(jArr.toString());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "no products found").build().toString());
@@ -76,7 +76,7 @@ public class ProductController {
     public ResponseEntity<String> getAllOtherProducts(@PathVariable String email, @RequestParam(required = false) Integer pageSize, @RequestParam(required = false, defaultValue = "0") Integer pageIndex) {
         JsonArray jArr = productService.getAllOtherProducts(email, pageSize, pageIndex);
         if (jArr != null) {
-            System.out.println(jArr.size());
+            System.out.println("No. of other products: " + jArr.size());
             return ResponseEntity.ok().body(jArr.toString());
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "no products found").build().toString());

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { LoginService } from 'src/app/service/login.service';
 import { ProductService } from 'src/app/service/product.service';
 import { StorageService } from 'src/app/service/storage.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-header',
@@ -28,28 +29,68 @@ export class HeaderComponent implements OnInit {
     }
 
     gotoProfile() {
-        this.router.navigate([this.email + '/profile'])
+        if (!this.isLoggedIn) {
+            Swal.fire({
+                title: 'LOGIN!',
+                text: 'Please login',
+                confirmButtonText: 'Ok'
+            })
+        } else {
+            this.router.navigate([this.email + '/profile'])
+        }
     }
 
     addProduct() {
-        this.router.navigate([this.email + '/addproduct'])
+        if (!this.isLoggedIn) {
+            Swal.fire({
+                title: 'LOGIN!',
+                text: 'Please login',
+                confirmButtonText: 'Ok'
+            })
+        } else {
+            this.router.navigate([this.email + '/addproduct'])
+        }
     }
 
     listProducts() {
-        this.router.navigate([ this.email + '/productlist'])
+        if (!this.isLoggedIn) {
+            Swal.fire({
+                title: 'LOGIN!',
+                text: 'Please login',
+                confirmButtonText: 'Ok'
+            })
+        } else {
+            this.router.navigate([ this.email + '/productlist'])
+        }
     }
 
     listAllProducts() {
-        this.router.navigate([this.email + '/allproducts'], { queryParams: {
-            pageSize: 10,
-            pageIndex: 0
-        }}).then(() => {
-            location.reload()
-        })
+        if (!this.isLoggedIn) {
+            Swal.fire({
+                title: 'LOGIN!',
+                text: 'Please login',
+                confirmButtonText: 'Ok'
+            })
+        } else {
+            this.router.navigate([this.email + '/allproducts'], { queryParams: {
+                pageSize: 10,
+                pageIndex: 0
+            }}).then(() => {
+                location.reload()
+            })
+        }
     }
 
     gotoWatchlist() {
-        this.router.navigate([this.email + '/watchlist'])
+        if (!this.isLoggedIn) {
+            Swal.fire({
+                title: 'LOGIN!',
+                text: 'Please login',
+                confirmButtonText: 'Ok'
+            })
+        } else {
+            this.router.navigate([this.email + '/watchlist'])
+        }
     }
 
     gotoChat() {

@@ -3,7 +3,7 @@ CREATE TABLE `tfip_project`.`product_details` (
   `productID` INT NOT NULL AUTO_INCREMENT,
   `productName` VARCHAR(255) NOT NULL,
   `price` DOUBLE NOT NULL,
-  `description` VARCHAR(255) NULL,
+  `description` VARCHAR(2560) NULL,
   `email` VARCHAR(255) NOT NULL,
   `uploadTime` DATETIME NOT NULL,
   `productStatus` VARCHAR(45) NOT NULL,

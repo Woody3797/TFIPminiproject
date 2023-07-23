@@ -5,7 +5,7 @@
             <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="gotoProfile()">Profile</button>
                 <button mat-menu-item [matMenuTriggerFor]="product">Product</button>
-                <button mat-menu-item (click)="logout()">Logout</button>
+                <button mat-menu-item *ngIf="isLoggedIn" (click)="logout()">Logout</button>
             </mat-menu>
             <mat-menu #product="matMenu">
                 <button mat-menu-item (click)="listProducts()">My Product List</button>
