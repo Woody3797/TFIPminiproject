@@ -103,7 +103,6 @@ public class ProductController {
     @DeleteMapping(path = "/deleteproduct/{productID}")
     public ResponseEntity<String> deleteProduct(@PathVariable String productID) {
         boolean result = productService.deleteProduct(Integer.parseInt(productID));
-
         if (result) {
             return ResponseEntity.ok().body(Json.createObjectBuilder().add("result", "product with productID: " + productID + " deleted").build().toString());
         } else {
