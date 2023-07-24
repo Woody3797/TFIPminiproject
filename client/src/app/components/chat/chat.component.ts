@@ -152,7 +152,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
                     // this.renderer.setProperty(this.convoID.toArray()[i].nativeElement, 'textContent', displayConvo)
                 })
             }
-        }, 150);
+        }, 200);
     }
 
     sendMessage(content: string) {
