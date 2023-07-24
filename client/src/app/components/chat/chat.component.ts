@@ -11,7 +11,8 @@ import { ProfileService } from 'src/app/service/profile.service';
 import { StorageService } from 'src/app/service/storage.service';
 import * as Stomp from 'stompjs';
 
-const SOCKET_KEY = 'https://fluttering-sock-production.up.railway.app/chat'
+const SOCKET_KEY = 'http://localhost:8080/chat'
+// const SOCKET_KEY = 'https://fluttering-sock-production.up.railway.app/chat'
 
 @Component({
     selector: 'app-chat',
@@ -66,13 +67,14 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
             for (let i = 0; i < this.conversationsArray.length; i++) {
                 const c = this.conversationsArray[i].chatID
                 let arr = c.split(',')
+                const prodID = +arr[2]
                 arr = arr.filter((s: string) => s != this.email)
-                const prodID = +arr[1]
                 this.product$ = this.productService.getProduct(prodID).subscribe(d => {
                     this.conversationsArray[i]['product'] = d
+                    this.conversationsArray[i]['newMessages'] = false
                 })
             }
-            // console.info(this.conversationsArray)
+            console.info(this.conversationsArray)
             if (!!this.recipient && this.productID > 0) {
                 this.chatID = this.chatService.generateChatID(this.email, this.recipient, this.productID)
                 this.getProductInfo(this.productID)
@@ -110,12 +112,17 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
                         }
                         return -1
                     })
-                    this.sortConvo()
-                    for (let i = 0; i < this.conversationsArray.length; i++) {
-                        if (this.chatID == this.conversationsArray[i].chatID) {
-                            this.selectedIndex = i
+                    this.convos$ = this.chatService.getAllConvos(this.email).subscribe(data => {
+                        this.sortConvo(data)
+                        for (let i = 0; i < this.conversationsArray.length; i++) {
+                            if (this.chatID == this.conversationsArray[i].chatID) {
+                                this.selectedIndex = i
+                            }
+                            if (message.chatID != this.chatID && message.chatID == this.conversationsArray[i].chatID) {
+                                this.conversationsArray[i]['newMessages'] = true
+                            }
                         }
-                    }
+                    })
                 })
             }
         })
@@ -134,21 +141,24 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
     ngAfterViewInit(): void {
         setTimeout(() => {
             for (let i = 0; i < this.convoID.toArray().length; i++) {
-                const c = this.convoID.toArray()[i].nativeElement.innerText
+                const c = this.convoID.toArray()[i].nativeElement.innerText.trim()
                 let arr = c.split(',')
+                const prodID = +arr[2]
                 arr = arr.filter((s: string) => s != this.email)
-                const prodID = +arr[1]
                 const otherEmail = arr[0]
                 this.product$ = this.productService.getProduct(prodID).subscribe(d => {
                     var displayConvo = `${otherEmail} - Product ID: (${prodID})`
-                    this.renderer.setProperty(this.convoID.toArray()[i].nativeElement, 'textContent', displayConvo)
-                    // this.convoID.toArray()[i].nativeElement.textContent = displayConvo
+                    this.convoID.toArray()[i].nativeElement.textContent = displayConvo
+                    // this.renderer.setProperty(this.convoID.toArray()[i].nativeElement, 'textContent', displayConvo)
                 })
             }
-        }, 200);
+        }, 150);
     }
 
     sendMessage(content: string) {
+        if (content.length == 0) {
+            return;
+        }
         const message: ChatMessage = {
             chatID: this.chatID,
             productID: this.productID,
@@ -160,13 +170,17 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
         this.stompClient.send('/app/chat/' + this.chatID, {}, JSON.stringify({
             message
         }));
-        this.sortConvo()
         this.messageInput.reset()
     }
 
     selectRecipient(chatID: any, i: number) {
         this.chatID = chatID
         this.selectedIndex = i
+        for (let i = 0; i < this.conversationsArray.length; i++) {
+            if (this.chatID == this.conversationsArray[i].chatID) {
+                this.conversationsArray[i].newMessages = false
+            }
+        }
         this.chatService.getChatMessagesByID(this.chatID).subscribe(data => {
             this.messages = data
             this.productID = data[0].productID
@@ -194,35 +208,6 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
         })
     }
 
-    sortConvo() {
-        this.convos$ = this.chatService.getAllConvos(this.email).subscribe(data => {
-            let conversationsMap = this.groupBy(data, 'chatID')
-            this.conversationsArray = Object.entries(conversationsMap).map(([chatID, messages]) => ({ chatID, messages }))
-            this.chatIDs = Object.keys(conversationsMap)
-            this.conversationsArray = this.conversationsArray.sort((a, b) => {
-                if (a.messages[a.messages.length-1].timestamp > b.messages[b.messages.length-1].timestamp) {
-                    return -1
-                }
-                return 1
-            })
-            for (let i = 0; i < this.conversationsArray.length; i++) {
-                const c = this.conversationsArray[i].chatID
-                let arr = c.split(',')
-                arr = arr.filter((s: string) => s != this.email)
-                const prodID = +arr[1]
-                const otherEmail = arr[0]
-                this.product$ = this.productService.getProduct(prodID).subscribe(d => {
-                    this.conversationsArray[i]['product'] = d
-                    var displayConvo = `${otherEmail} - Product ID: (${prodID})`
-                    this.renderer.setProperty(this.convoID.toArray()[i].nativeElement, 'textContent', displayConvo)
-                })
-                if (this.conversationsArray[i].chatID == this.chatID) {
-                    this.selectedIndex = i
-                }
-            }
-        })
-    }
-
     private groupBy<T>(array: Array<T>, property: keyof T): { [key: string]: Array<T> } {
         return array.reduce(
             (objectToBeBuilt: { [key: string]: Array<T> }, arrayElem: T) => {
@@ -236,6 +221,43 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
                 objectToBeBuilt[newOuterIdx]?.push(arrayElem);
                 return objectToBeBuilt;
             }, {});
+    }
+
+    sortConvo(data: ChatMessage[]) {
+        let conversationsMap = this.groupBy(data, 'chatID')
+        let conversationsArray2: any[] = Object.entries(conversationsMap).map(([chatID, messages]) => ({ chatID, messages }))
+        this.chatIDs = Object.keys(conversationsMap)
+        conversationsArray2 = conversationsArray2.sort((a, b) => {
+            if (a.messages[a.messages.length-1].timestamp > b.messages[b.messages.length-1].timestamp) {
+                return -1
+            }
+            return 1
+        })
+        for (let i = 0; i < conversationsArray2.length; i++) {
+            if (this.conversationsArray[i].newMessages) {
+                let newMessageID = this.conversationsArray[i].chatID
+                for (let j = 0; j < conversationsArray2.length; j++) {
+                    if (conversationsArray2[j].chatID == newMessageID) {
+                        conversationsArray2[j]['newMessages'] = true
+                        console.info(conversationsArray2)
+                    }
+                }
+            }
+            const c = conversationsArray2[i].chatID.trim()
+            let arr = c.split(',')
+            const prodID = +arr[2]
+            arr = arr.filter((s: string) => s != this.email)
+            const otherEmail = arr[0]
+            this.product$ = this.productService.getProduct(prodID).subscribe(d => {
+                conversationsArray2[i]['product'] = d
+                var displayConvo = `${otherEmail} - Product ID: (${prodID})`
+                this.renderer.setProperty(this.convoID.toArray()[i].nativeElement, 'textContent', displayConvo)
+            })
+            if (conversationsArray2[i].chatID == this.chatID) {
+                this.selectedIndex = i
+            }
+        }
+        this.conversationsArray = conversationsArray2
     }
 
 }

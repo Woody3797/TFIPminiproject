@@ -54,7 +54,7 @@ public class ProductController {
     public ResponseEntity<String> getProductByID(@PathVariable String productID) {
         Optional<Product> opt = productService.getProductByID(Integer.parseInt(productID));
         if (opt.isPresent()) {
-            System.out.println(opt.get());
+            // System.out.println(opt.get());
             return ResponseEntity.ok().body(opt.get().toJson().toString());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Json.createObjectBuilder().add("error", "no product found").build().toString());

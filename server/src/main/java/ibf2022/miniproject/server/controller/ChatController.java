@@ -36,7 +36,7 @@ public class ChatController {
         message.setSender(jo.getJsonObject("message").getString("sender"));
         message.setRecipient(jo.getJsonObject("message").getString("recipient"));
         message.setContent(jo.getJsonObject("message").getString("content"));
-        // System.out.println(message);
+        // System.out.println(message.toString());
         ChatMessage result = chatService.saveChatMessage(message);
 
         return result;
