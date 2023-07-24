@@ -34,6 +34,7 @@ export class ProductlistallComponent implements OnInit, OnDestroy, AfterViewInit
     loggedIn = this.storageService.isLoggedIn()
     tags!: string[]
     prods!: Subscription
+    isLoaded = false
 
     ngOnInit(): void {
         if (this.tag != undefined) {
@@ -46,12 +47,15 @@ export class ProductlistallComponent implements OnInit, OnDestroy, AfterViewInit
         this.productService.getAllOtherProductsCount(this.email).subscribe(data => {
             this.length = data
         });
+
         this.prods = this.productService.getAllOtherProducts(this.email, this.pageSize, this.pageIndex).pipe(
             map(data => {
                 this.productlist = data
+                this.isLoaded = true
                 return this.productlist
             })
         ).subscribe()
+
         this.productService.getAllProductTags().subscribe(data => {
             this.tags = this.shuffleArray(data).slice(0, this.randomIntFromInterval(13, 17))
         })

@@ -66,7 +66,7 @@ mat-card-header {
     border: 1px solid black;
     color: darkred;
     width: 30%;
-    height: 100%;
+    height: 400px;
     margin: 0.5rem;
     max-width: 350px;
     max-height: 450px;

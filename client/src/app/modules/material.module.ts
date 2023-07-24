@@ -13,6 +13,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatListModule } from '@angular/material/list';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 const matModules: any[] = [
@@ -30,6 +31,7 @@ const matModules: any[] = [
     MatSelectModule,
     MatChipsModule,
     MatListModule,
+    MatProgressSpinnerModule
 ]
 
 @NgModule({

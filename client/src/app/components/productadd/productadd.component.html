@@ -10,7 +10,7 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Product Price</mat-label>
-                    <input type="number" matInput placeholder="Product Price" min="0" step="0.1" formControlName="price" (input)="limitPriceDecimal($event)" (blur)="priceToDecimal($event)">
+                    <input type="number" matInput placeholder="Product Price" min="0" step="0.1" formControlName="price" (keyup)="limitPriceDecimal($event)" (blur)="priceToDecimal($event)">
                 </mat-form-field>
                 <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Product Description</mat-label>

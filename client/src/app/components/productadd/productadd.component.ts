@@ -49,7 +49,7 @@ export class ProductaddComponent implements OnInit {
     createAddProductForm() {
         this.form = this.fb.group({
             productName: this.fb.control<string>('', [Validators.required, Validators.minLength(5)]),
-            price: this.fb.control<number>(0, [Validators.required, Validators.min(0)]),
+            price: this.fb.control<number>(Number.parseFloat(''), [Validators.required, Validators.min(0)]),
             description: this.fb.control<string>(''),
             productImage: this.fb.control<File | null>(null, [])
         })
@@ -108,20 +108,20 @@ export class ProductaddComponent implements OnInit {
     invalidForm() {
         return this.form.invalid || this.product.images.length == 0
     }
-
-    limitPriceDecimal(event: Event) {
-        const target = event.target as HTMLInputElement
-        const separator = '.'
-        const regex = new RegExp(`^\\d*(${separator}\\d{0,2})?$`)
-        if (!regex.test(target.value)) {
-            target.value = target.value.slice(0, -1)
+    
+    limitPriceDecimal(event: any) {
+        let dec = event.target.value.indexOf(".")
+        let tooLong = event.target.value.length > dec + 3
+        let invalidNum = isNaN(parseFloat(event.target.value))
+        if ((dec >= 0 && tooLong) || invalidNum) {
+            event.target.value = event.target.value.slice(0, -1)
         }
-        target.value = parseFloat(target.value).toFixed(2);
     }
-
+    
     priceToDecimal(event: Event) {
         const target = event.target as HTMLInputElement
         target.value = parseFloat(target.value).toFixed(2);
+        console.info(target.value)
     }
 
 }
