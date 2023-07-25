@@ -142,18 +142,19 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
 
     ngAfterViewInit(): void {
         setTimeout(() => {
-            for (let i = 0; i < this.convoID.toArray().length; i++) {
-                const c = this.convoID.toArray()[i].nativeElement.innerText.trim()
-                let arr = c.split(',')
-                const prodID = +arr[2]
-                arr = arr.filter((s: string) => s != this.email)
-                const otherEmail = arr[0]
-                this.product$ = this.productService.getProduct(prodID).subscribe(d => {
-                    var displayConvo = `${otherEmail} - Product ID: (${prodID})`
-                    this.convoID.toArray()[i].nativeElement.textContent = displayConvo
-                    // this.renderer.setProperty(this.convoID.toArray()[i].nativeElement, 'textContent', displayConvo)
-                })
-            }
+            this.sortConvo(this.conversationsArray)
+            // for (let i = 0; i < this.convoID.toArray().length; i++) {
+            //     const c = this.convoID.toArray()[i].nativeElement.innerText.trim()
+            //     let arr = c.split(',')
+            //     const prodID = +arr[2]
+            //     arr = arr.filter((s: string) => s != this.email)
+            //     const otherEmail = arr[0]
+            //     this.product$ = this.productService.getProduct(prodID).subscribe(d => {
+            //         var displayConvo = `${otherEmail} - Product ID: (${prodID})`
+            //         this.convoID.toArray()[i].nativeElement.textContent = displayConvo
+            //         // this.renderer.setProperty(this.convoID.toArray()[i].nativeElement, 'textContent', displayConvo)
+            //     })
+            // }
         }, 150);
     }
 
