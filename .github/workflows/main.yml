@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
 
-    
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -38,6 +38,9 @@ jobs:
     - name: Build with Maven
       run: mvn -B package -DskipTests --file pom.xml
       working-directory: server
+
+    - name: Create static folder in Spring
+      run: mkdir server/src/main/resources/static/
 
     - name: Copy Angular files to static folder in Spring
       run: cp -R client/dist/client/* server/src/main/resources/static/
