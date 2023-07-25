@@ -113,7 +113,9 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
                         return -1
                     })
                     this.convos$ = this.chatService.getAllConvos(this.email).subscribe(data => {
-                        this.sortConvo(data)
+                        setTimeout(() => {
+                            this.sortConvo(data)
+                        }, 100);
                         for (let i = 0; i < this.conversationsArray.length; i++) {
                             if (this.chatID == this.conversationsArray[i].chatID) {
                                 this.selectedIndex = i
@@ -152,7 +154,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
                     // this.renderer.setProperty(this.convoID.toArray()[i].nativeElement, 'textContent', displayConvo)
                 })
             }
-        }, 200);
+        }, 150);
     }
 
     sendMessage(content: string) {
