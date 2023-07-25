@@ -125,7 +125,7 @@ public class UserController {
         System.out.println(email);
         String password = jwtService.generateResetPassword();
         if (userService.resetPassword(email, password)) {
-            emailService.sendEmailFromTemplate("wuchienwei89@gmail.com", password);
+            emailService.sendEmailFromTemplate(email, password);
             return ResponseEntity.ok().body(Json.createObjectBuilder().add("status", "Password reset, check email for details").build().toString());
         }
         System.out.println("no email found");
