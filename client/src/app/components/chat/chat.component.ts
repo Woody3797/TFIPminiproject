@@ -84,7 +84,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
                     productID: this.productID,
                     messages: this.messages
                 }
-                this.conversationsArray.push(newConvo)
+                this.conversationsArray.unshift(newConvo)
                 this.chatService.getChatMessagesByID(this.chatID).subscribe(data => {
                     this.messages = data
                 })
