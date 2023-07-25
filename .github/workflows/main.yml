@@ -3,9 +3,8 @@ name: Spring Boot CI/CD
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
+    
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,6 +12,22 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v3
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    
+    - name: Install Angular CLI
+      run: npm install -g @angular/cli
+
+    - name: Install node dependencies
+      run: npm clean-install
+      working-directory: client
+
+    - name: Build in Angular
+      run: ng build
+      working-directory: client
 
     - name: Use JDK 17
       uses: actions/setup-java@v3
@@ -23,6 +38,9 @@ jobs:
     - name: Build with Maven
       run: mvn -B package -DskipTests --file pom.xml
       working-directory: server
+
+    - name: Copy Angular files to static folder in Spring
+      run: cp -R client/dist/client/* server/src/main/resources/static/
 
     - name: Install Railway CLI
       run: npm i -g @railway/cli
