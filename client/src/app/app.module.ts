@@ -24,6 +24,7 @@ import { MaterialModule } from './modules/material.module';
 import { SocialAuthServiceProvider } from './modules/social.module';
 import { WatchlistComponent } from './components/watchlist/watchlist.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { ChatroomComponent } from './components/chatroom/chatroom.component';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     ChatComponent,
     ForgotpasswordComponent,
     WatchlistComponent,
+    ChatroomComponent,
   ],
   imports: [
     BrowserModule,

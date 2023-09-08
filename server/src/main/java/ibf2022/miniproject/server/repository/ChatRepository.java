@@ -37,5 +37,10 @@ public class ChatRepository {
         return messages;
 	}
 
-    
+    public List<ChatMessage> getAllConvosGroupedByChatID(String email) {
+        Query query = Query.query(new Criteria().orOperator(Criteria.where("sender").regex(email, "i"), Criteria.where("recipient").regex(email, "i")));
+        List<ChatMessage> messages = mongoTemplate.find(query, ChatMessage.class, "chat_messages");
+        return messages;
+	}
+
 }

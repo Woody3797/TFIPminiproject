@@ -1,0 +1,77 @@
+<app-header></app-header>
+<br>
+<div id="container" class="container mt-3 mw-80">
+    <aside>
+        <header>
+            <h1 class="mat-headline-5" style="margin: 0;">Conversations</h1>
+        </header>
+        <mat-selection-list>
+            <mat-list-item *ngFor="let conversation of conversations; let i = index" (click)="selectRecipient(conversation.chatID, i)" [ngClass]="{'selected': selectedIndex == i}">
+                <span matListItemTitle style="white-space: break-spaces;" #convoID>
+                    {{ conversation.chatID }}
+                </span>
+                <span matListItemLine>
+                    <span>
+                        <!-- Product Name: {{ conversation?.product?.productName }} - ${{ conversation?.product?.price }} -->
+                    </span>
+                    <!-- <span *ngIf="conversation.newMessages" style="color: red; position: absolute; right: 3%; top: 0%;">
+                        &#11044;
+                    </span> -->
+                    <!-- <span *ngIf="conversation?.product?.productStatus == 'sold'" style="color: green; font-weight: bold; position: absolute; right: 3%; bottom: 0%;">SOLD</span> -->
+                </span>
+            </mat-list-item>
+        </mat-selection-list>
+    </aside>
+    <main>
+        <header style="display: flex;">
+            <div style="width: 10%;">
+                <img *ngIf="profileImage.length != 0; else noImage" src="{{ profileImage }}">
+            </div>
+            <div *ngIf="recipient; else noRecipient" class="conversation">
+                <span class="fs-5" style="padding: 5px;">
+                    {{ recipient }} -- Product: <span *ngIf="product">{{ product.productName }} - ${{ product.price }}</span>
+                </span>
+                <span *ngIf="product?.productStatus == 'sold';else showSelling" style="float: right; padding: 5px;">status: {{ product.productStatus }}</span>
+            </div>
+        </header>
+        <div *ngIf="recipient;else noChat" class="chatwindow">
+            <ul id="chat" #chat [scrollTop]="chat.scrollHeight">
+                <li *ngFor="let message of messages" [ngClass]="message.sender == email ? 'me' : 'you'">
+                    <div class="entete">
+                        <h3>{{ message.timestamp | date:'ccc d LLL y, h:mm:ss a' }}</h3>
+                    </div>
+                    <div class="message">
+                        {{ message.content }}
+                    </div>
+                </li>
+            </ul>
+            <footer>
+                <textarea placeholder="Type your message" #chatMessage (keydown.enter)="sendMessage(chatMessage.value);false" [formControl]="messageInput"></textarea>
+                <button mat-raised-button class="button" (click)="sendMessage(chatMessage.value)" type="submit" [disabled]="messageInput.invalid">Send</button>
+            </footer>
+        </div>
+    </main>
+</div>
+
+<ng-template #noImage>
+    <img class="profilepic" src="/assets/profilepic.png">
+</ng-template>
+
+<ng-template #noRecipient>
+    <div class="conversation">
+        <span style="margin: auto;">SELECT A CONVERSATION FROM THE CONVERSATIONS BAR</span>
+    </div>
+</ng-template>
+
+<ng-template #noChat>
+    <div style="text-align: center; position: relative; top: 35%;">
+        <h1 class="mat-headline-3" style="margin: 1rem">NO ACTIVE CONVERSATION</h1>
+        <h2 class="mat-headline-4">Select a conversation from the left</h2>
+    </div>
+</ng-template>
+
+<ng-template #showSelling>
+    <span style="padding: 5px;">
+        status: selling
+    </span>
+</ng-template>

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import ibf2022.miniproject.server.model.ChatConvo;
 import ibf2022.miniproject.server.model.ChatMessage;
 import ibf2022.miniproject.server.service.ChatService;
 import jakarta.json.Json;
@@ -52,10 +53,18 @@ public class ChatController {
 
     @GetMapping(path = "/getallconvos")
     @ResponseBody
-    public ResponseEntity<List<ChatMessage>> getAllConvos(@RequestParam String sender) {
-        List<ChatMessage> messages = chatService.getAllConvos(sender);
+    public ResponseEntity<List<ChatMessage>> getAllConvos(@RequestParam String email) {
+        List<ChatMessage> messages = chatService.getAllConvos(email);
 
         return ResponseEntity.ok(messages);
+    }
+
+    @GetMapping(path = "/getallconvos2")
+    @ResponseBody
+    public ResponseEntity<List<ChatConvo>> getAllConvos2(@RequestParam String email) {
+        List<ChatConvo> conversations = chatService.getAllConvos2(email);
+
+        return ResponseEntity.ok(conversations);
     }
 
 

@@ -11,8 +11,8 @@ import { ProfileService } from 'src/app/service/profile.service';
 import { StorageService } from 'src/app/service/storage.service';
 import * as Stomp from 'stompjs';
 
-// const SOCKET_KEY = 'http://localhost:8080/chat'
-const SOCKET_KEY = 'https://fluttering-sock-production.up.railway.app/chat'
+const SOCKET_KEY = 'http://localhost:8080/chat'
+// const SOCKET_KEY = 'https://fluttering-sock-production.up.railway.app/chat'
 
 @Component({
     selector: 'app-chat',
@@ -54,6 +54,10 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
         this.productID = this.productService.productID
         this.recipient = this.productService.seller
 
+        this.chatService.getAllConvos2(this.email).subscribe(data => {
+            console.info(data)
+        })
+
         this.convos$ = this.chatService.getAllConvos(this.email).subscribe(data => {
             let conversationsMap = this.groupBy(data, 'chatID')
             this.conversationsArray = Object.entries(conversationsMap).map(([chatID, messages]) => ({ chatID, messages }))
@@ -74,7 +78,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, After
                     this.conversationsArray[i]['newMessages'] = false
                 })
             }
-            console.info(this.conversationsArray)
+            // console.info(this.conversationsArray)
             if (!!this.recipient && this.productID > 0) {
                 this.chatID = this.chatService.generateChatID(this.email, this.recipient, this.productID)
                 this.chatIDs.push(this.chatID)

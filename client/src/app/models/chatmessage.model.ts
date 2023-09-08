@@ -1,9 +1,9 @@
 export interface ChatMessage {
     chatID: string
-    productID: number
     sender: string
     recipient: string
     content: string
+    productID: number
     timestamp: Date
 }
 

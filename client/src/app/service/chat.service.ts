@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ChatMessage } from '../models/chatmessage.model';
+import { ChatConvo, ChatMessage } from '../models/chatmessage.model';
 
 @Injectable({
     providedIn: 'root'
@@ -16,16 +16,17 @@ export class ChatService {
         return this.http.get<ChatMessage[]>('/api/chat/getmessages', { params })
     }
 
-    getAllConvos(sender: string): Observable<ChatMessage[]> {
-        const params = new HttpParams().set('sender', sender)
+    getAllConvos(email: string): Observable<ChatMessage[]> {
+        const params = new HttpParams().set('email', email)
 
         return this.http.get<ChatMessage[]>('/api/chat/getallconvos', { params })
     }
 
+    getAllConvos2(email: string): Observable<ChatConvo[]> {
+        const params = new HttpParams().set('email', email)
 
-
-
-
+        return this.http.get<ChatConvo[]>('/api/chat/getallconvos2', { params })
+    }
 
 
     generateChatID(chatter1: string, chatter2: string, productID: number) {

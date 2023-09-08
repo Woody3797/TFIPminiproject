@@ -1,11 +1,13 @@
 package ibf2022.miniproject.server.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ChatConvo {
 
     private String chatID;
-    private String chatter1;
-    private String chatter2;
     private Integer productID;
+    private List<ChatMessage> messages = new ArrayList<>();
     
     public String getChatID() {
         return chatID;
@@ -13,26 +15,30 @@ public class ChatConvo {
     public void setChatID(String chatID) {
         this.chatID = chatID;
     }
-    public String getChatter1() {
-        return chatter1;
-    }
-    public void setChatter1(String chatter1) {
-        this.chatter1 = chatter1;
-    }
-    public String getChatter2() {
-        return chatter2;
-    }
-    public void setChatter2(String chatter2) {
-        this.chatter2 = chatter2;
-    }
     public Integer getProductID() {
         return productID;
     }
     public void setProductID(Integer productID) {
         this.productID = productID;
     }
-    
-    
-    
-    
+    public List<ChatMessage> getMessages() {
+        return messages;
+    }
+    public void setMessages(List<ChatMessage> messages) {
+        this.messages = messages;
+    }
+
+    public ChatConvo() {
+    }
+
+    public ChatConvo(String chatID, Integer productID, List<ChatMessage> messages) {
+        this.chatID = chatID;
+        this.productID = productID;
+        this.messages = messages;
+    }
+
+    @Override
+    public String toString() {
+        return "ChatConvo [chatID=" + chatID + ", productID=" + productID + ", messages=" + messages + "]";
+    }
 }

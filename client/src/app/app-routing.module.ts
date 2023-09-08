@@ -12,6 +12,7 @@ import { ProductlistallComponent } from './components/productlistall/productlist
 import { ChatComponent } from './components/chat/chat.component';
 import { ForgotpasswordComponent } from './components/forgotpassword/forgotpassword.component';
 import { WatchlistComponent } from './components/watchlist/watchlist.component';
+import { ChatroomComponent } from './components/chatroom/chatroom.component';
 
 const routes: Routes = [
     {path: '', component: MainComponent, title: 'Welcome', canActivate: [authGuard]},
@@ -25,6 +26,7 @@ const routes: Routes = [
     {path: 'editproduct/:productID', component: ProducteditComponent, title: 'Edit Product', canActivate: [authGuard]},
     {path: ':email/allproducts', component: ProductlistallComponent, title: 'All Products', canActivate: [authGuard]},
     {path: ':email/chat', component: ChatComponent, title: 'Chat', canActivate: [authGuard]},
+    {path: 'chat', component: ChatroomComponent, title: 'Chat', canActivate: [authGuard]},
 ];
 
 @NgModule({
