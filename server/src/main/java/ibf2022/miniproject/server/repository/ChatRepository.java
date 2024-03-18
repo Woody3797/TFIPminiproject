@@ -16,10 +16,10 @@ public class ChatRepository {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    @SuppressWarnings("null")
     public ChatMessage saveChatMessage(ChatMessage message) {
         // Query query = Query.query(Criteria.where("chatID").is(message.getChatID()));
         ChatMessage result = mongoTemplate.insert(message, "chat_messages");
-
         return result;
     }
 
@@ -37,6 +37,7 @@ public class ChatRepository {
         return messages;
 	}
 
+    @SuppressWarnings("null")
     public List<ChatMessage> getAllConvosGroupedByChatID(String email) {
         Query query = Query.query(new Criteria().orOperator(Criteria.where("sender").regex(email, "i"), Criteria.where("recipient").regex(email, "i")));
         List<ChatMessage> messages = mongoTemplate.find(query, ChatMessage.class, "chat_messages");

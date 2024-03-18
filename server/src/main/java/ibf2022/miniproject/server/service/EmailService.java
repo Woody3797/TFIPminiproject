@@ -20,6 +20,7 @@ public class EmailService {
     @Autowired
     private SpringTemplateEngine springTemplateEngine;
 
+    @SuppressWarnings("null")
     public void sendEmailFromTemplate(String to, String content) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");

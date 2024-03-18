@@ -76,6 +76,7 @@ public class JwtService {
         return false;
     }
 
+    @SuppressWarnings("null")
     public String getJwtFromCookie(HttpServletRequest request) {
         Cookie cookie = WebUtils.getCookie(request, "JWTtoken");
         if (cookie != null) {
@@ -84,6 +85,7 @@ public class JwtService {
         return null;
     }
 
+    @SuppressWarnings("null")
     public ResponseCookie generateCookieFromEmail(String email) {
         String jwtToken = generateTokenFromEmail(email);
         ResponseCookie cookie = ResponseCookie.from("JWTtoken", jwtToken).path("/").httpOnly(true).build();

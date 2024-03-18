@@ -143,7 +143,6 @@ public class ProductRepository {
                 statement.setBytes(3, f.getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
-                return null;
             }
             statement.setInt(4, productID);
             return statement;

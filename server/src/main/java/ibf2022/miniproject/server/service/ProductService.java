@@ -231,6 +231,7 @@ public class ProductService {
         return response;
     }
 
+    @SuppressWarnings("null")
     private List<String> getTagsFromImagga(String upload_id) {
         String url = UriComponentsBuilder.fromUriString("https://api.imagga.com/v2/tags")
         .queryParam("image_upload_id", upload_id)
